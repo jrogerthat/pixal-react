@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import axios from "axios";
-import logo from './logo.svg';
 import './App.css';
+import PredicateNav from './components/PredicateNav';
+import AppBar from '@mui/material/AppBar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
 function App() {
 
    // new line start
-  const [profileData, setProfileData] = useState(null)
+  const [profileData, setProfileData] = useState(null);
+  const [predEditMode, setPredEditMode] = useState(true);
 
   function getData() {
     axios({
@@ -29,29 +33,16 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-
-        {/* new line start*/}
-        <p>To get your profile details: </p><button onClick={getData}>Click me</button>
-        {profileData && <div>
-              <p>Profile name: {profileData.profile_name}</p>
-              <p>About me: {profileData.about_me}</p>
-            </div>
-        }
-         {/* end of new line */}
-      </header>
+      {/* <div className="header">PIXAL</div> */}
+      <AppBar position="static" sx = {{ background: 'white', padding: "10px"}}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
+      </AppBar>
+      <PredicateNav setPredEditMode={setPredEditMode} predEditMode={predEditMode}></PredicateNav>
+      {predEditMode ? (
+        <div>{'Edit Mode!'}</div>
+      ): (
+        <div>{'Not in edit mode'}</div>
+      )}
     </div>
   );
 }
