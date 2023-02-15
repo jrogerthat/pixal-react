@@ -24,9 +24,10 @@ def my_profile():
 
 @api.route('/load_predicates')
 def load_predicates():
-    print("is this firing")
     pred = PredicateControl('static/data')
-    pred.load_predicates('augmented_superstore_predicates.json')
+    return pred.load_predicates('augmented_superstore_predicates.json')
+
+    
 
 # def index():
 #     save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)

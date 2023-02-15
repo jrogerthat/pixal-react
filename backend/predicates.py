@@ -9,9 +9,11 @@ class PredicateControl:
     def load_predicates(self, predicates_path):
         print("reaching predicates", f"{self.path}/{predicates_path}")
         with open(f"{self.path}/{predicates_path}", 'rb') as f:
-            print('FFF',f) 
+            
             # change this from pickle
-            predicates = pickle.load(f)
+            predicates = json.load(f)
+            print('preddddd',predicates)
+            # pickle.load(f)
         return predicates
 
     def save_predicates(self, predicates, predicates_path):

@@ -54,9 +54,14 @@ body {
 .pred-exp-nav {
 
   width: 25%;
-  background-color: #61dafb;
+  background-color: #FFF;
   padding:10px;
   /* flex-shrink: 0; */
+}
+
+.ped-wrap {
+  background-color: aquamarine;
+  height: 20px;
 }
 
 .pred-exp-view {
