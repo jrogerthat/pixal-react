@@ -9,7 +9,7 @@ export const useAxiosGet = (url) => {
     useEffect(() => {
       axios
         .get(url)
-        .then((response) => setData(response.data))
+        .then((response) => setData(Object.entries(response.data)))
         .catch((error) => setError(error.message))
         .finally(() => setLoaded(true));
     }, []);

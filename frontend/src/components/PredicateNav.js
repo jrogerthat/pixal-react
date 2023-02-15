@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
-import axios from "axios";
+import { useMemo } from 'react'
+
 import '../App.css';
 import Button from '@mui/material/Button';
 import { useAxiosGet } from '../axiosUtil';
@@ -7,18 +7,19 @@ import { useAxiosGet } from '../axiosUtil';
 function PredicateNav({predEditMode, setPredEditMode}) {
 
   
-
   const { data, error, loaded } = useAxiosGet('/load_predicates');
-  const stringifiedData = useMemo(() => {
-    return JSON.stringify(data || {});
+  const predicates = useMemo(() => {
+    return data || [];
+    // return JSON.stringify(data || {});
   }, [data]);
 
-  console.log('DATA', stringifiedData);
+  console.log('DATA', predicates);
 
 
   return (
     <div className="pred-exp-nav">
       <Button
+      variant="outlined"
       onClick={()=> predEditMode ? setPredEditMode(false) : setPredEditMode(true)}
       >{predEditMode ? "Explore Predicate Explanations" : "Explore Predicate Explorer"}</Button>
       <div>
@@ -29,6 +30,11 @@ function PredicateNav({predEditMode, setPredEditMode}) {
             }) :
             <div>loading...</div>
         } */}
+        {
+          predicates.map(p => (
+            <div key={`pred-${p[0]}`}></div>
+          ))
+        }
       </div>
     </div>
   );

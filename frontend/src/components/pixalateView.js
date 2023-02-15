@@ -8,10 +8,10 @@ function Pixalate() {
   return (
     <div className="pixalate">
       
-        <div class="l-top">score</div>
-        <div class="r-top">marks</div>
-        <div class="l-bottom">feature</div>
-        <div class="r-bottom">explaination</div>
+        <div className="l-top">score</div>
+        <div className="r-top">marks</div>
+        <div className="l-bottom">feature</div>
+        <div className="r-bottom">explaination</div>
       
     </div>
   );
