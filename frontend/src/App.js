@@ -5,6 +5,8 @@ import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Pixalate from './components/pixalateView';
+import PredicateExplore from './components/predicateExploreView';
 
 function App() {
 
@@ -37,12 +39,15 @@ function App() {
       <AppBar position="static" sx = {{ background: 'white', padding: "10px"}}>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
       </AppBar>
-      <PredicateNav setPredEditMode={setPredEditMode} predEditMode={predEditMode}></PredicateNav>
-      {predEditMode ? (
-        <div>{'Edit Mode!'}</div>
-      ): (
-        <div>{'Not in edit mode'}</div>
-      )}
+      <div className="main-wrapper">
+        <PredicateNav setPredEditMode={setPredEditMode} predEditMode={predEditMode}></PredicateNav>
+        {predEditMode ? (
+          <PredicateExplore/>
+        ): (
+          <Pixalate/>
+        )}
+      </div>
+    
     </div>
   );
 }

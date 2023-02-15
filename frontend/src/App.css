@@ -13,6 +13,30 @@
   }
 } */
 
+body {
+  position:absolute;
+  top:0px;
+  right:0px;
+  bottom:0px;
+  left:0px;
+}
+
+.App {
+  height:100%;
+  width: 100%;
+  position: absolute;
+}
+
+.main-wrapper {
+  display:flex;
+  flex-direction:row;
+  justify-content: space-around;
+  align-items: stretch;
+  height: calc(100% - 50px);
+  background-color: blue;
+
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -28,12 +52,49 @@
 
 /* FOR PREDICATE NAV */
 .pred-exp-nav {
-  height: 100%;
-  /* display: flex; */
-  left:0;
-  width: 20%;
-  /* flex-direction: column;   */
+
+  width: 25%;
   background-color: #61dafb;
   padding:10px;
   /* flex-shrink: 0; */
+}
+
+.pred-exp-view {
+  background-color: yellow;
+  width:70%;
+}
+
+.pixalate {
+  background-color: purple;
+  width:70%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  grid-auto-rows: repeat(2, 1fr);
+}
+
+.l-top {
+  background-color: beige;
+  grid-column: 1/3;
+  grid-row: 1;
+}
+
+.r-top {
+
+  background-color: yellow;
+  grid-column: 3/6;
+  grid-row: 1;
+}
+
+.l-bottom {
+  background-color: red;
+  grid-column: 1/3;
+  grid-row: 2;
+}
+
+.r-bottom {
+
+  background-color: green;
+  grid-column: 3/6;
+  grid-row: 2;
 }
