@@ -27,8 +27,6 @@ def load_predicates():
     pred = PredicateControl('static/data')
     return pred.load_predicates('augmented_superstore_predicates.json')
 
-    
-
 # def index():
 #     save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
 #     save_predicate_id(0, predicate_id_path)

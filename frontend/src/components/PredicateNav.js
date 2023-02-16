@@ -1,38 +1,33 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import '../App.css';
 import Button from '@mui/material/Button';
 import { useAxiosGet } from '../axiosUtil';
+import AddPredBox from './addPredicateBox';
+import EditablePredicate from './editablePredComp';
 
 function PredicateNav({predEditMode, setPredEditMode}) {
 
-  
   const { data, error, loaded } = useAxiosGet('/load_predicates');
   const predicates = useMemo(() => {
     return data || [];
-    // return JSON.stringify(data || {});
   }, [data]);
 
-  console.log('DATA', predicates);
-
+  const [addPredMode, setAddPredMode] = useState(false);
 
   return (
     <div className="pred-exp-nav">
       <Button
-      variant="outlined"
-      onClick={()=> predEditMode ? setPredEditMode(false) : setPredEditMode(true)}
-      >{predEditMode ? "Explore Predicate Explanations" : "Explore Predicate Explorer"}</Button>
+        variant="outlined"
+        onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
+      >{addPredMode ? "Cancel" : "Add Predicate"}</Button>
+      {
+        addPredMode && <AddPredBox setPredEditMode={setAddPredMode} />
+      }
       <div>
-        {/* {
-          data.length > 0 ? 
-            data.map((d) => {
-              <div key={'pred-'+d[0]} className="pred-wrap">pred</div>
-            }) :
-            <div>loading...</div>
-        } */}
         {
           predicates.map(p => (
-            <div key={`pred-${p[0]}`}></div>
+           <EditablePredicate key={`pred-edir-${p[0]}`} predicateData={p}/>
           ))
         }
       </div>
