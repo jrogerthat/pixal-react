@@ -1,5 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import { useState } from 'react'
+import { addPredicate } from '../axiosUtil';
 
 /*
 TODO: hook this up to actually create a predicate
@@ -11,8 +12,10 @@ export default function AddPredBox({setPredEditMode}) {
     const handleChange = (e) => setNewPred(e.target.value)
 
     const handleSubmit = () => {
+        addPredicate(newPred)
         setNewPred(null);
         setPredEditMode(null);
+        
     }
 
     return (
@@ -30,4 +33,4 @@ export default function AddPredBox({setPredEditMode}) {
             >Submit</Button>}
         </div>
     );
-}
+} 
