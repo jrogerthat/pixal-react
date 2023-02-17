@@ -26,7 +26,7 @@ function PredicateNav({predEditMode, setPredEditMode}) {
       }
       <div>
         {
-          predicates.map(p => (
+          Object.entries(predicates).map(p => (
            <EditablePredicate key={`pred-edir-${p[0]}`} predicateData={p}/>
           ))
         }

@@ -9,13 +9,15 @@ const useAxiosGet = (url) => {
     useEffect(() => {
       axios
         .get(url)
-        .then((response) => setData(Object.entries(response.data)))
+        .then((response) => setData(response.data))
         .catch((error) => setError(error.message))
         .finally(() => setLoaded(true));
     }, []);
   
     return { data, error, loaded };
   }
+
+
 
 // THIS THROWS A 505 ERROR
 // {"State": ["Vermont"], "Segment": ["Corporate"]}
