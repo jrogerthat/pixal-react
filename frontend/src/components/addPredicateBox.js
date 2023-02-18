@@ -12,7 +12,11 @@ export default function AddPredBox({setAddPredMode}) {
     const handleChange = (e) => setNewPred(e.target.value)
 
     const handleSubmit = () => {
-        addPredicate(newPred)
+
+        
+        let formatted = {'pred': newPred}
+        console.log(formatted)
+        addPredicate(formatted)
         setNewPred(null);
         setAddPredMode(null);
         

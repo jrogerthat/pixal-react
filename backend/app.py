@@ -35,21 +35,17 @@ session_id = "49324312"
 predicates_path = f'static/data/predicates_{session_id}.pkl'
 predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 
+"""
+These work!
+"""
 @api.route("/")
 def index():
-    pred = all.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
-    all.save_predicate_id(0, predicate_id_path)
-    test = all.add_predicates(all.feat_val, pred)
-    # print('TSETS', test)
-    return test
+    return "WORKING"
 
 @api.route('/load_predicates')
 def load_predicates():
     return edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
 
-@api.route('/load_spec')
-def load_spec():
-    return edit_predicates.load_predicate_data(data_path, 'test-spec.json')
 
 @api.route('/get_pred_dis')
 def get_pred_hist():
@@ -59,6 +55,30 @@ def get_pred_hist():
 
     return all.get_pred_distribution_data(all.feat_val, pred)
 
+@api.route('/get_selected_data')
+def get_selected_data():
+    """
+    Need to think about this function. Proposed impolementation:
+    send the id of the predicate. op send a feature.
+    keep track of predicate, feature, if feature, explanation.
+
+    """
+    return "test"
+
+    # {'predicate': '01',
+    # predicate_scores : {pred: [], other: []
+    # 'feature_data': []
+    # feature: {feature: '', value: ''}
+
+
+    # }
+    
+    # }
+
+
+"""
+These below are work in progress!
+"""
 
 @api.route("/add_predicates", methods=['PUT'])
 def app_add_predicates():

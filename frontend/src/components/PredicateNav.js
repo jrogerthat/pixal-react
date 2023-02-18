@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react'
-
 import '../App.css';
 import Button from '@mui/material/Button';
-import { useAxiosGet } from '../axiosUtil';
 import AddPredBox from './addPredicateBox';
-import EditablePredicate from './editablePredComp';
+import PredicateComp from './predicateComponent';
 
-function PredicateNav({predicateArray, setHighlightPred}) {
+function PredicateNav({predicateArray, setHighlightPred, predEditMode}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
 
@@ -17,20 +15,24 @@ function PredicateNav({predicateArray, setHighlightPred}) {
 
   return (
     <div className="pred-exp-nav">
-      <Button
+      {
+        predEditMode ? <Button
         variant="outlined"
         onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
-      >{addPredMode ? "Cancel" : "Add Predicate"}</Button>
+      >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span>Predicates</span>
+      }
+      
       {
         addPredMode && <AddPredBox setAddPredMode={setAddPredMode} />
       }
       <div>
         {
           Object.entries(predicateArray).map(p => (
-           <EditablePredicate 
+           <PredicateComp
            key={`pred-edir-${p[0]}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
+           predEditMode={predEditMode}
           //  onMouseEnter={() => handleHighlight(p[0])}
           //  onMouseLeave={() => handleHighlight(null)}
            />

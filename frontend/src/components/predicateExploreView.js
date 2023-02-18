@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import '../App.css';
 import { useAxiosGet } from '../axiosUtil';
 import ReactDOM from 'react-dom';
-import { PredExplorePlot } from './predExplorerPlot';
+import { PredExplorePlot } from './plots/predExplorerPlot';
 
 
 

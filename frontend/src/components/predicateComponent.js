@@ -1,5 +1,3 @@
-import { Button, TextField } from '@mui/material';
-import { useState } from 'react'
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
@@ -8,7 +6,7 @@ import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function EditablePredicate({predicateData, setHighlightPred}) {
+export default function PredicateComp({predicateData, setHighlightPred, predEditMode}) {
 
     const features = Object.entries(predicateData[1])
 
@@ -44,12 +42,17 @@ export default function EditablePredicate({predicateData, setHighlightPred}) {
                     </div>
                 ))
             }
-            <div className="pred-edit-bar">
-                <DoNotDisturbTwoToneIcon />
-                <ColorLensTwoToneIcon />
-                <VisibilityOffTwoToneIcon />
-                <DeleteForeverTwoToneIcon />
-            </div>
+            {
+                predEditMode && (
+                    <div className="pred-edit-bar">
+                    <DoNotDisturbTwoToneIcon />
+                    <ColorLensTwoToneIcon />
+                    <VisibilityOffTwoToneIcon />
+                    <DeleteForeverTwoToneIcon />
+                    </div>
+                )
+            }
+           
         </div>
     );
 }

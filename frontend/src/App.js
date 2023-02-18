@@ -16,6 +16,10 @@ function App() {
   const [predEditMode, setPredEditMode] = useState(true);
   const [highlightPred, setHighlightPred] = useState(null);
 
+  /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
+   * 
+   */
+
   const { data } = useAxiosGet('/load_predicates');
   const predicateArray = useMemo(() => {
     return data || [];

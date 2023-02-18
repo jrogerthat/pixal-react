@@ -2,16 +2,26 @@ import { useState } from 'react'
 import axios from "axios";
 import '../App.css';
 import Button from '@mui/material/Button';
+import { PredScorePlot } from './plots/predScorePlot';
 
-function Pixalate() {
+function Pixalate({colorDict}) {
 
   return (
     <div className="pixalate">
       
-        <div className="l-top">score</div>
-        <div className="r-top">marks</div>
-        <div className="l-bottom">feature</div>
-        <div className="r-bottom">explaination</div>
+        <div className="l-top">
+          <div>score</div>
+          <PredScorePlot PredData={[]} width={300} height={300} colorDict={colorDict} />
+          </div>
+        <div className="r-top">
+          <div>marks</div>
+          </div>
+        <div className="l-bottom">
+          <div>feature</div>
+          </div>
+        <div className="r-bottom">
+          <div>explaination</div>
+        </div>
       
     </div>
   );
