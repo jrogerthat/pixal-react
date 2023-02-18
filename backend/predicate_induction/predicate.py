@@ -1,7 +1,12 @@
-class Predicate:
+from .pivot import Pivot
+from .utils import get_filter_mask
+from .utils import get_filters_masks
+from .utils import merge_filter_value
+
+class Predicate(object):
     
-    def __init__(self, data=None, dtypes=None, attribute_values=None, attribute_mask=None, mask=None, adj_outer=None, adj_inner=None, parents=None, **kwargs):
-        self.attributes = list(dtypes.keys()) if dtypes is not None else None
+    def __init__(self, data=None, dtypes=None, attributes=None, attribute_values=None, attribute_mask=None, mask=None, adj_outer=None, adj_inner=None, parents=None, **kwargs):
+        self.attributes = list(dtypes.keys()) if attributes is None else attributes
         if attribute_values is None:
             self.attribute_values = {}
             for k,v in kwargs.items():
@@ -57,7 +62,7 @@ class Predicate:
             
     def set_attribute_values(self, attribute_values, attribute_mask=None, mask=None):
         if attribute_mask is None:
-            attribute_mask = get_filters_masks(data, dtypes, self.attribute_values)
+            attribute_mask = get_filters_masks(self.data, self.dtypes, self.attribute_values)
         if mask is None:
             mask = attribute_mask.all(axis=1)
         return Predicate(self.data, self.dtypes, attribute_values, attribute_mask, mask)
@@ -69,7 +74,7 @@ class Predicate:
             attribute_mask = self.attribute_mask
         else:
             attribute_mask = self.attribute_mask.copy()
-            attribute_mask[attribute] = get_filter_mask(self.data, self.dtypes, attribute, value)
+            attribute_mask[attribute] = get_filter_mask(self.data, self.dtypes, attribute, values)
         if mask is None:
             mask = self.mask
         return Predicate(self.data, self.dtypes, attribute_values, attribute_mask, mask)
@@ -138,11 +143,15 @@ class Predicate:
         return predicate
     
     def pivot(self, attribute, data=None):
-        if data is None:
-            data = self.data
         other_attributes = [attr for attr in self.predicate_attributes if attr != attribute]
-        mask = self.attribute_mask[other_attributes].all(axis=1)
-        return data.assign(predicate=self.mask).loc[mask]
+        return Pivot(
+            data if self.data is None else self.data,
+            self.dtypes, attribute, self.attribute_values[attribute],
+            {attr:self.attribute_values[attr] for attr in other_attributes},
+            self.attribute_mask[attribute],
+            self.attribute_mask[other_attributes].all(axis=1),
+        )
+    
     
     def set_attribute_side(self, predicate, attribute, side):
         dtype = self.dtypes[attribute]
@@ -155,7 +164,7 @@ class Predicate:
         adj_inner = {k: v for k,v in predicate.adj_inner.items()}
         adj_outer[attribute] = predicate.adj_outer[attribute]
         adj_inner[attribute] = predicate.adj_inner.get(attribute,{})
-        predicate = Predicate(self.data, self.dtypes, attribute_values, attribute_mask, None, adj_outer, adj_inner)
+        predicate = Predicate(self.data, self.dtypes, self.attributes, attribute_values, attribute_mask, None, adj_outer, adj_inner)
         return predicate
     
     def get_adjacent_attribute_inner(self, attribute):
