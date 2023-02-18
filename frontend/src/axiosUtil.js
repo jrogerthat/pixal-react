@@ -14,7 +14,7 @@ const useAxiosGet = (url) => {
         .finally(() => setLoaded(true));
     }, []);
   
-    return { data, error, loaded };
+    return { data };
   }
 
 

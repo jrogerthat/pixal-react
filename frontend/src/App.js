@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import axios from "axios";
+import { useMemo, useState } from 'react'
 import './App.css';
 import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
@@ -8,11 +7,30 @@ import IconButton from '@mui/material/IconButton';
 import Pixalate from './components/pixalateView';
 import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
+import { useAxiosGet } from './axiosUtil';
+import randomColor from 'randomcolor'
 
 function App() {
 
    // new line start
   const [predEditMode, setPredEditMode] = useState(true);
+  const [highlightPred, setHighlightPred] = useState(null);
+
+  const { data } = useAxiosGet('/load_predicates');
+  const predicateArray = useMemo(() => {
+    return data || [];
+  }, [data]);
+
+
+  let colorDict = useMemo(() => {
+    if(predicateArray != []){
+      return Object.entries(predicateArray).map(c => {
+        return {id: c[0], color: randomColor()}
+      })
+    }else{
+      return []
+    }
+  }, [data]);
 
 
 
@@ -24,9 +42,15 @@ function App() {
         <BasicDrop predEditMode={predEditMode} setPredEditMode={setPredEditMode} />
       </AppBar>
       <div className="main-wrapper">
-        <PredicateNav setPredEditMode={setPredEditMode} predEditMode={predEditMode}></PredicateNav>
+        <PredicateNav 
+        setPredEditMode={setPredEditMode} 
+        predEditMode={predEditMode} 
+        predicateArray={predicateArray}
+        colorDict={colorDict}
+        setHighlightPred={setHighlightPred}
+        ></PredicateNav>
         {predEditMode ? (
-          <PredicateExplore/>
+          <PredicateExplore colorDict={colorDict} highlightPred={highlightPred}/>
         ): (
           <Pixalate/>
         )}

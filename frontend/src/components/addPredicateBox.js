@@ -5,7 +5,7 @@ import { addPredicate } from '../axiosUtil';
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function AddPredBox({setPredEditMode}) {
+export default function AddPredBox({setAddPredMode}) {
 
     const [newPred, setNewPred] = useState(null);
 
@@ -14,7 +14,7 @@ export default function AddPredBox({setPredEditMode}) {
     const handleSubmit = () => {
         addPredicate(newPred)
         setNewPred(null);
-        setPredEditMode(null);
+        setAddPredMode(null);
         
     }
 

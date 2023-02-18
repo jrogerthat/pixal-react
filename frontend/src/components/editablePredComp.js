@@ -8,7 +8,7 @@ import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function EditablePredicate({predicateData}) {
+export default function EditablePredicate({predicateData, setHighlightPred}) {
 
     const features = Object.entries(predicateData[1])
 
@@ -33,7 +33,10 @@ export default function EditablePredicate({predicateData}) {
     }
 
     return (
-        <div className='pred-wrap'>
+        <div className='pred-wrap'
+           onMouseEnter={() => setHighlightPred(predicateData[0])}
+           onMouseLeave={() => setHighlightPred(null)}
+        >
             {
                 features.map((f, i)=> (
                     <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>
