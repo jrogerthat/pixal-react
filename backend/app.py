@@ -10,7 +10,7 @@ import plot_pred
 import all
 
 from flask import Flask, request, session
-from predicate_induction import PredicateInduction, Anomaly, infer_dtypes, encode_data, get_predicates_from_data
+from predicate_induction import Predicate, PredicateInduction, Anomaly, infer_dtypes, encode_data, get_predicates_from_data
 
 from flask import Flask
 
@@ -85,9 +85,27 @@ def app_add_predicates():
     return json.dumps(res)
 
 @api.route('/add_predicate', methods=['POST'])
-def add_predicate(pred):
-    print(pred)
-    return edit_predicates.save_predicate_data(data_path, 'augmented_superstore_predicates.json')
+def add_predicate(attribute_values):
+    predicate = Predicate(session['data']['data'], session['data']['dtypes'], attribute_values)
+    predicate_id = len(session['predicate']['predicates'])
+    session['predicate']['predicates'].append(predicate)
+    
+    predicates = load_predicate_data(path, predicates_path)
+    predicates[predicate_id] = predicates
+    save_predicates(path, predicates, predicates_path)
+    return predicates
+
+@api.route('/edit_predicate', methods=['POST'])
+def edit_predicate():
+    pass
+
+@api.route('/delete_predicate', methods=['POST'])
+def delete_predicate():
+    pass
+
+@api.route('/copy_predicate', methods=['POST'])
+def copy_predicate():
+    pass
 
 if __name__ == "__main__":
     api.run(host='localhost',port=5000)
