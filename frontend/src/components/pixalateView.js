@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import axios from "axios";
 import '../App.css';
 import Button from '@mui/material/Button';
 import { PredScorePlot } from './plots/predScorePlot';
 
 function Pixalate({colorDict}) {
+
+
 
   return (
     <div className="pixalate">

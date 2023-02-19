@@ -153,3 +153,11 @@ def get_filter_predicate_clause_text(attribute, value, dtype):
             return f'{attribute}>{value[0]}'
         else:
             return f'{attribute}:{value}'
+
+def merge_filter_value(value1, value2, dtype):
+    if dtype in ('nominal','binary'):
+        return list(set(value1+value2))
+    else:
+        left_val = min(value1[0], value2[0])
+        right_val = max(value1[1], value2[1])
+        return [left_val, right_val]

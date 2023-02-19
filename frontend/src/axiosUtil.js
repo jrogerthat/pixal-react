@@ -1,7 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const useAxiosGet = (url) => {
+// const useAxiosGet = (url) => {
+//     const [data, setData] = useState(null);
+//     const [error, setError] = useState("");
+//     const [loaded, setLoaded] = useState(false);
+  
+//     useEffect(()=> {
+//       axios
+//       .get(url)
+//       .then((response) => {
+//         setData(response.data)})
+//       .catch((error) => setError(error.message))
+//       .finally(() => setLoaded(true));
+//     }, [])  
+    
+//     return { data };
+//   }
+
+
+  const useAxiosGet = (url) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState("");
     const [loaded, setLoaded] = useState(false);
@@ -14,8 +32,8 @@ const useAxiosGet = (url) => {
         .finally(() => setLoaded(true));
     }, []);
   
-    return { data };
-  }
+    return { data, error, loaded };
+  };
 
 
 
@@ -23,7 +41,7 @@ const useAxiosGet = (url) => {
 // {"State": ["Vermont"], "Segment": ["Corporate"]}
 const addPredicate = (dataOb, url) => {
   
-  console.log(dataOb);
+ 
   // useEffect(() => {
   axios  
     .post(url, JSON.stringify(dataOb), {headers:{"Content-Type" : "application/json"}})

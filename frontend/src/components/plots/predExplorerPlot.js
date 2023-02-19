@@ -17,7 +17,6 @@ const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) =>
     const xScale = useMemo(() => {
         if(distData.length > 0){
             let maxArr = distData.flatMap(m => m[1]).map(m => m.bin)
-            console.log(maxArr,d3.max(maxArr))
             return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
         }else{
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);

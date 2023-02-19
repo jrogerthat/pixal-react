@@ -8,14 +8,13 @@ TODO: hook this up to actually create a predicate
 export default function AddPredBox({setAddPredMode, setPredicateArray}) {
 
     const [newPred, setNewPred] = useState(null);
-
-    const handleChange = (e) => setNewPred(e.target.value)
+    const handleChange = (e) => setNewPred(e.target.value);
 
     const handleSubmit = () => {
 
         
         let formatted = {'pred': newPred}
-        console.log(formatted);
+       
         addPredicate(formatted, '/add_predicate').then((data) => {
             setPredicateArray(data||[])
         });

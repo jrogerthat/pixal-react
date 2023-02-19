@@ -23,16 +23,17 @@ function App() {
    * 
    */
 
-  
-
-  const { data } = useAxiosGet('/load_predicates');
-  // const predicateArray = useMemo(() => {
-  //   return data || [];
-  // }, [data]);
+  let {data, error, loaded} = useAxiosGet('/load_predicates');
+ 
   useEffect(() => {
-    setPredicateArray(data || [])
-  }, [data])
+   
+    if(loaded){
+      setPredicateArray(Object.entries(data))
+    }
+    
+  }, [loaded])
 
+  console.log('PREDD ARRAY',predicateArray)
 
   let colorDict = useMemo(() => {
     if(predicateArray != []){
@@ -42,7 +43,7 @@ function App() {
     }else{
       return []
     }
-  }, [data]);
+  }, [predicateArray]);
 
 
 
@@ -61,7 +62,7 @@ function App() {
         setPredicateArray={setPredicateArray}
         colorDict={colorDict}
         setHighlightPred={setHighlightPred}
-        ></PredicateNav>
+        ></PredicateNav> 
         {predEditMode ? (
           <PredicateExplore colorDict={colorDict} highlightPred={highlightPred}/>
         ): (

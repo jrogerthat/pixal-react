@@ -9,8 +9,8 @@ import plot_pred
 # from predicate_induction_main import Predicate
 import all_fun
 
-# from flask import Flask, request, 
-from predicate_induction import Predicate, PredicateInduction, Anomaly, infer_dtypes, encode_data, get_predicates_from_data
+# from flask import Flask, request, session
+from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 
 from flask import Flask
 
@@ -48,17 +48,17 @@ def index():
 @api.route('/load_predicates')
 def load_predicates():
     test = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
-    print(test)
+    # print(test)
     return test
 
 
 @api.route('/get_pred_dis')
-def get_pred_hist():
+def get_pred_dis():
 
     pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
     all_fun.save_predicate_id(0, predicate_id_path)
 
-    return all_fun.get_pred_distribution_data(all.feat_val, pred)
+    return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
 @api.route('/get_selected_data')
 def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
@@ -121,7 +121,7 @@ def add_predicate():
     return predicates
 
 @api.route('/edit_predicate', methods=['POST'])
-def edit_predicate():
+def edit_predicate(predicate_id, negate=False, attribute_values=None):
     pass
 
 @api.route('/delete_predicate', methods=['POST'])

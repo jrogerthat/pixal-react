@@ -10,7 +10,7 @@ export default function BasicDrop({predEditMode, setPredEditMode}) {
   
   const options = [{display: 'Explore and Edit Predicates', bool: true},{display: 'Explore Explanations', bool: false}]
 
-  console.log(predEditMode, options.filter(f => f.bool === predEditMode))
+  
   
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

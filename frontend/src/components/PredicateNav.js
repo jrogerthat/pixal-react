@@ -8,10 +8,6 @@ function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, pred
 
   const [addPredMode, setAddPredMode] = useState(false);
 
-  const handleHighlight = (p) => {
-    setHighlightPred(p)
-    console.log('NEW COLOR', p);
-  }
 
   return (
     <div className="pred-exp-nav">
@@ -27,14 +23,12 @@ function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, pred
       }
       <div>
         {
-          Object.entries(predicateArray).map(p => (
+          predicateArray.map(p => (
            <PredicateComp
            key={`pred-edir-${p[0]}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
            predEditMode={predEditMode}
-          //  onMouseEnter={() => handleHighlight(p[0])}
-          //  onMouseLeave={() => handleHighlight(null)}
            />
           ))
         }

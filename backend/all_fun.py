@@ -229,7 +229,8 @@ def get_pred_distribution_data(feature_values, all_predicates):
         
         job[k] = pred_val_array
     
-    return {'data_distributions': job, 'feature_domains': domains}
+    # return {'data_distributions': job, 'feature_domains': domains}
+    return job
 
 
 
