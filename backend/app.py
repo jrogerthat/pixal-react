@@ -107,5 +107,6 @@ def delete_predicate():
 def copy_predicate():
     pass
 
+
 if __name__ == "__main__":
     api.run(host='localhost',port=5000)
