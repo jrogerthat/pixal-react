@@ -21,12 +21,12 @@ const useAxiosGet = (url) => {
 
 // THIS THROWS A 505 ERROR
 // {"State": ["Vermont"], "Segment": ["Corporate"]}
-const addPredicate = (dataOb) => {
+const addPredicate = (dataOb, url) => {
   
   console.log(dataOb);
   // useEffect(() => {
   axios  
-    .post('/add_predicate', JSON.stringify(dataOb), {headers:{"Content-Type" : "application/json"}})
+    .post(url, JSON.stringify(dataOb), {headers:{"Content-Type" : "application/json"}})
     .then((response) => console.log(response))
     .catch((error) => console.log(error.response))
     // .finally(() => setLoaded(true));

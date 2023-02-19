@@ -15,8 +15,8 @@ export default function AddPredBox({setAddPredMode}) {
 
         
         let formatted = {'pred': newPred}
-        console.log(formatted)
-        addPredicate(formatted)
+        console.log(formatted);
+        addPredicate(formatted, '/add_predicate');
         setNewPred(null);
         setAddPredMode(null);
         

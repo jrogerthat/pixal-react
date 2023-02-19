@@ -88,7 +88,10 @@ def app_add_predicates():
     return json.dumps(res)
 
 @api.route('/add_predicate', methods=['POST'])
-def add_predicate(pred):
-    print(pred)
-    return edit_predicates.save_predicate_data(data_path, 'augmented_superstore_predicates.json')
+def add_predicate():
+    test = request.json['pred']
+    print(test)
+    # return edit_predicates.save_predicate_data(data_path, 'augmented_superstore_predicates.json')
+    return test
+
 
