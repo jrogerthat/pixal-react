@@ -27,7 +27,7 @@ const addPredicate = (dataOb, url) => {
   // useEffect(() => {
   axios  
     .post(url, JSON.stringify(dataOb), {headers:{"Content-Type" : "application/json"}})
-    .then((response) => console.log(response))
+    .then((response) => console.log('response!!',response.data))
     .catch((error) => console.log(error.response))
     // .finally(() => setLoaded(true));
   // }, []);

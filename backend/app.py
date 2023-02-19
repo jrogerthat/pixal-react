@@ -76,6 +76,8 @@ def get_selected_data():
     # }
 
 
+  '{"State": ["Vermont"], "Segment": ["Corporate"]}'
+
 """
 These below are work in progress!
 """
@@ -86,6 +88,7 @@ def app_add_predicates():
     feature_values = request_data['feature_values']
     res = all.add_predicates(feature_values)
     return json.dumps(res)
+
 
 @api.route('/add_predicate', methods=['POST'])
 def add_predicate():

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css';
 import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
@@ -15,15 +15,23 @@ function App() {
    // new line start
   const [predEditMode, setPredEditMode] = useState(true);
   const [highlightPred, setHighlightPred] = useState(null);
+  
+  const [selectedPredicateData, setSelectedPredData] = useState(null);
+  const [predicateArray, setPredicateArray] = useState([])
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
    * 
    */
 
+  
+
   const { data } = useAxiosGet('/load_predicates');
-  const predicateArray = useMemo(() => {
-    return data || [];
-  }, [data]);
+  // const predicateArray = useMemo(() => {
+  //   return data || [];
+  // }, [data]);
+  useEffect(() => {
+    setPredicateArray(data || [])
+  }, [data])
 
 
   let colorDict = useMemo(() => {
@@ -50,6 +58,7 @@ function App() {
         setPredEditMode={setPredEditMode} 
         predEditMode={predEditMode} 
         predicateArray={predicateArray}
+        setPredicateArray={setPredicateArray}
         colorDict={colorDict}
         setHighlightPred={setHighlightPred}
         ></PredicateNav>

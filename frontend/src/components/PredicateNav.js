@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import AddPredBox from './addPredicateBox';
 import PredicateComp from './predicateComponent';
 
-function PredicateNav({predicateArray, setHighlightPred, predEditMode}) {
+function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, predEditMode}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
 
@@ -23,7 +23,7 @@ function PredicateNav({predicateArray, setHighlightPred, predEditMode}) {
       }
       
       {
-        addPredMode && <AddPredBox setAddPredMode={setAddPredMode} />
+        addPredMode && <AddPredBox setAddPredMode={setAddPredMode} setPredicateArray={setPredicateArray}  />
       }
       <div>
         {

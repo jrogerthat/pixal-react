@@ -1,11 +1,11 @@
 import { Button, TextField } from '@mui/material';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { addPredicate } from '../axiosUtil';
 
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function AddPredBox({setAddPredMode}) {
+export default function AddPredBox({setAddPredMode, setPredicateArray}) {
 
     const [newPred, setNewPred] = useState(null);
 
@@ -16,7 +16,10 @@ export default function AddPredBox({setAddPredMode}) {
         
         let formatted = {'pred': newPred}
         console.log(formatted);
-        addPredicate(formatted, '/add_predicate');
+        addPredicate(formatted, '/add_predicate').then((data) => {
+            setPredicateArray(data||[])
+        });
+        
         setNewPred(null);
         setAddPredMode(null);
         
