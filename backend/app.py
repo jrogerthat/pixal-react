@@ -15,7 +15,7 @@ from predicate_induction import Predicate, PredicateInduction, Anomaly, infer_dt
 from flask import Flask
 
 api = Flask(__name__)
-
+path = os.path.dirname(os.path.realpath(__file__))
 my_path = 'static/data'
 
 colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#7f7f7f", "#17becf", "#bcbd22"]
@@ -34,7 +34,8 @@ features = list(feature_test.keys())
 num_bins = 100
 
 session_id = "49324312"
-predicates_path = f'static/data/predicates_{session_id}.pkl'
+# predicates_path = f'static/data/predicates_{session_id}.pkl'
+predicates_path = 'augmented_superstore_predicates.json'
 predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 
 """
@@ -83,6 +84,17 @@ def app_add_predicates():
     feature_values = request_data['feature_values']
     res = all.add_predicates(feature_values)
     return json.dumps(res)
+
+def load_predicate_data(path, predicates_path):
+    print("reaching predicates", f"{path}/{predicates_path}")
+    with open(f"{path}/{predicates_path}", 'rb') as f:
+        predicates = json.load(f)
+    return predicates
+
+def save_predicates(path, predicates, predicates_path):
+    with open(f"{path}/{predicates_path}", 'wb') as f:
+        json.dump(predicates, f)
+    return predicates
 
 @api.route('/add_predicate', methods=['POST'])
 def add_predicate(attribute_values):
