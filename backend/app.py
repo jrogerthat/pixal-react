@@ -10,7 +10,7 @@ import plot_pred
 import all
 
 from flask import Flask, request, session
-from predicate_induction import Predicate, PredicateInduction, Anomaly, infer_dtypes, encode_data, get_predicates_from_data
+from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 
 from flask import Flask
 
@@ -108,7 +108,7 @@ def add_predicate(attribute_values):
     return predicates
 
 @api.route('/edit_predicate', methods=['POST'])
-def edit_predicate():
+def edit_predicate(predicate_id, negate=False, attribute_values=None):
     pass
 
 @api.route('/delete_predicate', methods=['POST'])
