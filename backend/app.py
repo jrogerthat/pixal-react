@@ -6,9 +6,11 @@ import pandas as pd
 # from predicates import PredicateControl 
 import edit_predicates
 import plot_pred
-from predicate_induction_main import Predicate
+# from predicate_induction_main import Predicate
 import all
 
+from flask import Flask, request, session
+from predicate_induction import PredicateInduction, Anomaly, infer_dtypes, encode_data, get_predicates_from_data
 
 from flask import Flask
 
@@ -56,25 +58,20 @@ def get_pred_hist():
     return all.get_pred_distribution_data(all.feat_val, pred)
 
 @api.route('/get_selected_data')
-def get_selected_data():
-    """
-    Need to think about this function. Proposed impolementation:
-    send the id of the predicate. op send a feature.
-    keep track of predicate, feature, if feature, explanation.
-
-    """
-    return "test"
-
-    # {'predicate': '01',
-    # predicate_scores : {pred: [], other: []
-    # 'feature_data': []
-    # feature: {feature: '', value: ''}
-
-
-    # }
-    
-    # }
-
+def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
+    predicate_induction = session['predicate']['predicate_induction']
+    predicate = session['predicate']['predicates'][predicate_id]
+    predicate_data = {
+        'predicate_id': predicate_id,
+        'predicate_scores': predicate.get_score_dist_data(predicate_induction.target, num_bins=num_score_bins).to_dict(), # [{'bin': 10, 'density': 0.23, 'predicate': False}, ...]
+        'attribute_score_data': {
+            attr: predicate.pivot(attr).get_plot_data(predicate_induction.target, num_bins=num_pivot_bins).to_dict() for attr in predicate.predicate_attributes
+        }, # {'sales': [{'sales_bin': 10, 'avg_score': 100}, ...], ...}
+        'attribute_data': {
+            {attr: {num_attr: predicate.pivot(attr).get_plot_data(predicate_induction.target, num_bins=num_pivot_bins).to_dict() for num_attr in session['data']['dtypes']['numeric']} for attr in predicate.predicate_attributes}
+        }, # {'sales': {'profit': [{'sales_bin': 10, 'avg_profit': 32.49}, ...], ...}, ...}
+    }
+    return predicate_data
 
 """
 These below are work in progress!
@@ -92,3 +89,5 @@ def add_predicate(pred):
     print(pred)
     return edit_predicates.save_predicate_data(data_path, 'augmented_superstore_predicates.json')
 
+if __name__ == "__main__":
+    api.run(host='localhost',port=5000)
