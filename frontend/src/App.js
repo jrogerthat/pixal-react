@@ -58,12 +58,15 @@ function App() {
         predicateArray={predicateArray}
         setPredicateArray={setPredicateArray}
         setHighlightPred={setHighlightPred}
+        hiddenPreds={hiddenPreds}
+        setHiddenPreds={setHiddenPreds}
         ></PredicateNav> 
         {predEditMode ? (
           <PredicateExplore 
           highlightPred={highlightPred} 
           predicateArray={predicateArray}
           predicateDistributions={predicateDistributions}
+          hiddenPreds={hiddenPreds}
           />
         ): (
           <Pixalate/>

@@ -1,12 +1,19 @@
 import * as d3 from "d3";
 import { useEffect, useMemo, useRef } from "react";
 
-const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred}) => {
+const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred, hiddenPreds}) => {
     
 
     const axesRef = useRef(null);
 
-    console.log('predd',predicateArray)
+    let filteredDist = [...distData].filter(f => {
+        if(hiddenPreds.length === 0){
+            return f
+        }else{
+            return hiddenPreds.indexOf(f[0]) === -1
+        }
+       
+    });
 
     const yScale = useMemo(() => {
         if(distData.length > 0){
@@ -43,7 +50,7 @@ const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred
     return(
         <svg width={width} height={height} >
             {
-                distData.length > 0 && distData.map((p, i) => (
+                filteredDist.length > 0 && filteredDist.map((p, i) => (
                     <PredicateGroup 
                     key={`pred-${i+1}`} 
                     predData={p[1]} 

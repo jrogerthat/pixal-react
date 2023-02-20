@@ -1,24 +1,28 @@
 import { Button, TextField } from '@mui/material';
-import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
-import { useEffect, useState } from 'react'
+
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
+import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
+
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
+import { useState } from 'react';
 
 const HideButton = ({predicateData, hiddenPreds, setHiddenPreds}) => {
-    
+    const [hidden, setHidden] = useState(false);
+
     const handleHides = () => {
-       
-        if(hiddenPreds.indexOf(predicateData.id) === -1){
-            let newPreds = [...hiddenPreds].push(predicateData.id);
-            setHiddenPreds(newPreds);
-            console.log('add hide', hiddenPreds);
+     
+        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
+            setHiddenPreds(oldArray => [...oldArray, predicateData.id]);
+            setHidden(true);
         }else{
             let newPreds = [...hiddenPreds].filter(f => f != predicateData.id);
             setHiddenPreds(newPreds);
-            console.log('show pred', hiddenPreds);
+            setHidden(false);
         }
     }
+
+   
 
     return(
         <Button
@@ -30,7 +34,9 @@ const HideButton = ({predicateData, hiddenPreds, setHiddenPreds}) => {
             marginRight: 5
         }}
         onClick={handleHides}
-        ><VisibilityOffTwoToneIcon />
+        >{
+            hidden ? <VisibilityTwoToneIcon /> : <VisibilityOffTwoToneIcon />
+        }
         </Button>
     )
 }

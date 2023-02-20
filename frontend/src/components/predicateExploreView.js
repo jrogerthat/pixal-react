@@ -5,40 +5,21 @@ import { PredExplorePlot } from './plots/predExplorerPlot';
 
 
 
-function PredicateExplore({highlightPred, predicateArray, predicateDistributions}) {
+function PredicateExplore({highlightPred, predicateArray, predicateDistributions, hiddenPreds}) {
 
-  // const [predicateDistributions, setPredicateDistributions] = useState([]);
-
-  // let {data, error, loaded} = useAxiosGet('/get_pred_dis');
-  // useEffect(()=> {
-  //   if(loaded){
-  //     setPredicateDistributions(Object.entries(data))
-  //   }
-  // }, [loaded])
-  // useEffect(() => {
-   
-  //   console.log('PREDICATE ARRAY', predicateArray);
-
-  //   let {data, error, loaded} = useAxiosGet('/get_pred_dis');
-  //   useEffect(()=> {
-  //     if(loaded){
-  //       setPredicateDistributions(Object.entries(data))
-  //     }
-  //   }, [loaded])
-    
-  // }, [predicateArray])
-
-
-  // useGetDistributions().then((data)=> setPredicateDistributions(Object.entries(data.data)));
- 
   
- 
-
   return (
     <div className="pred-exp-view">
 
       <div className="pred-dist-plot">
-        <PredExplorePlot width={900} height={600} distData={predicateDistributions} predicateArray={predicateArray} highlightPred={highlightPred} />
+        <PredExplorePlot 
+        width={900} 
+        height={600} 
+        distData={predicateDistributions} 
+        predicateArray={predicateArray} 
+        highlightPred={highlightPred} 
+        hiddenPreds={hiddenPreds}
+        />
       </div>
     
     </div>
