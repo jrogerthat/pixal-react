@@ -1,17 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import './App.css';
 import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Pixalate from './components/pixalateView';
 import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
-import { useAxiosGet } from './axiosUtil';
+import { useAxiosGet, useGetAxiosAsync } from './axiosUtil';
 import formatPredicateArray from './dataFormating';
+import { DataContext } from './context';
+
+
 
 function App() {
-
+  
    // new line start
   const [predEditMode, setPredEditMode] = useState(true);
   const [highlightPred, setHighlightPred] = useState(null);
@@ -21,6 +23,9 @@ function App() {
   const [predicateDistributions, setPredicateDistributions] = useState([]);
   
   const [hiddenPreds, setHiddenPreds] = useState([]);
+
+  const [{predicateArrayTest}, dispatch] = useContext(DataContext);
+
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
    * 
@@ -38,28 +43,37 @@ function App() {
       let arr = formatPredicateArray(data.pred_list);
       setPredicateArray(arr)
       setPredicateDistributions(Object.entries(data.pred_dist))
-      
+      let fit = Object.entries(data.pred_dist)
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", fit})
     }
     
   }, [loaded])
 
+  
+
+
+  useEffect(()=> {
+    console.log('pred array test changed!!', predicateArrayTest)
+  }, [predicateArrayTest])
+
 
   return (
+  
     <div className="App">
-     
       <AppBar position="static" sx = {{ background: 'white', padding: "10px", flexDirection:"row"}}>
         <Typography variant="h6" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
         <BasicDrop predEditMode={predEditMode} setPredEditMode={setPredEditMode} />
       </AppBar>
       <div className="main-wrapper">
         <PredicateNav 
-        setPredEditMode={setPredEditMode} 
-        predEditMode={predEditMode} 
-        predicateArray={predicateArray}
-        setPredicateArray={setPredicateArray}
-        setHighlightPred={setHighlightPred}
-        hiddenPreds={hiddenPreds}
-        setHiddenPreds={setHiddenPreds}
+          setPredEditMode={setPredEditMode} 
+          predEditMode={predEditMode} 
+          predicateArray={predicateArray}
+          setPredicateArray={setPredicateArray}
+          setHighlightPred={setHighlightPred}
+          hiddenPreds={hiddenPreds}
+          setHiddenPreds={setHiddenPreds}
+          setSelectedPredData={setSelectedPredData}
         ></PredicateNav> 
         {predEditMode ? (
           <PredicateExplore 
@@ -69,11 +83,13 @@ function App() {
           hiddenPreds={hiddenPreds}
           />
         ): (
-          <Pixalate/>
+          <Pixalate 
+          selectedPredicateData={selectedPredicateData} 
+          setSelectedPredData={setSelectedPredData} />
         )}
       </div>
-    
     </div>
+   
   );
 }
 

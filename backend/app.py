@@ -9,6 +9,7 @@ import plot_pred
 # from predicate_induction_main import Predicate
 import all_fun
 from predicate_induction import Predicate, PredicateInduction, infer_dtypes
+import random
 
 from flask import Flask
 
@@ -36,12 +37,25 @@ session_id = "49324312"
 predicates_path = 'augmented_superstore_predicates.json'
 predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 
-"""
+""" 
 These work!
 """
 @api.route("/")
 def index():
-    return "WORKING"
+   pass
+
+@api.route("/load_test_score")
+def load_test_score():
+    job = []
+    with open(f"static/data/test_pred_score.json", 'rb') as f:
+        scores = json.load(f)
+        for ob in scores["scores_test"]:
+            print(ob)
+            ob["density"] = random.randrange(0, 8) * .1
+            job.append(ob)
+    finob = {}
+    finob["predicate_scores"] = job
+    return finob
 
 @api.route('/load_predicates_dist_list')
 def load_predicates_dist_list():

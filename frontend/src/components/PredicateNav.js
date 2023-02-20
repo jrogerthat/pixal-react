@@ -1,14 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import '../App.css';
 import Button from '@mui/material/Button';
 import AddPredBox from './addPredicateBox';
 import PredicateComp from './predicateComponent';
+import { DataContext } from '../context';
 
 function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
 
+//  const [{contacts}, dispatch] = useContext(DataContext)
 
+//  console.log('CONTACTS', contacts)
+ 
   return (
     <div className="pred-exp-nav">
       {

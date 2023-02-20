@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef } from "react";
 
 const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred, hiddenPreds}) => {
     
-
     const axesRef = useRef(null);
 
     let filteredDist = [...distData].filter(f => {
@@ -12,7 +11,6 @@ const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred
         }else{
             return hiddenPreds.indexOf(f[0]) === -1
         }
-       
     });
 
     const yScale = useMemo(() => {
