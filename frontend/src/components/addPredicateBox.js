@@ -1,33 +1,33 @@
 import { Button, TextField } from '@mui/material';
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAddPredicate } from '../axiosUtil';
+import { DataContext } from '../context';
 import formatPredicateArray from '../dataFormating';
-
-
 
 /*
 TODO: hook this up to actually create a predicate
 */
-function AddPredBox({setAddPredMode, setPredicateArray}){
+function AddPredBox({setAddPredMode}){
 
     const [newPred, setNewPred] = useState(null);
     const handleChange = (e) => setNewPred(e.target.value);
+    const [, dispatch] = useContext(DataContext);
 
     const useHandleSubmit = () => {
 
         let formatted = {'pred': newPred}
-       
+
         // let data = useAddPredicate(formatted)
-        
-        // console.log("WOKRING ?", data)
         
         let testArray = {"0": {"Sub-Category": ["Tables"]}, "1": {"Sub-Category": ["Machines"]}}
         
-        let shift = formatPredicateArray(testArray)
+        let newPredicate = formatPredicateArray(testArray)
 
         setNewPred(null);
         setAddPredMode(null);
-        setPredicateArray(shift);
+
+        dispatch({ type: "ADD_PREDICATE", newPredicate})
+       
         
     }
 

@@ -26,6 +26,14 @@ async function useGetDistributions(){
   return data;
 }
 
+async function useGetAxiosAsync(url){
+
+  let data = await axios.get(url)
+  console.log('data in axios dist',data);
+
+  return data;
+}
+
 
 
 // THIS THROWS A 505 ERROR
@@ -52,5 +60,5 @@ async function useAddPredicate (dataOb){
   return data;
 }
 
-export {useAxiosGet, useAddPredicate, useGetDistributions}
+export {useAxiosGet, useAddPredicate, useGetDistributions, useGetAxiosAsync}
 

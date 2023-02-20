@@ -1,35 +1,35 @@
 import * as d3 from "d3";
-import { useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
+import { DataContext } from "../../context";
 
-const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred, hiddenPreds}) => {
+const PredExplorePlot = ({width, height, highlightPred, hiddenPreds}) => {
     
-
     const axesRef = useRef(null);
+    const [{predicateArray, predicateDistributionArray}, dispatch] = useContext(DataContext);
 
-    let filteredDist = [...distData].filter(f => {
+    let filteredDist = [...predicateDistributionArray].filter(f => {
         if(hiddenPreds.length === 0){
             return f
         }else{
             return hiddenPreds.indexOf(f[0]) === -1
         }
-       
     });
 
     const yScale = useMemo(() => {
-        if(distData.length > 0){
-            let maxArr =  distData.flatMap(m => m[1]).map(m => +m.density);
+        if(predicateDistributionArray.length > 0){
+            let maxArr =  predicateDistributionArray.flatMap(m => m[1]).map(m => +m.density);
             return d3.scaleLinear().range([(height-50), 0]).domain([0, d3.max(maxArr)]);
         }else{
              return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [distData, height]);
+        }}, [predicateDistributionArray, height]);
 
     const xScale = useMemo(() => {
-        if(distData.length > 0){
-            let maxArr = distData.flatMap(m => m[1]).map(m => m.bin)
+        if(predicateDistributionArray.length > 0){
+            let maxArr = predicateDistributionArray.flatMap(m => m[1]).map(m => m.bin)
             return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
         }else{
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [distData, width]);
+        }}, [predicateDistributionArray, width]);
    
 
       // Render the X axis using d3.js, not react
