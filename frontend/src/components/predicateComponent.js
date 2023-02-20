@@ -8,7 +8,7 @@ TODO: hook this up to actually create a predicate
 */
 export default function PredicateComp({predicateData, setHighlightPred, predEditMode}) {
 
-    const features = Object.entries(predicateData[1])
+    const features = Object.entries(predicateData.predicate)
 
     const isDate = function(date) {
         return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));

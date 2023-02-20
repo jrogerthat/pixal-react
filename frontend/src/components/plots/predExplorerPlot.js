@@ -1,10 +1,12 @@
 import * as d3 from "d3";
 import { useEffect, useMemo, useRef } from "react";
 
-const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) => {
-   
+const PredExplorePlot = ({distData, width, height, predicateArray, highlightPred}) => {
+    
 
     const axesRef = useRef(null);
+
+    console.log('predd',predicateArray)
 
     const yScale = useMemo(() => {
         if(distData.length > 0){
@@ -37,18 +39,18 @@ const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) =>
         svgElement.append("g").call(yAxisGenerator);
     }, [xScale, yScale, height]);
     
-  
+   
     return(
         <svg width={width} height={height} >
             {
-                distData.length > 0 && distData.map(p => (
+                distData.length > 0 && distData.map((p, i) => (
                     <PredicateGroup 
-                    key={p[0]} 
+                    key={`pred-${i+1}`} 
                     predData={p[1]} 
                     xScale={xScale} 
                     yScale={yScale} 
                     height={height} 
-                    color={colorDict.filter(f=> +p[0] === +f.id)[0]}
+                    color={predicateArray.filter(f=> +p[0] === +f.id)[0]}
                     highlightPred={highlightPred} />
                 ))
             }
@@ -63,6 +65,7 @@ const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) =>
 }
 
 const PredicateGroup = ({predData, yScale, xScale, height, color, highlightPred}) => {
+
    let calcColor = highlightPred != null && highlightPred != color.id ? 'rgba(211,211,211, .2)' : color.color
     return(
         <g>

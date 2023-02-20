@@ -8,7 +8,7 @@ import Pixalate from './components/pixalateView';
 import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
 import { useAxiosGet } from './axiosUtil';
-import randomColor from 'randomcolor'
+import formatPredicateArray from './dataFormating';
 
 function App() {
 
@@ -17,34 +17,30 @@ function App() {
   const [highlightPred, setHighlightPred] = useState(null);
   
   const [selectedPredicateData, setSelectedPredData] = useState(null);
-  const [predicateArray, setPredicateArray] = useState([])
+  const [predicateArray, setPredicateArray] = useState([]);
+  const [predicateDistributions, setPredicateDistributions] = useState([]);
+  // const [predicateDistributions, setPredicateDistributions] = useState([]);
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
    * 
    */
 
-  let {data, error, loaded} = useAxiosGet('/load_predicates');
+  //TODO: Creat new ends points for what view you are in. 
+
+  /**
+   * This loads an object with pred_dist (list of predicate distribtutions) and pred_list (pred_list)
+   */
+  let {data, error, loaded} = useAxiosGet('/load_predicates_dist_list');
  
   useEffect(() => {
-   
     if(loaded){
-      setPredicateArray(Object.entries(data))
+      let arr = formatPredicateArray(data.pred_list);
+      setPredicateArray(arr)
+      setPredicateDistributions(Object.entries(data.pred_dist))
+      console.log(data)
     }
     
   }, [loaded])
-
-  console.log('PREDD ARRAY',predicateArray)
-
-  let colorDict = useMemo(() => {
-    if(predicateArray != []){
-      return Object.entries(predicateArray).map(c => {
-        return {id: c[0], color: randomColor()}
-      })
-    }else{
-      return []
-    }
-  }, [predicateArray]);
-
 
 
   return (
@@ -60,11 +56,14 @@ function App() {
         predEditMode={predEditMode} 
         predicateArray={predicateArray}
         setPredicateArray={setPredicateArray}
-        colorDict={colorDict}
         setHighlightPred={setHighlightPred}
         ></PredicateNav> 
         {predEditMode ? (
-          <PredicateExplore colorDict={colorDict} highlightPred={highlightPred}/>
+          <PredicateExplore 
+          highlightPred={highlightPred} 
+          predicateArray={predicateArray}
+          predicateDistributions={predicateDistributions}
+          />
         ): (
           <Pixalate/>
         )}

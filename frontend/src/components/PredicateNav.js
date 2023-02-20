@@ -25,7 +25,7 @@ function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, pred
         {
           predicateArray.map(p => (
            <PredicateComp
-           key={`pred-edir-${p[0]}`} 
+           key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
            predEditMode={predEditMode}

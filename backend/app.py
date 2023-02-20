@@ -45,12 +45,23 @@ These work!
 def index():
     return "WORKING"
 
+@api.route('/load_predicates_dist_list')
+def load_predicates_dist_list():
+    job = {}
+    job['pred_list'] = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
+
+    pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
+    all_fun.save_predicate_id(0, predicate_id_path)
+
+    job['pred_dist'] = all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
+
+    return job
+
 @api.route('/load_predicates')
 def load_predicates():
     test = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
     # print(test)
     return test
-
 
 @api.route('/get_pred_dis')
 def get_pred_dis():
@@ -85,6 +96,7 @@ These below are work in progress!
 @api.route("/add_predicates", methods=['PUT'])
 def app_add_predicates():
     request_data = request.get_json(force=True)
+    print('request_data', request_data)
     feature_values = request_data['feature_values']
     res = all_fun.add_predicates(feature_values)
     return json.dumps(res)
@@ -111,6 +123,7 @@ def save_predicates(path, predicates, predicates_path):
 @api.route('/add_predicate', methods=['POST'])
 def add_predicate():
     attribute_values = request.json['pred']
+    print('VALUES', attribute_values)
     predicate = Predicate(session['data']['data'], session['data']['dtypes'], attribute_values)
     predicate_id = len(session['predicate']['predicates'])
     session['predicate']['predicates'].append(predicate)
