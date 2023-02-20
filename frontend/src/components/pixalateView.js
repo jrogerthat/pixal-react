@@ -3,16 +3,14 @@ import '../App.css';
 import Button from '@mui/material/Button';
 import { PredScorePlot } from './plots/predScorePlot';
 
-function Pixalate({colorDict}) {
-
-
+function Pixalate() {
 
   return (
     <div className="pixalate">
       
         <div className="l-top">
           <div>score</div>
-          <PredScorePlot PredData={[]} width={300} height={300} colorDict={colorDict} />
+          <PredScorePlot PredData={[]} width={300} height={300} />
           </div>
         <div className="r-top">
           <div>marks</div>

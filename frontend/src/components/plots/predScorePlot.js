@@ -1,27 +1,30 @@
 import * as d3 from "d3";
-import { useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
+import { DataContext } from "../../context";
 
-const PredScorePlot = ({PredData, width, height, colorDict}) => {
+const PredScorePlot = ({width, height}) => {
    
-
+    const [{selectedPredicate, predicateArray}, dispatch] = useContext(DataContext);
     const axesRef = useRef(null);
 
+    console.log(selectedPredicate.predicate_scores)
+
     const yScale = useMemo(() => {
-        if(PredData.length > 0){
+        if(selectedPredicate.predicate_scores > 0){
             // let maxArr =  distData.flatMap(m => m[1]).map(m => +m.density);
             // return d3.scaleLinear().range([(height-50), 0]).domain([0, d3.max(maxArr)]);
         }else{
              return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [PredData, height]);
+        }}, [selectedPredicate.predicate_scores, height]);
 
     const xScale = useMemo(() => {
-        if(PredData.length > 0){
+        if(selectedPredicate.predicate_scores.length > 0){
             // let maxArr = distData.flatMap(m => m[1]).map(m => m.bin)
             // console.log(maxArr,d3.max(maxArr))
             // return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
         }else{
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [PredData, width]);
+        }}, [selectedPredicate.predicate_scores, width]);
    
 
       // Render the X axis using d3.js, not react

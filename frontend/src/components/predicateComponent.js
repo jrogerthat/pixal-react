@@ -1,18 +1,19 @@
+import axios from 'axios';
+import { useContext } from 'react';
+import { useGetAxiosAsync } from '../axiosUtil';
+import { DataContext } from '../context';
 import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 
 /*
 TODO: hook this up to actually create a predicate
 */
 export default function PredicateComp({predicateData, setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
-
+ 
     const features = Object.entries(predicateData.predicate)
-
-    const isDate = function(date) {
-        return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    }
-
+    const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+    const [, dispatch] = useContext(DataContext);
+    
     const featureValues = (valArr) => {
-       
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
             return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
             </span></div>
@@ -35,11 +36,22 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
         }
     }
 
+    let handleClick = () => {
+        if(!predEditMode){
+            axios.get("/load_test_score").then((data)=> {
+                let predScores
+                dispatch({type: "UPDATE_SELECTED_PREDICATE", predScores})
+            })
+        }
+    }
+
     return (
         <div className="pred-wrap"
             style={{opacity: isHidden()}}
+           
             onMouseEnter={() => setHighlightPred(predicateData.id)}
             onMouseLeave={() => setHighlightPred(null)}
+            onClick={handleClick}
         >
             {
                 features.map((f, i)=> (
@@ -54,9 +66,11 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
                     <InvertButton />
                     {/* <ColorLensTwoToneIcon /> */}
                     <DeleteButton />
-                    <HideButton predicateData={predicateData} hiddenPreds={hiddenPreds} setHiddenPreds={setHiddenPreds}/>
+                    <HideButton 
+                    predicateData={predicateData} 
+                    hiddenPreds={hiddenPreds} 
+                    setHiddenPreds={setHiddenPreds}/>
 
-                  
                     </div>
                 )
             }

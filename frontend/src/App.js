@@ -16,15 +16,10 @@ function App() {
   
    // new line start
   const [predEditMode, setPredEditMode] = useState(true);
-  const [highlightPred, setHighlightPred] = useState(null);
-  
-  const [selectedPredicateData, setSelectedPredData] = useState(null);
-  const [predicateArray, setPredicateArray] = useState([]);
-  const [predicateDistributions, setPredicateDistributions] = useState([]);
-  
+  const [highlightPred, setHighlightPred] = useState(null);  
   const [hiddenPreds, setHiddenPreds] = useState([]);
 
-  const [{predicateArrayTest}, dispatch] = useContext(DataContext);
+  const [{predicateArray, selectedPredicate}, dispatch] = useContext(DataContext);
 
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
@@ -41,24 +36,15 @@ function App() {
   useEffect(() => {
     if(loaded){
       let arr = formatPredicateArray(data.pred_list);
-      setPredicateArray(arr)
-      setPredicateDistributions(Object.entries(data.pred_dist))
-      let fit = Object.entries(data.pred_dist)
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", fit})
+      let pred_dist = Object.entries(data.pred_dist)
+      let predData = {'pred_list': arr, 'pred_dist': pred_dist}
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
     }
     
   }, [loaded])
 
-  
-
-
-  useEffect(()=> {
-    console.log('pred array test changed!!', predicateArrayTest)
-  }, [predicateArrayTest])
-
 
   return (
-  
     <div className="App">
       <AppBar position="static" sx = {{ background: 'white', padding: "10px", flexDirection:"row"}}>
         <Typography variant="h6" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
@@ -68,24 +54,17 @@ function App() {
         <PredicateNav 
           setPredEditMode={setPredEditMode} 
           predEditMode={predEditMode} 
-          predicateArray={predicateArray}
-          setPredicateArray={setPredicateArray}
           setHighlightPred={setHighlightPred}
           hiddenPreds={hiddenPreds}
           setHiddenPreds={setHiddenPreds}
-          setSelectedPredData={setSelectedPredData}
         ></PredicateNav> 
         {predEditMode ? (
           <PredicateExplore 
           highlightPred={highlightPred} 
-          predicateArray={predicateArray}
-          predicateDistributions={predicateDistributions}
           hiddenPreds={hiddenPreds}
           />
         ): (
-          <Pixalate 
-          selectedPredicateData={selectedPredicateData} 
-          setSelectedPredData={setSelectedPredData} />
+          <Pixalate />
         )}
       </div>
     </div>

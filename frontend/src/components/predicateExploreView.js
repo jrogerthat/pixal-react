@@ -5,7 +5,7 @@ import { PredExplorePlot } from './plots/predExplorerPlot';
 
 
 
-function PredicateExplore({highlightPred, predicateArray, predicateDistributions, hiddenPreds}) {
+function PredicateExplore({highlightPred, hiddenPreds}) {
 
   
   return (
@@ -15,8 +15,6 @@ function PredicateExplore({highlightPred, predicateArray, predicateDistributions
         <PredExplorePlot 
         width={900} 
         height={600} 
-        distData={predicateDistributions} 
-        predicateArray={predicateArray} 
         highlightPred={highlightPred} 
         hiddenPreds={hiddenPreds}
         />

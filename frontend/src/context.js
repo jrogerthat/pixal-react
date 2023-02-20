@@ -5,7 +5,7 @@ import { useAxiosGet, useGetAxiosAsync } from "./axiosUtil";
 export const DataContext = createContext();
 
 const initialState = {
-  predicateArrayTest: [],
+  predicateArray: [],
   predicateDistributionArray: [],
   selectedPredicate:null
 };
@@ -14,19 +14,16 @@ const reducer = (state, action) => {
 
   switch (action.type) {
     case "SET_PREDICATE_EXPLORE_DATA":
-        
-        return {...state, predicateArrayTest: action.fit}
+        return {...state, predicateArray: action.predData.pred_list, predicateDistributionArray: action.predData.pred_dist}
 
-    case "SET_DATA":
-        console.log('set data called')
-      return {...state};
-    case "START":
+    case "ADD_PREDICATE":
+        console.log('NEED TO FILL THIS OUT')
       return {
-        loading: true
+        ...state
       };
-    case "COMPLETE":
+    case "UPDATE_SELECTED_PREDICATE":
       return {
-        loading: false
+        ...state, selectedPredicate : action.selectedPredicate
       };
     default:
       throw new Error();

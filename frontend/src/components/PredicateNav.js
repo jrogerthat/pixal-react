@@ -5,13 +5,11 @@ import AddPredBox from './addPredicateBox';
 import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
 
-function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
+function PredicateNav({setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
-
-//  const [{contacts}, dispatch] = useContext(DataContext)
-
-//  console.log('CONTACTS', contacts)
+  const [{predicateArray, predicateDistributionArray}, dispatch] = useContext(DataContext);
+//
  
   return (
     <div className="pred-exp-nav">
@@ -23,7 +21,7 @@ function PredicateNav({predicateArray, setPredicateArray, setHighlightPred, pred
       }
       
       {
-        addPredMode && <AddPredBox setAddPredMode={setAddPredMode} setPredicateArray={setPredicateArray}  />
+        addPredMode && <AddPredBox setAddPredMode={setAddPredMode}  />
       }
       <div>
         {
