@@ -19,7 +19,8 @@ function App() {
   const [selectedPredicateData, setSelectedPredData] = useState(null);
   const [predicateArray, setPredicateArray] = useState([]);
   const [predicateDistributions, setPredicateDistributions] = useState([]);
-  // const [predicateDistributions, setPredicateDistributions] = useState([]);
+  
+  const [hiddenPreds, setHiddenPreds] = useState([]);
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
    * 
@@ -37,7 +38,7 @@ function App() {
       let arr = formatPredicateArray(data.pred_list);
       setPredicateArray(arr)
       setPredicateDistributions(Object.entries(data.pred_dist))
-      console.log(data)
+      
     }
     
   }, [loaded])

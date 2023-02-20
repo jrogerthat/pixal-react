@@ -1,12 +1,9 @@
-import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
-import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
-import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
-import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
+import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData, setHighlightPred, predEditMode}) {
+export default function PredicateComp({predicateData, setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
 
     const features = Object.entries(predicateData.predicate)
 
@@ -19,7 +16,7 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
             return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
             </span></div>
-        }else if(valArr.length == 1){
+        }else if(valArr.length === 1){
             return  <div className="feature-value">{` ${valArr[0]}`}</div>
         }
 
@@ -30,10 +27,12 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
         )
     }
 
+ 
+
     return (
         <div className='pred-wrap'
-           onMouseEnter={() => setHighlightPred(predicateData[0])}
-           onMouseLeave={() => setHighlightPred(null)}
+            onMouseEnter={() => setHighlightPred(predicateData.id)}
+            onMouseLeave={() => setHighlightPred(null)}
         >
             {
                 features.map((f, i)=> (
@@ -45,10 +44,12 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
             {
                 predEditMode && (
                     <div className="pred-edit-bar">
-                    <DoNotDisturbTwoToneIcon />
-                    <ColorLensTwoToneIcon />
-                    <VisibilityOffTwoToneIcon />
-                    <DeleteForeverTwoToneIcon />
+                    <InvertButton />
+                    {/* <ColorLensTwoToneIcon /> */}
+                    <DeleteButton />
+                    <HideButton predicateData={predicateData} hiddenPreds={hiddenPreds} setHiddenPreds={setHiddenPreds}/>
+
+                  
                     </div>
                 )
             }
