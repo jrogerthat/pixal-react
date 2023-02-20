@@ -22,8 +22,6 @@ const HideButton = ({predicateData, hiddenPreds, setHiddenPreds}) => {
         }
     }
 
-   
-
     return(
         <Button
         variant="outlined" 

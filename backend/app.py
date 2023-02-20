@@ -8,8 +8,6 @@ import edit_predicates
 import plot_pred
 # from predicate_induction_main import Predicate
 import all_fun
-
-# from flask import Flask, request, session
 from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 
 from flask import Flask
@@ -71,10 +69,12 @@ def get_pred_dis():
 
     return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
-@api.route('/get_selected_data')
+@api.route('/get_selected_data/<predicate_id>')
 def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
+    print('preddddd',predicate_id)
     predicate_induction = session['predicate']['predicate_induction']
     predicate = session['predicate']['predicates'][predicate_id]
+
     predicate_data = {
         'predicate_id': predicate_id,
         'predicate_scores': predicate.get_score_dist_data(predicate_induction.target, num_bins=num_score_bins).to_dict(), # [{'bin': 10, 'density': 0.23, 'predicate': False}, ...]
