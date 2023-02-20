@@ -54,6 +54,10 @@ body {
   padding:5px;
 }
 
+.pred-wrap.hidden {
+  opacity: .1;
+}
+
 .pred-wrap:hover{
   border: 1px solid rgb(42, 146, 250);
 }

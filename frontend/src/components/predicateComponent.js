@@ -27,10 +27,17 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
         )
     }
 
- 
+    let isHidden = () => {
+        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
+            return 1
+        }else{
+            return .5
+        }
+    }
 
     return (
-        <div className='pred-wrap'
+        <div className="pred-wrap"
+            style={{opacity: isHidden()}}
             onMouseEnter={() => setHighlightPred(predicateData.id)}
             onMouseLeave={() => setHighlightPred(null)}
         >
