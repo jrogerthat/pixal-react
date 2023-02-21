@@ -45,7 +45,7 @@ function Pixalate() {
       <div className="pixalate-two">
         
         
-          <div className="right">
+          <div className="left">
             <div>feature</div>
             {
               predicateFeatureArray.map(f => (
@@ -54,7 +54,7 @@ function Pixalate() {
             }
           </div>
 
-          <div className="left">
+          <div className="right">
           <div>score</div>
           <PredScorePlot predScoreArray={selectedPredicate.predicate_scores} width={600} height={300} />
           </div>

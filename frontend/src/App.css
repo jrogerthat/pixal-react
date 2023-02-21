@@ -114,16 +114,19 @@ body {
 }
 
 .pixalate-two .left{
-  background-color: purple;
   padding:10px;
-
+  border-radius: 30px;
+  /* background-color: #e8e4e4e0; */
 }
 
 .pixalate-two .right{
-  background-color: red;
   padding:10px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  background-color: #e8e4e4e0;
 }
 
 .l-top {
