@@ -1,14 +1,17 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import '../App.css';
 import Button from '@mui/material/Button';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
+import { PixalFeatureNav } from './pixalFeatureNav';
 
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-
+  let predicateFeatureArray = useMemo(()=> {
+    return selectedPredicate ? Object.entries(selectedPredicate.predicate_features.predicate) : [];
+  }, [selectedPredicate]);
 
   if(selectedPredicate && !!selectedPredicate.feature){
     return(
@@ -19,7 +22,12 @@ function Pixalate() {
           </div>
         
           <div className="l-bottom">
-            <div>feature</div>
+            <div>features</div>
+            {
+              predicateFeatureArray.map(f => (
+                <PixalFeatureNav key={`${f[0]}`} feature={f}/>
+              ))
+            }
           </div>
 
           <div className="r-top">
@@ -27,7 +35,7 @@ function Pixalate() {
           </div>
 
           <div className="r-bottom">
-          <div>explaination</div>
+          <div>explanation</div>
         </div>
     </div>
     )
@@ -38,6 +46,11 @@ function Pixalate() {
         
           <div className="right">
             <div>feature</div>
+            {
+              predicateFeatureArray.map(f => (
+                <PixalFeatureNav key={`${f[0]}`} feature={f}/>
+              ))
+            }
           </div>
 
           <div className="left">

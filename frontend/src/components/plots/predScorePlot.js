@@ -51,7 +51,6 @@ const PredScorePlot = ({width, height, predScoreArray}) => {
 
 const ScoreGroup = ({data, xScale, yScale}) => {
     let color = data[0] ? 'blue' : 'gray';
-    console.log(data, color)
 
     const gRef = useRef(null);
 
