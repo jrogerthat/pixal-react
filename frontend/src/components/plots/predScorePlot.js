@@ -1,31 +1,19 @@
 import * as d3 from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
-import { DataContext } from "../../context";
 
-const PredScorePlot = ({width, height}) => {
+
+const PredScorePlot = ({width, height, predScoreArray}) => {
    
-    const [{selectedPredicate, predicateArray}, dispatch] = useContext(DataContext);
     const axesRef = useRef(null);
 
-    console.log(selectedPredicate.predicate_scores)
-
     const yScale = useMemo(() => {
-        if(selectedPredicate.predicate_scores > 0){
-            // let maxArr =  distData.flatMap(m => m[1]).map(m => +m.density);
-            // return d3.scaleLinear().range([(height-50), 0]).domain([0, d3.max(maxArr)]);
-        }else{
-             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [selectedPredicate.predicate_scores, height]);
+        d3.max(predScoreArray.map(f => f.density))
+        return d3.scaleLinear().range([height, 0]).domain([0, d3.max(predScoreArray.map(f => f.density))]);
+    }, [predScoreArray, height]);
 
     const xScale = useMemo(() => {
-        if(selectedPredicate.predicate_scores.length > 0){
-            // let maxArr = distData.flatMap(m => m[1]).map(m => m.bin)
-            // console.log(maxArr,d3.max(maxArr))
-            // return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
-        }else{
-            return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [selectedPredicate.predicate_scores, width]);
-   
+        return d3.scaleLinear().range([0, width]).domain([0, d3.max(predScoreArray.map(f => f.iforest_score))]);
+    }, [predScoreArray, width]);
 
       // Render the X axis using d3.js, not react
     useEffect(() => {
@@ -39,23 +27,18 @@ const PredScorePlot = ({width, height}) => {
 
         const yAxisGenerator = d3.axisLeft(yScale);
         svgElement.append("g").call(yAxisGenerator);
+
     }, [xScale, yScale, height]);
-    
-  
+
+    let distScoreData = Array.from(d3.group(predScoreArray, d => d.predicate));
+
     return(
-        <svg width={width} height={height} >
-            {/* {
-                distData.length > 0 && distData.map(p => (
-                    <PredicateGroup 
-                    key={p[0]} 
-                    predData={p[1]} 
-                    xScale={xScale} 
-                    yScale={yScale} 
-                    height={height} 
-                    color={colorDict.filter(f=> +p[0] === +f.id)[0]}
-                    highlightPred={highlightPred} />
+        <svg width={width} height={height}>
+            {
+                distScoreData.map(d => (
+                    <ScoreGroup key={`isPred${d[0]}`} data={d} yScale={yScale} xScale={xScale} />
                 ))
-            } */}
+            }
             <g
             width={width}
             height={20}
@@ -63,6 +46,37 @@ const PredScorePlot = ({width, height}) => {
             transform={`translate(${[30, 30].join(",")})`}
             />
         </svg>
+    )
+}
+
+const ScoreGroup = ({data, xScale, yScale}) => {
+    let color = data[0] ? 'blue' : 'gray';
+    console.log(data, color)
+
+    const gRef = useRef(null);
+
+    useEffect(()=> {
+
+        const gElement = d3.select(gRef.current);
+        gElement.append("path")
+        .attr("class", "mypath")
+        .datum(data[1])
+        .attr("fill", color)
+        .attr("opacity", ".6")
+        .attr("stroke", "#000")
+        .attr("stroke-width", 1)
+        .attr("stroke-linejoin", "round")
+        .attr("d",  d3.line()
+            .curve(d3.curveBasis)
+            .x(function(d) { return xScale(d.iforest_score); })
+            .y(function(d) { return yScale(d.density); })
+        );
+
+
+    }, [data]);
+
+    return(
+        <g ref={gRef}>{data[0]}</g>
     )
 }
 

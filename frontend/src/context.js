@@ -21,10 +21,9 @@ const reducer = (state, action) => {
       return {
         ...state
       };
+      
     case "UPDATE_SELECTED_PREDICATE":
-      return {
-        ...state, selectedPredicate : action.selectedPredicate
-      };
+        return {...state, selectedPredicate : action.predSel};
     default:
       throw new Error();
   }

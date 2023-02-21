@@ -39,8 +39,9 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
     let handleClick = () => {
         if(!predEditMode){
             axios.get("/load_test_score").then((data)=> {
-                let predScores
-                dispatch({type: "UPDATE_SELECTED_PREDICATE", predScores})
+                let predSel = data.data;
+                predSel.predicate_features = predicateData;
+                dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
             })
         }
     }
