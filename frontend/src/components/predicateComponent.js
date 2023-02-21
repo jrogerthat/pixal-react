@@ -7,11 +7,11 @@ import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData, setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
+export default function PredicateComp({predicateData, hiddenPreds, setHiddenPreds}) {
  
     const features = Object.entries(predicateData.predicate)
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [, dispatch] = useContext(DataContext);
+    const [{editMode}, dispatch] = useContext(DataContext);
     
     const featureValues = (valArr) => {
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
@@ -37,7 +37,7 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
     }
 
     let handleClick = () => {
-        if(!predEditMode){
+        if(!editMode){
             axios.get("/load_test_score").then((data)=> {
                 let predSel = data.data;
                 predSel.predicate_features = predicateData;
@@ -46,12 +46,15 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
         }
     }
 
+    let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})
+    
+
     return (
         <div className="pred-wrap"
             style={{opacity: isHidden()}}
            
-            onMouseEnter={() => setHighlightPred(predicateData.id)}
-            onMouseLeave={() => setHighlightPred(null)}
+            onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}
+            onMouseLeave={() => editMode ? handleHover(null) : null}
             onClick={handleClick}
         >
             {
@@ -62,7 +65,7 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
                 ))
             }
             {
-                predEditMode && (
+                editMode && (
                     <div className="pred-edit-bar">
                     <InvertButton />
                     {/* <ColorLensTwoToneIcon /> */}

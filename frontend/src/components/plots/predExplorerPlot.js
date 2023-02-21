@@ -2,10 +2,12 @@ import * as d3 from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { DataContext } from "../../context";
 
-const PredExplorePlot = ({width, height, highlightPred, hiddenPreds}) => {
+const PredExplorePlot = ({width, height, hiddenPreds}) => {
     
     const axesRef = useRef(null);
     const [{predicateArray, predicateDistributionArray}, dispatch] = useContext(DataContext);
+
+    console.log('this rendering');
 
     let filteredDist = [...predicateDistributionArray].filter(f => {
         if(hiddenPreds.length === 0){
@@ -58,7 +60,7 @@ const PredExplorePlot = ({width, height, highlightPred, hiddenPreds}) => {
                     yScale={yScale} 
                     height={height} 
                     color={predicateArray.filter(f=> +p[0] === +f.id)[0]}
-                    highlightPred={highlightPred} />
+                    />
                 ))
             }
             <g
@@ -71,10 +73,12 @@ const PredExplorePlot = ({width, height, highlightPred, hiddenPreds}) => {
     )
 }
 
-const PredicateGroup = ({predData, yScale, xScale, height, color, highlightPred}) => {
+const PredicateGroup = ({predData, yScale, xScale, height, color}) => {
 
-   let calcColor = highlightPred != null && highlightPred != color.id ? 'rgba(211,211,211, .2)' : color.color
-    return(
+    const [{highlightedPred}, dispatch] = useContext(DataContext);
+
+    let calcColor = highlightedPred != null && highlightedPred != color.id ? 'rgba(211,211,211, .2)' : color.color
+        return(
         <g>
         {
             predData.map((p, i) => (

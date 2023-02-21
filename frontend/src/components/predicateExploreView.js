@@ -5,7 +5,7 @@ import { PredExplorePlot } from './plots/predExplorerPlot';
 
 
 
-function PredicateExplore({highlightPred, hiddenPreds}) {
+function PredicateExplore({hiddenPreds}) {
 
   
   return (
@@ -13,10 +13,9 @@ function PredicateExplore({highlightPred, hiddenPreds}) {
 
       <div className="pred-dist-plot">
         <PredExplorePlot 
+        hiddenPreds={hiddenPreds}
         width={900} 
         height={600} 
-        highlightPred={highlightPred} 
-        hiddenPreds={hiddenPreds}
         />
       </div>
     

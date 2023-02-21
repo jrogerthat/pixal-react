@@ -7,12 +7,17 @@ export const DataContext = createContext();
 const initialState = {
   predicateArray: [],
   predicateDistributionArray: [],
-  selectedPredicate:null
+  selectedPredicate:null,
+  highlightedPred:null,
+  editMode: true
 };
 
 const reducer = (state, action) => {
 
   switch (action.type) {
+    case "UPDATE_EDIT_MODE":
+      return {...state, editMode: action.editMode}
+
     case "SET_PREDICATE_EXPLORE_DATA":
         return {...state, predicateArray: action.predData.pred_list, predicateDistributionArray: action.predData.pred_dist}
 
@@ -23,14 +28,17 @@ const reducer = (state, action) => {
       };
 
     case "UPDATE_SELECTED_PREDICATE":
-        console.log(action.predSel)
         return {...state, selectedPredicate : action.predSel};
 
     case "FEATURE_SELECTED":
-     
       let newSelectedPred = {...state.selectedPredicate}
       newSelectedPred.feature = action.feature;
       return {...state, selectedPredicate : newSelectedPred}
+
+    case "PREDICATE_HOVER":
+      return {...state, highlightedPred: action.pred}
+
+
 
     default:
       throw new Error();

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import '../App.css';
-import Button from '@mui/material/Button';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
 import { PixalFeatureNav } from './pixalFeatureNav';
@@ -8,6 +7,8 @@ import { PixalFeatureNav } from './pixalFeatureNav';
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
+
+  console.log('pixalate rendering')
 
   let predicateFeatureArray = useMemo(()=> {
     return selectedPredicate ? Object.entries(selectedPredicate.predicate_features.predicate) : [];
@@ -18,7 +19,7 @@ function Pixalate() {
       <div className="pixalate">
         <div className="l-top">
           <div>score</div>
-          <PredScorePlot predScoreArray={selectedPredicate.predicate_scores} width={440} height={300} />
+          <PredScorePlot width={440} height={300} />
           </div>
         
           <div className="l-bottom">

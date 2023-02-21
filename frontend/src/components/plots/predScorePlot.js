@@ -1,19 +1,22 @@
 import * as d3 from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
+import { DataContext } from "../../context";
 
 
-const PredScorePlot = ({width, height, predScoreArray}) => {
+const PredScorePlot = ({width, height}) => {
    
     const axesRef = useRef(null);
 
+    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+
     const yScale = useMemo(() => {
-        d3.max(predScoreArray.map(f => f.density))
-        return d3.scaleLinear().range([height, 0]).domain([0, d3.max(predScoreArray.map(f => f.density))]);
-    }, [predScoreArray, height]);
+        d3.max(selectedPredicate.predicate_scores.map(f => f.density))
+        return d3.scaleLinear().range([height, 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(f => f.density))]);
+    }, [selectedPredicate.predicate_scores, height]);
 
     const xScale = useMemo(() => {
-        return d3.scaleLinear().range([0, width]).domain([0, d3.max(predScoreArray.map(f => f.iforest_score))]);
-    }, [predScoreArray, width]);
+        return d3.scaleLinear().range([0, width]).domain([0, d3.max(selectedPredicate.predicate_scores.map(f => f.iforest_score))]);
+    }, [selectedPredicate.predicate_scores, width]);
 
       // Render the X axis using d3.js, not react
     useEffect(() => {
@@ -30,7 +33,7 @@ const PredScorePlot = ({width, height, predScoreArray}) => {
 
     }, [xScale, yScale, height]);
 
-    let distScoreData = Array.from(d3.group(predScoreArray, d => d.predicate));
+    let distScoreData = Array.from(d3.group(selectedPredicate.predicate_scores, d => d.predicate));
 
     return(
         <svg width={width} height={height}>
@@ -70,7 +73,6 @@ const ScoreGroup = ({data, xScale, yScale}) => {
             .x(function(d) { return xScale(d.iforest_score); })
             .y(function(d) { return yScale(d.density); })
         );
-
 
     }, [data]);
 

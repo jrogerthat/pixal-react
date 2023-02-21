@@ -5,16 +5,17 @@ import AddPredBox from './addPredicateBox';
 import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
 
-function PredicateNav({setHighlightPred, predEditMode, hiddenPreds, setHiddenPreds}) {
+function PredicateNav({setHighlightPred, hiddenPreds, setHiddenPreds}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
-  const [{predicateArray, predicateDistributionArray}, dispatch] = useContext(DataContext);
-//
+  const [{editMode, predicateArray}, dispatch] = useContext(DataContext);
+
+  console.log("rendering predicate nav");
  
   return (
     <div className="pred-exp-nav">
       {
-        predEditMode ? <Button
+        editMode ? <Button
         variant="outlined"
         onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
       >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span>Predicates</span>
@@ -30,7 +31,6 @@ function PredicateNav({setHighlightPred, predEditMode, hiddenPreds, setHiddenPre
            key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
-           predEditMode={predEditMode}
            hiddenPreds={hiddenPreds}
            setHiddenPreds={setHiddenPreds}
            />

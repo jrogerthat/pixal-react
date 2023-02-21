@@ -15,11 +15,10 @@ import { DataContext } from './context';
 function App() {
   
    // new line start
-  const [predEditMode, setPredEditMode] = useState(true);
-  const [highlightPred, setHighlightPred] = useState(null);  
+
   const [hiddenPreds, setHiddenPreds] = useState([]);
 
-  const [{predicateArray, selectedPredicate}, dispatch] = useContext(DataContext);
+  const [{predicateArray, selectedPredicate, editMode}, dispatch] = useContext(DataContext);
 
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
@@ -48,19 +47,15 @@ function App() {
     <div className="App">
       <AppBar position="static" sx = {{ background: 'white', padding: "10px", flexDirection:"row"}}>
         <Typography variant="h6" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
-        <BasicDrop predEditMode={predEditMode} setPredEditMode={setPredEditMode} />
+        <BasicDrop />
       </AppBar>
       <div className="main-wrapper">
         <PredicateNav 
-          setPredEditMode={setPredEditMode} 
-          predEditMode={predEditMode} 
-          setHighlightPred={setHighlightPred}
           hiddenPreds={hiddenPreds}
           setHiddenPreds={setHiddenPreds}
         ></PredicateNav> 
-        {predEditMode ? (
+        {editMode ? (
           <PredicateExplore 
-          highlightPred={highlightPred} 
           hiddenPreds={hiddenPreds}
           />
         ): (
