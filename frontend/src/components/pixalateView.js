@@ -11,7 +11,7 @@ function Pixalate() {
   console.log('pixalate rendering')
 
   let predicateFeatureArray = useMemo(()=> {
-    return selectedPredicate ? Object.entries(selectedPredicate.predicate_features.predicate) : [];
+    return selectedPredicate ? Object.entries(selectedPredicate.attribute_data) : [];
   }, [selectedPredicate]);
 
   if(selectedPredicate && !!selectedPredicate.feature){

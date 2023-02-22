@@ -11,7 +11,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
  
     const features = Object.entries(predicateData.predicate)
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [{editMode}, dispatch] = useContext(DataContext);
+    const [{editMode, selectedPredicate}, dispatch] = useContext(DataContext);
     
     const featureValues = (valArr) => {
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
@@ -36,11 +36,15 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
         }
     }
 
+    let isSelected = () => {
+        return (selectedPredicate && predicateData.id === selectedPredicate.predicate_id) ? predicateData.color : '#e8e4e4e0';
+    }
+
     let handleClick = () => {
         if(!editMode){
-            axios.get("/load_test_score").then((data)=> {
+            axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
                 let predSel = data.data;
-                predSel.predicate_features = predicateData;
+                predSel.predicate_info = predicateData;
                 dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
             })
         }
@@ -48,10 +52,12 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
 
     let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})
     
-
     return (
         <div className="pred-wrap"
-            style={{opacity: isHidden()}}
+            style={{
+                opacity: isHidden(),
+                backgroundColor: isSelected()
+            }}
            
             onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}
             onMouseLeave={() => editMode ? handleHover(null) : null}
