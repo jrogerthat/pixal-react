@@ -1,24 +1,33 @@
 import { Button, TextField } from '@mui/material';
-import { useState } from 'react'
-import { addPredicate } from '../axiosUtil';
+import { useContext, useEffect, useState } from 'react'
+import { useAddPredicate } from '../axiosUtil';
+import { DataContext } from '../context';
+import formatPredicateArray from '../dataFormating';
 
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function AddPredBox({setAddPredMode}) {
+function AddPredBox({setAddPredMode}){
 
     const [newPred, setNewPred] = useState(null);
+    const handleChange = (e) => setNewPred(e.target.value);
+    const [, dispatch] = useContext(DataContext);
 
-    const handleChange = (e) => setNewPred(e.target.value)
+    const useHandleSubmit = () => {
 
-    const handleSubmit = () => {
-
-        
         let formatted = {'pred': newPred}
-        console.log(formatted)
-        addPredicate(formatted)
+
+        // let data = useAddPredicate(formatted)
+        
+        let testArray = {"0": {"Sub-Category": ["Tables"]}, "1": {"Sub-Category": ["Machines"]}}
+        
+        let newPredicate = formatPredicateArray(testArray)
+
         setNewPred(null);
         setAddPredMode(null);
+
+        dispatch({ type: "ADD_PREDICATE", newPredicate})
+       
         
     }
 
@@ -33,8 +42,10 @@ export default function AddPredBox({setAddPredMode}) {
             onChange={handleChange}
             />
             {newPred !== null && <Button
-            onClick={handleSubmit}
+            onClick={useHandleSubmit}
             >Submit</Button>}
         </div>
     );
 } 
+
+export default AddPredBox

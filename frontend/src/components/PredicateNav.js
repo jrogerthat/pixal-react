@@ -1,40 +1,38 @@
-import { useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import '../App.css';
 import Button from '@mui/material/Button';
 import AddPredBox from './addPredicateBox';
 import PredicateComp from './predicateComponent';
+import { DataContext } from '../context';
 
-function PredicateNav({predicateArray, setHighlightPred, predEditMode}) {
+function PredicateNav({setHighlightPred, hiddenPreds, setHiddenPreds}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
+  const [{editMode, predicateArray}, dispatch] = useContext(DataContext);
 
-  const handleHighlight = (p) => {
-    setHighlightPred(p)
-    console.log('NEW COLOR', p);
-  }
-
+  console.log("rendering predicate nav");
+ 
   return (
     <div className="pred-exp-nav">
       {
-        predEditMode ? <Button
+        editMode ? <Button
         variant="outlined"
         onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
       >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span>Predicates</span>
       }
       
       {
-        addPredMode && <AddPredBox setAddPredMode={setAddPredMode} />
+        addPredMode && <AddPredBox setAddPredMode={setAddPredMode}  />
       }
       <div>
         {
-          Object.entries(predicateArray).map(p => (
+          predicateArray.map(p => (
            <PredicateComp
-           key={`pred-edir-${p[0]}`} 
+           key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
-           predEditMode={predEditMode}
-          //  onMouseEnter={() => handleHighlight(p[0])}
-          //  onMouseLeave={() => handleHighlight(null)}
+           hiddenPreds={hiddenPreds}
+           setHiddenPreds={setHiddenPreds}
            />
           ))
         }

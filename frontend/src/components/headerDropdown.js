@@ -3,15 +3,16 @@ import { useState } from 'react'
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { DataContext } from '../context';
 
-export default function BasicDrop({predEditMode, setPredEditMode}) {
+export default function BasicDrop() {
+
+  const [{editMode}, dispatch] = React.useContext(DataContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  
   const options = [{display: 'Explore and Edit Predicates', bool: true},{display: 'Explore Explanations', bool: false}]
 
-  console.log(predEditMode, options.filter(f => f.bool === predEditMode))
-  
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,7 +31,7 @@ export default function BasicDrop({predEditMode, setPredEditMode}) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        {options.filter(f => f.bool === predEditMode)[0].display}
+        {options.filter(f => f.bool === editMode)[0].display}
       </Button>
       <Menu
         id="basic-menu"
@@ -46,7 +47,7 @@ export default function BasicDrop({predEditMode, setPredEditMode}) {
                 <MenuItem 
                 key={`op-${i+1}`}
                 onClick={() => {
-                    setPredEditMode(op.bool);
+                    dispatch({type: "UPDATE_EDIT_MODE", editMode:op.bool})
                     handleClose();
                 }}
                 >{op.display}</MenuItem>

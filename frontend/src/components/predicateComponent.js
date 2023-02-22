@@ -1,25 +1,23 @@
-import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
-import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
-import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
-import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
+import axios from 'axios';
+import { useContext } from 'react';
+import { useGetAxiosAsync } from '../axiosUtil';
+import { DataContext } from '../context';
+import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData, setHighlightPred, predEditMode}) {
-
-    const features = Object.entries(predicateData[1])
-
-    const isDate = function(date) {
-        return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    }
-
+export default function PredicateComp({predicateData, hiddenPreds, setHiddenPreds}) {
+ 
+    const features = Object.entries(predicateData.predicate)
+    const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+    const [{editMode}, dispatch] = useContext(DataContext);
+    
     const featureValues = (valArr) => {
-       
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
             return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
             </span></div>
-        }else if(valArr.length == 1){
+        }else if(valArr.length === 1){
             return  <div className="feature-value">{` ${valArr[0]}`}</div>
         }
 
@@ -30,10 +28,34 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
         )
     }
 
+    let isHidden = () => {
+        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
+            return 1
+        }else{
+            return .5
+        }
+    }
+
+    let handleClick = () => {
+        if(!editMode){
+            axios.get("/load_test_score").then((data)=> {
+                let predSel = data.data;
+                predSel.predicate_features = predicateData;
+                dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
+            })
+        }
+    }
+
+    let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})
+    
+
     return (
-        <div className='pred-wrap'
-           onMouseEnter={() => setHighlightPred(predicateData[0])}
-           onMouseLeave={() => setHighlightPred(null)}
+        <div className="pred-wrap"
+            style={{opacity: isHidden()}}
+           
+            onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}
+            onMouseLeave={() => editMode ? handleHover(null) : null}
+            onClick={handleClick}
         >
             {
                 features.map((f, i)=> (
@@ -43,12 +65,16 @@ export default function PredicateComp({predicateData, setHighlightPred, predEdit
                 ))
             }
             {
-                predEditMode && (
+                editMode && (
                     <div className="pred-edit-bar">
-                    <DoNotDisturbTwoToneIcon />
-                    <ColorLensTwoToneIcon />
-                    <VisibilityOffTwoToneIcon />
-                    <DeleteForeverTwoToneIcon />
+                    <InvertButton />
+                    {/* <ColorLensTwoToneIcon /> */}
+                    <DeleteButton />
+                    <HideButton 
+                    predicateData={predicateData} 
+                    hiddenPreds={hiddenPreds} 
+                    setHiddenPreds={setHiddenPreds}/>
+
                     </div>
                 )
             }

@@ -1,5 +1,5 @@
 # from copyreg import pickle
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import os
 import json
 import pandas as pd
@@ -8,10 +8,9 @@ import numpy as np
 # import edit_predicates
 # import plot_pred
 # from predicate_induction_main import Predicate
-# import all
-
-from flask import Flask, request, session
+import all_fun
 from predicate_induction import Predicate, PredicateInduction, infer_dtypes
+import random
 
 from flask import Flask
 
@@ -59,27 +58,55 @@ session_id = "49324312"
 predicates_path = 'augmented_superstore_predicates.json'
 predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 
-"""
+""" 
 These work!
 """
 @api.route("/")
 def index():
-    return "WORKING"
+   pass
+
+@api.route("/load_test_score")
+def load_test_score():
+    job = []
+    with open(f"static/data/test_pred_score.json", 'rb') as f:
+        scores = json.load(f)
+        for ob in scores["scores_test"]:
+            ob["density"] = random.randrange(0, 8) * .1
+            job.append(ob)
+    finob = {}
+    finob["predicate_scores"] = job
+    print('firing dat load')
+    return finob
+
+@api.route('/load_predicates_dist_list')
+def load_predicates_dist_list():
+    job = {}
+    job['pred_list'] = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
+
+    pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
+    all_fun.save_predicate_id(0, predicate_id_path)
+
+    job['pred_dist'] = all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
+
+    return job
 
 @api.route('/load_predicates')
 def load_predicates():
-    return edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
+    test = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
+    # print(test)
+    return test
 
 @api.route('/get_pred_dis')
-def get_pred_hist():
+def get_pred_dis():
 
-    pred = all.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
-    all.save_predicate_id(0, predicate_id_path)
+    pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
+    all_fun.save_predicate_id(0, predicate_id_path)
 
-    return all.get_pred_distribution_data(all.feat_val, pred)
+    return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
-@api.route('/get_selected_data')
-def get_selected_data(predicate_id, max_pivot_bins=25):
+@api.route('/get_selected_data/<predicate_id>')
+def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
+    print('preddddd',predicate_id)
     # predicate_induction = session['predicate']['predicate_induction']
     # predicate = session['predicate']['predicates'][predicate_id]
     predicate = predicates[predicate_id]
@@ -97,6 +124,8 @@ def get_selected_data(predicate_id, max_pivot_bins=25):
     }
     return predicate_data
 
+#   '{"State": ["Vermont"], "Segment": ["Corporate"]}'
+
 """
 These below are work in progress!
 """
@@ -104,9 +133,18 @@ These below are work in progress!
 @api.route("/add_predicates", methods=['PUT'])
 def app_add_predicates():
     request_data = request.get_json(force=True)
+    print('request_data', request_data)
     feature_values = request_data['feature_values']
-    res = all.add_predicates(feature_values)
+    res = all_fun.add_predicates(feature_values)
     return json.dumps(res)
+
+
+# @api.route('/add_predicate', methods=['POST'])
+# def add_predicate():
+#     test = request.json['pred']
+#     print(test)
+#     # return edit_predicates.save_predicate_data(data_path, 'augmented_superstore_predicates.json')
+#     return test
 
 def load_predicate_data(path, predicates_path):
     print("reaching predicates", f"{path}/{predicates_path}")
@@ -120,7 +158,9 @@ def save_predicates(path, predicates, predicates_path):
     return predicates
 
 @api.route('/add_predicate', methods=['POST'])
-def add_predicate(attribute_values):
+def add_predicate():
+    attribute_values = request.json['pred']
+    print('VALUES', attribute_values)
     predicate = Predicate(session['data']['data'], session['data']['dtypes'], attribute_values)
     predicate_id = len(session['predicate']['predicates'])
     session['predicate']['predicates'].append(predicate)

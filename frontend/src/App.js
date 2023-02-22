@@ -1,66 +1,69 @@
-import { useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import './App.css';
 import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Pixalate from './components/pixalateView';
 import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
-import { useAxiosGet } from './axiosUtil';
-import randomColor from 'randomcolor'
+import { useAxiosGet, useGetAxiosAsync } from './axiosUtil';
+import formatPredicateArray from './dataFormating';
+import { DataContext } from './context';
+
+
 
 function App() {
-
+  
    // new line start
-  const [predEditMode, setPredEditMode] = useState(true);
-  const [highlightPred, setHighlightPred] = useState(null);
+
+  const [hiddenPreds, setHiddenPreds] = useState([]);
+
+  const [{predicateArray, selectedPredicate, editMode}, dispatch] = useContext(DataContext);
+
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
    * 
    */
 
-  const { data } = useAxiosGet('/load_predicates');
-  const predicateArray = useMemo(() => {
-    return data || [];
-  }, [data]);
+  //TODO: Creat new ends points for what view you are in. 
 
-
-  let colorDict = useMemo(() => {
-    if(predicateArray != []){
-      return Object.entries(predicateArray).map(c => {
-        return {id: c[0], color: randomColor()}
-      })
-    }else{
-      return []
+  /**
+   * This loads an object with pred_dist (list of predicate distribtutions) and pred_list (pred_list)
+   */
+  let {data, error, loaded} = useAxiosGet('/load_predicates_dist_list');
+ 
+  useEffect(() => {
+    if(loaded){
+      let arr = formatPredicateArray(data.pred_list);
+      let pred_dist = Object.entries(data.pred_dist)
+      let predData = {'pred_list': arr, 'pred_dist': pred_dist}
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
     }
-  }, [data]);
-
+    
+  }, [loaded])
 
 
   return (
     <div className="App">
-     
       <AppBar position="static" sx = {{ background: 'white', padding: "10px", flexDirection:"row"}}>
         <Typography variant="h6" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
-        <BasicDrop predEditMode={predEditMode} setPredEditMode={setPredEditMode} />
+        <BasicDrop />
       </AppBar>
       <div className="main-wrapper">
         <PredicateNav 
-        setPredEditMode={setPredEditMode} 
-        predEditMode={predEditMode} 
-        predicateArray={predicateArray}
-        colorDict={colorDict}
-        setHighlightPred={setHighlightPred}
-        ></PredicateNav>
-        {predEditMode ? (
-          <PredicateExplore colorDict={colorDict} highlightPred={highlightPred}/>
+          hiddenPreds={hiddenPreds}
+          setHiddenPreds={setHiddenPreds}
+        ></PredicateNav> 
+        {editMode ? (
+          <PredicateExplore 
+          hiddenPreds={hiddenPreds}
+          />
         ): (
-          <Pixalate/>
+          <Pixalate />
         )}
       </div>
-    
     </div>
+   
   );
 }
 

@@ -1,27 +1,37 @@
 import * as d3 from "d3";
-import { useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
+import { DataContext } from "../../context";
 
-const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) => {
-   
-
+const PredExplorePlot = ({width, height, hiddenPreds}) => {
+    
     const axesRef = useRef(null);
+    const [{predicateArray, predicateDistributionArray}, dispatch] = useContext(DataContext);
+
+    console.log('this rendering');
+
+    let filteredDist = [...predicateDistributionArray].filter(f => {
+        if(hiddenPreds.length === 0){
+            return f
+        }else{
+            return hiddenPreds.indexOf(f[0]) === -1
+        }
+    });
 
     const yScale = useMemo(() => {
-        if(distData.length > 0){
-            let maxArr =  distData.flatMap(m => m[1]).map(m => +m.density);
+        if(predicateDistributionArray.length > 0){
+            let maxArr =  predicateDistributionArray.flatMap(m => m[1]).map(m => +m.density);
             return d3.scaleLinear().range([(height-50), 0]).domain([0, d3.max(maxArr)]);
         }else{
              return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [distData, height]);
+        }}, [predicateDistributionArray, height]);
 
     const xScale = useMemo(() => {
-        if(distData.length > 0){
-            let maxArr = distData.flatMap(m => m[1]).map(m => m.bin)
-            console.log(maxArr,d3.max(maxArr))
+        if(predicateDistributionArray.length > 0){
+            let maxArr = predicateDistributionArray.flatMap(m => m[1]).map(m => m.bin)
             return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
         }else{
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [distData, width]);
+        }}, [predicateDistributionArray, width]);
    
 
       // Render the X axis using d3.js, not react
@@ -38,19 +48,19 @@ const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) =>
         svgElement.append("g").call(yAxisGenerator);
     }, [xScale, yScale, height]);
     
-  
+   
     return(
         <svg width={width} height={height} >
             {
-                distData.length > 0 && distData.map(p => (
+                filteredDist.length > 0 && filteredDist.map((p, i) => (
                     <PredicateGroup 
-                    key={p[0]} 
+                    key={`pred-${i+1}`} 
                     predData={p[1]} 
                     xScale={xScale} 
                     yScale={yScale} 
                     height={height} 
-                    color={colorDict.filter(f=> +p[0] === +f.id)[0]}
-                    highlightPred={highlightPred} />
+                    color={predicateArray.filter(f=> +p[0] === +f.id)[0]}
+                    />
                 ))
             }
             <g
@@ -63,9 +73,12 @@ const PredExplorePlot = ({distData, width, height, colorDict, highlightPred}) =>
     )
 }
 
-const PredicateGroup = ({predData, yScale, xScale, height, color, highlightPred}) => {
-   let calcColor = highlightPred != null && highlightPred != color.id ? 'rgba(211,211,211, .2)' : color.color
-    return(
+const PredicateGroup = ({predData, yScale, xScale, height, color}) => {
+
+    const [{highlightedPred}, dispatch] = useContext(DataContext);
+
+    let calcColor = highlightedPred != null && highlightedPred != color.id ? 'rgba(211,211,211, .2)' : color.color
+        return(
         <g>
         {
             predData.map((p, i) => (
