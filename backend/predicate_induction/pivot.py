@@ -18,13 +18,17 @@ class Pivot(object):
         self.dtype = self.dtypes[self.attribute]
         
     def get_plot_data(self, y='count', max_bins=25):
+        str_y = type(y) == str
         if self.dtype == 'nominal':
-            grouper = self.attribute
+            if str_y:
+                grouper = self.attribute
+            else:
+                grouper = self.data[self.attribute]
         else:
             num_bins = self.get_num_bins(max_bins)
             grouper = pd.cut(self.data[self.attribute], bins=num_bins)
         
-        if type(y) == str:
+        if str_y:
             if y == 'count':
                 agg_col = self.data.columns[0] if self.data.columns[0] != self.attribute else self.data.columns[1]
                 agg_func = 'count' 

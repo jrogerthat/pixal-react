@@ -3,11 +3,12 @@ from flask import Flask, render_template, request
 import os
 import json
 import pandas as pd
+import numpy as np
 # from predicates import PredicateControl 
-import edit_predicates
-import plot_pred
+# import edit_predicates
+# import plot_pred
 # from predicate_induction_main import Predicate
-import all
+# import all
 
 from flask import Flask, request, session
 from predicate_induction import Predicate, PredicateInduction, infer_dtypes
@@ -17,6 +18,26 @@ from flask import Flask
 api = Flask(__name__)
 path = os.path.dirname(os.path.realpath(__file__))
 my_path = 'static/data'
+
+
+###Testing data/predicate loading###
+
+data_path = 'static/data/superstore_data.csv'
+predicates_path = 'static/data/augmented_superstore_predicates.json'
+
+data = pd.read_csv(f'{path}/{data_path}')
+dtypes = infer_dtypes(data)
+with open(f'{path}/{predicates_path}', 'r') as f:
+    predicate_dicts = json.load(f)
+predicate_dicts = {k:v for k,v in predicate_dicts.items() if k not in ('3','4','5')}
+numeric = [attr for attr in dtypes['numeric'] if attr != 'iforest_score']
+
+predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for _,predicate_dict in predicate_dicts.items()]
+
+# session['data'] = {'data': data, 'dtypes': dtypes}
+# session['predicates'] = {'predicates': predicates}
+
+####################################
 
 colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#7f7f7f", "#17becf", "#bcbd22"]
 
@@ -49,7 +70,6 @@ def index():
 def load_predicates():
     return edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
 
-
 @api.route('/get_pred_dis')
 def get_pred_hist():
 
@@ -59,18 +79,21 @@ def get_pred_hist():
     return all.get_pred_distribution_data(all.feat_val, pred)
 
 @api.route('/get_selected_data')
-def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
-    predicate_induction = session['predicate']['predicate_induction']
-    predicate = session['predicate']['predicates'][predicate_id]
+def get_selected_data(predicate_id, max_pivot_bins=25):
+    # predicate_induction = session['predicate']['predicate_induction']
+    # predicate = session['predicate']['predicates'][predicate_id]
+    predicate = predicates[predicate_id]
+
+    # target = predicate_induction.target
+    target = pd.Series(np.random.uniform(0, 1, size=data.shape[0]))
+    # numeric = session['data']['dtypes']['numeric']
+    pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes}
+
     predicate_data = {
         'predicate_id': predicate_id,
-        'predicate_scores': predicate.get_score_dist_data(predicate_induction.target, num_bins=num_score_bins).to_dict(), # [{'bin': 10, 'density': 0.23, 'predicate': False}, ...]
-        'attribute_score_data': {
-            attr: predicate.pivot(attr).get_plot_data(predicate_induction.target, num_bins=num_pivot_bins).to_dict() for attr in predicate.predicate_attributes
-        }, # {'sales': [{'sales_bin': 10, 'avg_score': 100}, ...], ...}
-        'attribute_data': {
-            {attr: {num_attr: predicate.pivot(attr).get_plot_data(predicate_induction.target, num_bins=num_pivot_bins).to_dict() for num_attr in session['data']['dtypes']['numeric']} for attr in predicate.predicate_attributes}
-        }, # {'sales': {'profit': [{'sales_bin': 10, 'avg_profit': 32.49}, ...], ...}, ...}
+        'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records'),
+        'attribute_score_data': {attr: pivot.get_plot_data(target, max_bins=max_pivot_bins).to_dict('records') for attr,pivot in pivots.items()},
+        'attribute_data': {attr: {num_attr: pivot.get_plot_data(num_attr, max_bins=max_pivot_bins).to_dict('records') for num_attr in numeric if num_attr != attr} for attr,pivot in pivots.items()}
     }
     return predicate_data
 
@@ -119,6 +142,8 @@ def delete_predicate():
 def copy_predicate():
     pass
 
+# res = get_selected_data(1, max_pivot_bins=25)
+# print(res)
 
 if __name__ == "__main__":
     api.run(host='localhost',port=5000)
