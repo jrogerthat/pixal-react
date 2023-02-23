@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { DataContext } from "../context";
 import * as d3 from "d3";
 
@@ -7,8 +7,16 @@ export const PixalFeatureNav = ({feature}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    let height = 100;
 
-    console.log("FEATURE", Object.entries(selectedPredicate.attribute_score_data)[1]);
+    let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
+   
+
+    let arrayOfBarData = ['Segment', 'State', 'Sub-Category'];
+
+    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, 200]).padding(0.2);
+    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([height, 0])
+    const svgRef = useRef(null);
     
     const featureValues = (valArr) => {
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
@@ -28,10 +36,31 @@ export const PixalFeatureNav = ({feature}) => {
         dispatch({type:'FEATURE_SELECTED', feature})
     }
 
-    let x = d3.scaleBand().domain(Object.entries(selectedPredicate.attribute_score_data)[1])
-    
-
     useEffect(()=> {
+
+        
+        const svgElement = d3.select(svgRef.current);
+
+        svgElement.selectAll('*').remove();
+
+        let wrap = svgElement.append('g');
+
+        let xAxis = wrap.append("g")
+        .attr("transform", "translate(10," + height + ")")
+        .call(d3.axisBottom(xScale))
+        .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+
+        let bars = wrap.selectAll('rect.bar').data(plotData)
+        .join('rect').attr("x", function(d) { return xScale(d[feature[0]]); })
+        .attr("y", function(d) { return yScale(d.score); })
+        .attr("width", xScale.bandwidth())
+        .attr("height", function(d) { return height - yScale(d.score); })
+        .attr("fill", (d) => {
+            return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
+        })
+
 
     }, [selectedPredicate]);
 
@@ -43,12 +72,11 @@ export const PixalFeatureNav = ({feature}) => {
             <div>{`${feature[0]}: `}
             {/* {featureValues(feature[1])} */}
             </div>
-            <div>CHART HERE</div>
+            <div>
+                <svg ref={svgRef} />
+            </div>
         </div>
     )
 }
 
-const FeatureMeanPlot = (feature_data) => {
-    
-}
 

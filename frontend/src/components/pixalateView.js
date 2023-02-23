@@ -3,6 +3,7 @@ import '../App.css';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
 import { PixalFeatureNav } from './pixalFeatureNav';
+import { MarksControlComponent } from './markComponent';
 
 function Pixalate() {
 
@@ -32,7 +33,8 @@ function Pixalate() {
           </div>
 
           <div className="r-top">
-            <div>marks</div>
+            <MarksControlComponent />
+            <div>plot</div>
           </div>
 
           <div className="r-bottom">

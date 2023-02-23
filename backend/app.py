@@ -87,13 +87,13 @@ def load_predicates_dist_list():
     all_fun.save_predicate_id(0, predicate_id_path)
 
     job['pred_dist'] = all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
-
+    print('FEATURES',features)
     return job
 
 @api.route('/load_predicates')
 def load_predicates():
     test = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
-    # print(test)
+    print('FEATURES',features)
     return test
 
 @api.route('/get_pred_dis')
@@ -117,6 +117,7 @@ def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes}
 
     predicate_data = {
+        'features': features,
         'predicate_id': predicate_id,
         'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records'),
         'attribute_score_data': {attr: pivot.get_plot_data(target, max_bins=num_pivot_bins).to_dict('records') for attr,pivot in pivots.items()},

@@ -147,9 +147,15 @@ body {
   grid-column: 3/6;
   grid-row: 1;
   display:flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
   border-radius: 30px;
+  
+}
+
+.marksControl {
+  background-color: 'red';
+  display: flex;
+  flex-direction: column;
 }
 
 .l-bottom {
