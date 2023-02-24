@@ -49,7 +49,6 @@ export const MarksControlComponent = ({setXCoord}) => {
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
 
   
-
     let xOptions = ['Score', ...keys]
     
     console.log('KEYS', xOptions);
