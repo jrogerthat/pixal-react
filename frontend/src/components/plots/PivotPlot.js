@@ -32,7 +32,7 @@ export const  PivotPlot = () => {
         />
         <div>plot
 
-            <FeatureBarPlot selectedParam={xCoord} width={300} height={200} />
+            <FeatureBarPlot selectedParam={xCoord} width={600} height={100} />
         </div>
       </div>
     )
@@ -43,15 +43,11 @@ export const  PivotPlot = () => {
 export const MarksControlComponent = ({setXCoord}) => {
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
-
-    console.log('FEAT', selectedPredicate.feature[0])
-
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
 
   
     let xOptions = ['Score', ...keys]
-    
-    console.log('KEYS', xOptions);
+
 
     return(
         <div className="marksControl">

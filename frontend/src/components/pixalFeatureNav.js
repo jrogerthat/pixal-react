@@ -8,13 +8,13 @@ export const PixalFeatureNav = ({feature}) => {
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     let height = 100;
+    let width = 250;
 
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
    
-
     let arrayOfBarData = ['Segment', 'State', 'Sub-Category'];
 
-    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, 200]).padding(0.2);
+    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, width]).padding(0.2);
     let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([height, 0])
     const svgRef = useRef(null);
     
@@ -45,12 +45,18 @@ export const PixalFeatureNav = ({feature}) => {
 
         let wrap = svgElement.append('g');
 
+        wrap.attr("transform", "translate(30, 0)")
+
         let xAxis = wrap.append("g")
         .attr("transform", "translate(10," + height + ")")
         .call(d3.axisBottom(xScale))
         .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
             .style("text-anchor", "end");
+
+        let yAxis = wrap.append("g")
+        .attr("transform", "translate(10, 0)")
+        .call(d3.axisLeft(yScale))
 
         let bars = wrap.selectAll('rect.bar').data(plotData)
         .join('rect').attr("x", function(d) { return xScale(d[feature[0]]); })
@@ -69,10 +75,16 @@ export const PixalFeatureNav = ({feature}) => {
         className="feature-nav"
         onClick={handleClick}
         >
-            <div>{`${feature[0]}: `}
+            <div
+            style={{
+                fontSize:14, 
+                fontWeight:600,
+                margin:5
+            }}
+            >{`${feature[0]}: `}
             {/* {featureValues(feature[1])} */}
             </div>
-            <div>
+            <div style={{marginTop:10}}>
                 <svg ref={svgRef} />
             </div>
         </div>
