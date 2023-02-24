@@ -56,7 +56,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
         <div className="pred-wrap"
             style={{
                 opacity: isHidden(),
-                backgroundColor: isSelected()
+                border: `3px solid ${isSelected()}`
             }}
            
             onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}

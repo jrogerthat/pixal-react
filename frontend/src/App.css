@@ -131,7 +131,7 @@ body {
 
 .l-top {
   background-color: #e8e4e4e0;
-  grid-column: 1/3;
+  grid-column: 1/2;
   grid-row: 1;
   display:flex;
   justify-content: center;
@@ -144,7 +144,7 @@ body {
 .r-top {
 
   background-color: #e8e4e4e0;
-  grid-column: 3/6;
+  grid-column: 2/6;
   grid-row: 1;
   display:flex;
   flex-direction: row;

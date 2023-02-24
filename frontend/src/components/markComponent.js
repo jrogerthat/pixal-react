@@ -4,6 +4,9 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { DataContext } from '../context';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 export const MarksControlComponent = () => {
 
@@ -15,66 +18,48 @@ export const MarksControlComponent = () => {
     return(
         <div className="marksControl">
             <div>
-                <div>marks</div>
-                <div></div>
+                <CoordDrop options={['point', 'bar', 'line']} label={"marks"} />
             </div>
             <div>
                 <div>encoding</div>
-                <div></div>
+                <div>
+                    <CoordDrop options={selectedPredicate.features} label={"x"} />
+                    <CoordDrop options={selectedPredicate.features} label={"y"} />
+                </div>
             </div>
             <div>
-                <div>filters</div>
-                <MarkDropdown data={selectedPredicate.features} />
+                <CoordDrop options={selectedPredicate.features} label={"Filter by"} />
             </div>
         </div>
     )
 }
 
-const MarkDropdown = ({data}) => {
+const CoordDrop = ({options, label}) => {
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    // const options = [{display: 'Explore and Edit Predicates', bool: true},{display: 'Explore Explanations', bool: false}]
+    const [{selectedPredicate}, dispatch] = React.useContext(DataContext);
 
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const [coord, setCoord] = React.useState('');
+
+    const handleChange = (event) => {
+        setCoord(event.target.value);
     };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    return(
-        <div className='filter-drop'>
-        <Button
-            variant="outlined"
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-        >
-            Filter
-        </Button>
-        <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-            'aria-labelledby': 'basic-button',
-            }}
-        >
-            {
-                data.map((op, i)=> (
-                    <MenuItem 
-                    key={`op-${i+1}`}
-                    onClick={() => {
-                        // dispatch({type: "UPDATE_EDIT_MODE", editMode:op.bool})
-                        handleClose();
-                    }}
-                    >{`filter by ${op}`}</MenuItem>
-                ))
-            }
-        </Menu>
-        </div>
-    )
+
+    return (
+        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+        <InputLabel id="demo-select-small">{label}</InputLabel>
+        <Select
+            labelId="demo-select-small"
+            id="demo-select-small"
+            value={coord}
+            label={label}
+            onChange={handleChange}
+        >{
+            options.map(op => (
+                <MenuItem key={op} value={op}>{op}</MenuItem>
+            ))
+        }
+        </Select>
+        </FormControl>
+    );
+  
 }

@@ -65,18 +65,18 @@ These work!
 def index():
    pass
 
-@api.route("/load_test_score")
-def load_test_score():
-    job = []
-    with open(f"static/data/test_pred_score.json", 'rb') as f:
-        scores = json.load(f)
-        for ob in scores["scores_test"]:
-            ob["density"] = random.randrange(0, 8) * .1
-            job.append(ob)
-    finob = {}
-    finob["predicate_scores"] = job
-    print('firing dat load')
-    return finob
+# @api.route("/load_test_score")
+# def load_test_score():
+#     job = []
+#     with open(f"static/data/test_pred_score.json", 'rb') as f:
+#         scores = json.load(f)
+#         for ob in scores["scores_test"]:
+#             ob["density"] = random.randrange(0, 8) * .1
+#             job.append(ob)
+#     finob = {}
+#     finob["predicate_scores"] = job
+#     print('firing dat load')
+#     return finob
 
 @api.route('/load_predicates_dist_list')
 def load_predicates_dist_list():

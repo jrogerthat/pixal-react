@@ -3,161 +3,155 @@ import { useContext, useEffect, useMemo, useRef } from "react";
 import { DataContext } from "../../context";
 
 
+function kde(kernel, thresholds, data) {
+    return thresholds.map(t => [t, d3.mean(data, d => kernel(t - +d.score))]);
+}
+
+function epanechnikov(bandwidth) {
+    return x => Math.abs(x /= bandwidth) <= 1 ? 0.75 * (1 - x * x) / bandwidth : 0;
+}
+
+
 const PredScorePlot = ({width, height}) => {
    
-    const axesRef = useRef(null);
-
-    function kernelDensityEstimator(kernel, X) {
-        return function(V) {
-          return X.map(function(x) {
-            return [x, d3.mean(V, function(v) { return kernel(x - v); })];
-          });
-        };
-      }
-      function kernelEpanechnikov(k) {
-        return function(v) {
-          return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-        };}
-
-    /**
-     * START PRED SCORE SAMPLE
-     */
-
-      // Compute kernel density estimation
-//   var kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(60))
-//   var density1 =  kde( data
-//       .filter( function(d){return d.type === "variable 1"} )
-//       .map(function(d){  return d.value; }) )
-//   var density2 =  kde( data
-//       .filter( function(d){return d.type === "variable 2"} )
-//       .map(function(d){  return d.value; }) )
-  
-//   svg.append("path")
-//       .attr("class", "mypath")
-//       .datum(density1)
-//       .attr("fill", "#69b3a2")
-//       .attr("opacity", ".6")
-//       .attr("stroke", "#000")
-//       .attr("stroke-width", 1)
-//       .attr("stroke-linejoin", "round")
-//       .attr("d",  d3.line()
-//         .curve(d3.curveBasis)
-//           .x(function(d) { return x(d[0]); })
-//           .y(function(d) { return y(d[1]); })
-//       );
-//   svg.append("path")
-//       .attr("class", "mypath")
-//       .datum(density2)
-//       .attr("fill", "#404080")
-//       .attr("opacity", ".6")
-//       .attr("stroke", "#000")
-//       .attr("stroke-width", 1)
-//       .attr("stroke-linejoin", "round")
-//       .attr("d",  d3.line()
-//         .curve(d3.curveBasis)
-//           .x(function(d) { return x(d[0]); })
-//           .y(function(d) { return y(d[1]); })
-//       );
+    const svgRef = useRef(null);
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const data = selectedPredicate.predicate_scores;
+    const margin = {top: 20, right: 30, bottom: 30, left: 40}
+    const bandwidth = .05
 
+    console.log(data)
+    let maxScore = d3.max(data.map(m => m.score));
+
+    let x = useMemo(()=> {
+        return d3.scaleLinear()
+        .domain([0, maxScore])
+        .range([margin.left, width - margin.right]);
+
+    }, [width, selectedPredicate]);
+
+    console.log('domain',x.domain())
+
+    const thresholds = x.ticks(50)
+
+    let bins = d3.bin()
+    .value(function(d) { return +d.score; }) 
+    .domain(x.domain())
+    .thresholds(thresholds)
+
+
+    let binAll = bins(data);
+
+    let densityAll = kde(epanechnikov(bandwidth), thresholds, data);
+
+
+    let groupData = Array.from(d3.group(data, d => d.predicate));
    
 
-    const sortedScores = selectedPredicate.predicate_scores.sort((a, b) => {
-        return a.score - b.score;
-    });
+    let predData = groupData.filter(f => f[0] === true)[0][1];
+    let notPredData = groupData.filter(f => f[0] === false)[0][1];
 
-    console.log('sorted scores',sortedScores)
-
-    const xScale = useMemo(() => {
-        return d3.scaleLinear().range([0, width]).domain([-10,15])
-        // .domain([0, d3.max(sortedScores.map(f => f.score))]);
-    }, [sortedScores, width]);
-
-    const kde = kernelDensityEstimator(kernelEpanechnikov(7), xScale.ticks(60));
-
-    let densityPred =  kde( sortedScores
-    .filter( function(d){return d.predicate === true} )
-    .map(function(d){  return d.score; }) )
-
-    let densityNot =  kde( sortedScores
-        .filter( function(d){return d.predicate === false} )
-        .map(function(d){  return d.score; }) )
-
-    console.log(d3.max([...densityPred, ...densityNot].map(m => m[1])))
-
-    let maxVal = d3.max(kde(sortedScores.map(f => f.score)));
-
-    const yScale = useMemo(() => {
-        d3.max(sortedScores.map(f => f.density))
-        return d3.scaleLinear().range([height, 0]).domain([0, 0.12]);//.domain([0, maxVal[1]]);
-    }, [sortedScores, height]);
+    let predBin = bins(predData).map(m => {
+        m.y = m.length === 0 ? 0 : m.length / predData.length
+        return m;
+    })
+    let notBin = bins(notPredData).map(m => {
+        m.y = m.length === 0 ? 0 : m.length / notPredData.length
+        return m;
+    })
 
 
-      // Render the X axis using d3.js, not react
-    useEffect(() => {
-        const svgElement = d3.select(axesRef.current);
-        svgElement.selectAll("*").remove();
-        const xAxisGenerator = d3.axisBottom(xScale);
-        
-        let axisGroup = svgElement
-            .append("g")
-            .attr("transform", "translate(0," + (height - 20) + ")")
-            .call(xAxisGenerator);
+    // console.log(predData)
 
-        const yAxisGenerator = d3.axisLeft(yScale);
-        svgElement.append("g").call(yAxisGenerator);
+    let densityP = kde(epanechnikov(bandwidth), thresholds, predData);
 
-        let notGroup = svgElement.append('g').classed('not-dist', true);
-        let predGroup = svgElement.append('g').classed('pred-dist', true);
+    let densityN = kde(epanechnikov(bandwidth), thresholds, notPredData);
 
-        predGroup.append("path")
-        .attr("class", "mypath")
-        .datum(densityPred)
-        .attr("fill", "#69b3a2")
-        .attr("opacity", ".6")
-        .attr("stroke", "#000")
-        .attr("stroke-width", 1)
-        .attr("stroke-linejoin", "round")
-        .attr("d",  d3.line()
-        .curve(d3.curveBasis)
-          .x(function(d) { return xScale(d[0]); })
-          .y(function(d) { return yScale(d[1]); })
-      );
+    let yMaxAll = d3.extent(densityAll.map(m => m[1]))
 
-        notGroup.append("path")
-            .attr("class", "mypath")
-            .datum(densityNot)
-            .attr("fill", "#404080")
-            .attr("opacity", ".6")
+    let y = useMemo(()=> {
+        return d3.scaleLinear()
+        .domain([0, d3.max(binAll, d => d.length) / data.length])
+        // .range([height - margin.bottom, margin.top])
+        .range([height - margin.bottom, margin.top])
+    }, [height, selectedPredicate]);
+
+
+    console.log(y.domain())
+
+    let yp = useMemo(()=> {
+        return d3.scaleLinear()
+        .domain(yMaxAll)
+        // .domain([0, d3.max(bins, d => d.length) / data.length])
+        // .range([height - margin.bottom, margin.top])
+        .range([height - margin.bottom, margin.top])
+    }, [height, selectedPredicate]);
+
+
+
+    let yn = useMemo(()=> {
+        return d3.scaleLinear()
+        .domain(yMaxAll)
+        // .domain([0, d3.max(bins, d => d.length) / data.length])
+        // .range([height - margin.bottom, margin.top])
+        .range([height - margin.bottom, margin.top])
+    }, [height, selectedPredicate]);
+     
+   
+
+    const line = d3.line()
+    .curve(d3.curveBasis)
+    .x(d => x(d[0]))
+    .y(d => y(d[1]))
+
+    useEffect(()=> {
+
+        const svg = d3.select(svgRef.current);
+        svg.selectAll("*").remove();
+
+        // svg.append("g")
+        // .attr("fill", "#bbb")
+        // .selectAll("rect")
+        // .data(notBin)
+        // .join("rect")
+        //     .attr("x", d => x(d.x0) + 1)
+        //     .attr("y", d => y(d.y))
+        //     .attr("width", d => x(d.x1) - x(d.x0) - 1)
+        //     .attr("height", d => y(0) - y(d.y));
+
+
+        // svg.append("g")
+        // .attr("fill", "red")
+        // .selectAll("rect")
+        // .data(predBin)
+        // .join("rect")
+        //     .attr("x", d => x(d.x0) + 1)
+        //     .attr("y", d => y(d.y))
+        //     .attr("width", d => x(d.x1) - x(d.x0) - 1)
+        //     .attr("height", d => y(0) - y(d.y));
+
+    
+        svg.append("path")
+            .datum(densityN)
+            .attr("fill", "none")
             .attr("stroke", "#000")
-            .attr("stroke-width", 1)
+            .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
-            .attr("d",  d3.line()
-                .curve(d3.curveBasis)
-            .x(function(d) { return xScale(d[0]); })
-            .y(function(d) { return yScale(d[1]); })
-      );
+            .attr("d", line);
 
 
-    }, [xScale, yScale, height]);
-
-    // let distScoreData = Array.from(d3.group(sortedScores, d => d.predicate));
+        svg.append("path")
+            .datum(densityP)
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round")
+            .attr("d", line);
+    }, []);
 
     return(
-        <svg width={width} height={height}>
-            {/* {
-                distScoreData.map(d => (
-                    <ScoreGroup key={`isPred${d[0]}`} data={d} yScale={yScale} xScale={xScale} />
-                ))
-            } */}
-            <g
-            width={width}
-            height={20}
-            ref={axesRef}
-            transform={`translate(${[30, 30].join(",")})`}
-            />
-        </svg>
+        <svg ref={svgRef} width={width} height={height} />
     )
 }
 
@@ -190,6 +184,62 @@ const ScoreGroup = ({data, xScale, yScale}) => {
     )
 }
 
-
-
 export {PredScorePlot}
+
+// console.log('sorted scores',sortedScores)
+
+// const x = useMemo(() => {
+//     return d3.scaleLinear().range([0, (width - 50)]).domain([0, d3.max(sortedScores.map(f => f.score))]);
+// }, [sortedScores, width]);
+
+// var histogram = d3.bin()
+//   .value(function(d) { return +d.score; })   // I need to give the vector of value
+//   .domain(x.domain())  // then the domain of the graphic
+//   .thresholds(x.ticks(50)); // then the numbers of bins
+
+
+//  // And apply twice this function to data to get the bins.
+// var bins1 = histogram(sortedScores.filter( function(d){return d.predicate === false} ));
+// var bins2 = histogram(sortedScores.filter( function(d){return d.predicate === true} ));
+
+// console.log(bins1, bins2);
+
+// // Y axis: scale and draw:
+// let y = d3.scaleLinear()
+//   .range([(height - 50), 0]);
+//   y.domain([0, d3.max(bins1, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+
+
+
+//   // Render the X axis using d3.js, not react
+// useEffect(() => {
+//     const svg = d3.select(axesRef.current);
+//     svg.selectAll("*").remove();
+//     const xAxisGenerator = d3.axisBottom(x);
+    
+//     svg.append("g")
+//     .call(d3.axisLeft(y));
+
+// // append the bars for series 1
+// svg.selectAll("rect.notPred")
+//     .data(bins1)
+//     .join("rect")
+//     .classed("notPred", true)
+//       .attr("x", 1)
+//       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+//       .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+//       .attr("height", function(d) { return (height - 50) - y(d.length); })
+//       .style("fill", "#69b3a2")
+//       .style("opacity", 0.5)
+
+// // append the bars for series 2
+// svg.selectAll("rect.pred")
+//     .data(bins2)
+//     .join("rect")
+//     .classed("pred", true)
+//       .attr("x", 1)
+//       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+//       .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+//       .attr("height", function(d) { return (height - 50) - y(d.length); })
+//       .style("fill", "#404080")
+//       .style("opacity", 0.5)

@@ -4,6 +4,7 @@ import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
 import { PixalFeatureNav } from './pixalFeatureNav';
 import { MarksControlComponent } from './markComponent';
+import { PivotPlot } from './plots/PivotPlot';
 
 function Pixalate() {
 
@@ -19,23 +20,25 @@ function Pixalate() {
     return(
       <div className="pixalate">
         <div className="l-top">
-          <div>score</div>
-          <PredScorePlot width={440} height={300} />
-          </div>
-        
-          <div className="l-bottom">
-            <div>features</div>
+          <div>features</div>
             {
               predicateFeatureArray.map(f => (
                 <PixalFeatureNav key={`${f[0]}`} feature={f}/>
               ))
             }
           </div>
+        
+          <div className="l-bottom">
+          <div>score</div>
+          <PredScorePlot width={440} height={200} />
+          </div>
 
-          <div className="r-top">
+          {/* <div className="r-top">
             <MarksControlComponent />
             <div>plot</div>
-          </div>
+          </div> */}
+
+          <PivotPlot />
 
           <div className="r-bottom">
           <div>explanation</div>
