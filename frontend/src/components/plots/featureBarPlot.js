@@ -15,8 +15,6 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
 
     let plotData = plotDataOptions[selectedParam];
 
-    console.log('pl ', selectedPredicate);
-
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, width]).padding(0.2);
     let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(height), 0])
    

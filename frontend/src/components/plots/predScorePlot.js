@@ -21,7 +21,7 @@ const PredScorePlot = ({width, height}) => {
     const margin = {top: 20, right: 30, bottom: 30, left: 40}
     const bandwidth = .05
 
-    console.log(data)
+   
     let maxScore = d3.max(data.map(m => m.score));
 
     let x = useMemo(()=> {
@@ -30,8 +30,6 @@ const PredScorePlot = ({width, height}) => {
         .range([margin.left, width - margin.right]);
 
     }, [width, selectedPredicate]);
-
-    console.log('domain',x.domain())
 
     const thresholds = x.ticks(50)
 
@@ -44,11 +42,7 @@ const PredScorePlot = ({width, height}) => {
     let binAll = bins(data);
 
     let densityAll = kde(epanechnikov(bandwidth), thresholds, data);
-
-
     let groupData = Array.from(d3.group(data, d => d.predicate));
-   
-
     let predData = groupData.filter(f => f[0] === true)[0][1];
     let notPredData = groupData.filter(f => f[0] === false)[0][1];
 
@@ -61,8 +55,6 @@ const PredScorePlot = ({width, height}) => {
         return m;
     })
 
-
-    // console.log(predData)
 
     let densityP = kde(epanechnikov(bandwidth), thresholds, predData);
 
@@ -78,7 +70,7 @@ const PredScorePlot = ({width, height}) => {
     }, [height, selectedPredicate]);
 
 
-    console.log(y.domain())
+   
 
     let yp = useMemo(()=> {
         return d3.scaleLinear()
@@ -186,7 +178,7 @@ const ScoreGroup = ({data, xScale, yScale}) => {
 
 export {PredScorePlot}
 
-// console.log('sorted scores',sortedScores)
+
 
 // const x = useMemo(() => {
 //     return d3.scaleLinear().range([0, (width - 50)]).domain([0, d3.max(sortedScores.map(f => f.score))]);
@@ -201,8 +193,6 @@ export {PredScorePlot}
 //  // And apply twice this function to data to get the bins.
 // var bins1 = histogram(sortedScores.filter( function(d){return d.predicate === false} ));
 // var bins2 = histogram(sortedScores.filter( function(d){return d.predicate === true} ));
-
-// console.log(bins1, bins2);
 
 // // Y axis: scale and draw:
 // let y = d3.scaleLinear()

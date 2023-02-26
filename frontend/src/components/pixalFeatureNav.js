@@ -1,19 +1,28 @@
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../context";
 import * as d3 from "d3";
 
 
-export const PixalFeatureNav = ({feature}) => {
+export const PixalFeatureNav = ({feature, divWidth}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
-    let height = 100;
-    let width = 250;
+ 
+    const [width, setWidth] = useState(400);
+    const [height, setHeight] = useState(200);
+  
+    useEffect(()=> {
+       
+        if(divWidth && typeof divWidth === 'string'){
+            setWidth((+divWidth.split('px')[0]) - 65)
+            setHeight((width * .6))
+            console.log(width, height)
+        }
+       
+    }, [divWidth])
 
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
    
-    let arrayOfBarData = ['Segment', 'State', 'Sub-Category'];
-
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, width]).padding(0.2);
     let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([height, 0])
     const svgRef = useRef(null);
@@ -38,7 +47,6 @@ export const PixalFeatureNav = ({feature}) => {
 
     useEffect(()=> {
 
-        
         const svgElement = d3.select(svgRef.current);
 
         svgElement.selectAll('*').remove();
@@ -58,7 +66,10 @@ export const PixalFeatureNav = ({feature}) => {
         .attr("transform", "translate(10, 0)")
         .call(d3.axisLeft(yScale))
 
-        let bars = wrap.selectAll('rect.bar').data(plotData)
+        let barGroup = wrap.append('g')
+        barGroup.attr('transform', 'translate(10, 0)')
+
+        let bars = barGroup.selectAll('rect.bar').data(plotData)
         .join('rect').attr("x", function(d) { return xScale(d[feature[0]]); })
         .attr("y", function(d) { return yScale(d.score); })
         .attr("width", xScale.bandwidth())
@@ -85,7 +96,7 @@ export const PixalFeatureNav = ({feature}) => {
             {/* {featureValues(feature[1])} */}
             </div>
             <div style={{marginTop:10}}>
-                <svg ref={svgRef} />
+                <svg ref={svgRef} width={divWidth}/>
             </div>
         </div>
     )

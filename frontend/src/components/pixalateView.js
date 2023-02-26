@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import '../App.css';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
@@ -9,21 +9,36 @@ import { PivotPlot } from './plots/PivotPlot';
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
-
-  console.log('pixalate rendering')
+  const [plotWidth, setPlotWidth] = useState(400);
 
   let predicateFeatureArray = useMemo(()=> {
     return selectedPredicate ? Object.entries(selectedPredicate.attribute_data) : [];
   }, [selectedPredicate]);
 
+  const divRefTwo = useRef();
+  const divRefFour = useRef();
+  
+  useEffect(() => {
+    // I don't think it can be null at this point, but better safe than sorry
+     if (selectedPredicate && !!selectedPredicate.feature && divRefFour.current) {
+      
+        setPlotWidth(window.getComputedStyle(divRefFour.current).width);
+       
+     }else if(divRefTwo.current){
+    
+        setPlotWidth(window.getComputedStyle(divRefTwo.current).width);
+  
+     }
+   }, [divRefTwo.current, divRefFour.current]);
+
   if(selectedPredicate && !!selectedPredicate.feature){
     return(
       <div className="pixalate">
-        <div className="l-top">
+        <div className="l-top" ref={divRefFour}>
           <div>features</div>
             {
               predicateFeatureArray.map(f => (
-                <PixalFeatureNav key={`${f[0]}`} feature={f}/>
+                <PixalFeatureNav key={`${f[0]}`} feature={f} divWidth={plotWidth}/>
               ))
             }
           </div>
@@ -32,11 +47,6 @@ function Pixalate() {
           <div>score</div>
           <PredScorePlot width={440} height={200} />
           </div>
-
-          {/* <div className="r-top">
-            <MarksControlComponent />
-            <div>plot</div>
-          </div> */}
 
           <PivotPlot />
 
@@ -50,7 +60,7 @@ function Pixalate() {
       <div className="pixalate-two">
         
         
-          <div className="left">
+          <div className="left" ref={divRefTwo}>
             <div>feature</div>
             {
               predicateFeatureArray.map(f => (

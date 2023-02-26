@@ -12,7 +12,7 @@ export const MarksControlComponent = () => {
 
     const [{selectedPredicate}, dispatch] = React.useContext(DataContext);
 
-    console.log('selected', selectedPredicate)
+   
 
 
     return(
