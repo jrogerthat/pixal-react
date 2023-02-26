@@ -12,6 +12,21 @@ function epanechnikov(bandwidth) {
 }
 
 
+// Function to compute density
+function kernelDensityEstimator(kernel, X) {
+    return function(V) {
+      return X.map(function(x) {
+        return [x, d3.mean(V, function(v) { return kernel(x - v); })];
+      });
+    };
+  }
+  function kernelEpanechnikov(k) {
+    return function(v) {
+      return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
+    };
+  }
+
+
 const PredScorePlot = ({width, height}) => {
    
     const svgRef = useRef(null);
@@ -19,7 +34,7 @@ const PredScorePlot = ({width, height}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     const data = selectedPredicate.predicate_scores;
     const margin = {top: 20, right: 30, bottom: 30, left: 40}
-    const bandwidth = .05
+    const bandwidth = .04
 
    
     let maxScore = d3.max(data.map(m => m.score));
@@ -33,63 +48,36 @@ const PredScorePlot = ({width, height}) => {
 
     const thresholds = x.ticks(50)
 
-    let bins = d3.bin()
-    .value(function(d) { return +d.score; }) 
-    .domain(x.domain())
-    .thresholds(thresholds)
-
-
-    let binAll = bins(data);
-
     let densityAll = kde(epanechnikov(bandwidth), thresholds, data);
     let groupData = Array.from(d3.group(data, d => d.predicate));
     let predData = groupData.filter(f => f[0] === true)[0][1];
     let notPredData = groupData.filter(f => f[0] === false)[0][1];
 
-    let predBin = bins(predData).map(m => {
-        m.y = m.length === 0 ? 0 : m.length / predData.length
-        return m;
-    })
-    let notBin = bins(notPredData).map(m => {
-        m.y = m.length === 0 ? 0 : m.length / notPredData.length
-        return m;
-    })
 
+    let densityP = useMemo(() => {
+        return [[0,0], ...kde(epanechnikov(bandwidth), thresholds, predData), [1, 0]];
+    }, [selectedPredicate])
 
-    let densityP = kde(epanechnikov(bandwidth), thresholds, predData);
-
-    let densityN = kde(epanechnikov(bandwidth), thresholds, notPredData);
+    let densityN = useMemo(()=> {
+        return [[0,0], ...kde(epanechnikov(bandwidth), thresholds, notPredData), [1, 0]];
+    }, [selectedPredicate])
+    
 
     let yMaxAll = d3.extent(densityAll.map(m => m[1]))
 
+    let yMaxP = d3.extent(densityP.map(m => m[1]))
+
+    let yMaxN = d3.extent(densityN.map(m => m[1]))
+
+    let testMax = d3.max([yMaxP[1], yMaxN[1]]);
+
+
     let y = useMemo(()=> {
         return d3.scaleLinear()
-        .domain([0, d3.max(binAll, d => d.length) / data.length])
+        .domain([0, testMax])
         // .range([height - margin.bottom, margin.top])
-        .range([height - margin.bottom, margin.top])
+        .range([height - margin.bottom, 0])
     }, [height, selectedPredicate]);
-
-
-   
-
-    let yp = useMemo(()=> {
-        return d3.scaleLinear()
-        .domain(yMaxAll)
-        // .domain([0, d3.max(bins, d => d.length) / data.length])
-        // .range([height - margin.bottom, margin.top])
-        .range([height - margin.bottom, margin.top])
-    }, [height, selectedPredicate]);
-
-
-
-    let yn = useMemo(()=> {
-        return d3.scaleLinear()
-        .domain(yMaxAll)
-        // .domain([0, d3.max(bins, d => d.length) / data.length])
-        // .range([height - margin.bottom, margin.top])
-        .range([height - margin.bottom, margin.top])
-    }, [height, selectedPredicate]);
-     
    
 
     const line = d3.line()
@@ -102,45 +90,38 @@ const PredScorePlot = ({width, height}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        // svg.append("g")
-        // .attr("fill", "#bbb")
-        // .selectAll("rect")
-        // .data(notBin)
-        // .join("rect")
-        //     .attr("x", d => x(d.x0) + 1)
-        //     .attr("y", d => y(d.y))
-        //     .attr("width", d => x(d.x1) - x(d.x0) - 1)
-        //     .attr("height", d => y(0) - y(d.y));
+        const xAxis = d3.axisBottom(x);
 
+        svg
+        .append("g")
+        .attr("transform", "translate(0," + (height-margin.bottom) + ")")
+        .call(xAxis);
 
-        // svg.append("g")
-        // .attr("fill", "red")
-        // .selectAll("rect")
-        // .data(predBin)
-        // .join("rect")
-        //     .attr("x", d => x(d.x0) + 1)
-        //     .attr("y", d => y(d.y))
-        //     .attr("width", d => x(d.x1) - x(d.x0) - 1)
-        //     .attr("height", d => y(0) - y(d.y));
+        const yAxis = d3.axisLeft(y);
 
-    
+        svg.append("g").call(yAxis)
+        .attr("transform", "translate("+margin.left+",0)");
+
         svg.append("path")
             .datum(densityN)
-            .attr("fill", "none")
+            .attr("fill", "#000")
+            .attr("fill-opacity", 0.1)
             .attr("stroke", "#000")
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
             .attr("d", line);
 
-
         svg.append("path")
             .datum(densityP)
             .attr("fill", "none")
-            .attr("stroke", "red")
+            .attr("stroke", selectedPredicate.predicate_info.color)
+            .attr("fill", selectedPredicate.predicate_info.color)
+            .attr("fill-opacity", 0.4)
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
             .attr("d", line);
-    }, []);
+
+    }, [selectedPredicate]);
 
     return(
         <svg ref={svgRef} width={width} height={height} />

@@ -87,7 +87,7 @@ def load_predicates_dist_list():
     all_fun.save_predicate_id(0, predicate_id_path)
 
     job['pred_dist'] = all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
-    print('FEATURES',features)
+  
     return job
 
 @api.route('/load_predicates')
