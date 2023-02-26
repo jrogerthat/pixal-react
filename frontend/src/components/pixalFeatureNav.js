@@ -6,7 +6,7 @@ import * as d3 from "d3";
 export const PixalFeatureNav = ({feature, divWidth}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
  
     const [width, setWidth] = useState(400);
     const [height, setHeight] = useState(200);
@@ -27,17 +27,28 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
     const svgRef = useRef(null);
     
     const featureValues = (valArr) => {
-        if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
-            return <span>between{` ${valArr[0]} `}and{` ${valArr[1]} `}</span>
-        }else if(valArr.length === 1){
-            return  <span>{` ${valArr[0]}`}</span>
+        
+        console.log('feature val', valArr, categoricalFeatures.indexOf(valArr[0]))
+        if(categoricalFeatures.indexOf(valArr[0]) > -1){
+            let arr = Object.entries(valArr[1]);
+            let chosen = arr[0][1].filter(f => f.predicate === 1);
+            console.log('chosen',chosen[0][valArr[0]])
+            return chosen[0][valArr[0]]
         }
 
-        return (
-            valArr.map((m, i)=> (
-                <span key={`fv-${i+1}`}>{` ${m},`}</span>
-            ))
-        )
+        return ""
+
+        // if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
+        //     return <span>between{` ${valArr[0]} `}and{` ${valArr[1]} `}</span>
+        // }else if(valArr.length === 1){
+        //     return  <span>{` ${valArr[0]}`}</span>
+        // }
+
+        // return (
+        //     valArr.map((m, i)=> (
+        //         <span key={`fv-${i+1}`}>{` ${m},`}</span>
+        //     ))
+        // )
     }
 
     const handleClick = () => {
@@ -47,11 +58,8 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
     useEffect(()=> {
 
         const svgElement = d3.select(svgRef.current);
-
         svgElement.selectAll('*').remove();
-
         let wrap = svgElement.append('g');
-
         wrap.attr("transform", "translate(30, 0)")
 
         let xAxis = wrap.append("g")
@@ -97,7 +105,7 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
                 // backgroundColor:'blue'
             }}
             >{`${feature[0]}: `}
-            {/* {featureValues(feature[1])} */}
+            {featureValues(feature)}
             </div>
             <div style={{
                 marginTop:10, 

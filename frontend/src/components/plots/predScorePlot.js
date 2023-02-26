@@ -34,9 +34,8 @@ const PredScorePlot = ({width, height}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     const data = selectedPredicate.predicate_scores;
     const margin = {top: 20, right: 30, bottom: 30, left: 40}
-    const bandwidth = .04
+    const bandwidth = .06
 
-   
     let maxScore = d3.max(data.map(m => m.score));
 
     let x = useMemo(()=> {

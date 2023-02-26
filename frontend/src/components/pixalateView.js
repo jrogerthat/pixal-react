@@ -43,7 +43,7 @@ function Pixalate() {
           </div>
         
           <div className="l-bottom">
-          <div>score</div>
+          <div>Predicate I_Forest Score</div>
           <PredScorePlot width={440} height={200} />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
@@ -69,7 +69,7 @@ function Pixalate() {
           </div>
 
           <div className="right">
-          <div>score</div>
+          <div>Predicate I_Forest Score</div>
           <PredScorePlot predScoreArray={selectedPredicate.predicate_scores} width={600} height={300} />
           </div>
 
