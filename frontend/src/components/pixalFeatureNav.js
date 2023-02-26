@@ -7,6 +7,8 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
+
+    console.log('selected pred',selectedPredicate, feature)
  
     const [width, setWidth] = useState(400);
     const [height, setHeight] = useState(200);
@@ -16,7 +18,6 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
         if(divWidth && typeof divWidth === 'string'){
             setWidth((+divWidth.split('px')[0]) - 65)
             setHeight((width * .6))
-            console.log(width, height)
         }
        
     }, [divWidth])

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
@@ -20,9 +20,15 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
    
     
     const svgRef = useRef(null);
+
+    const divRef = useRef();
+
+    const [divWidth, setDivWidth] = useState();
     
     
     useEffect(()=> {
+
+
 
         const svgElement = d3.select(svgRef.current);
 
@@ -60,7 +66,7 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
         <div 
         className="feature-bar"
         >
-            <div>
+            <div ref={divRef}>
                 <svg 
                 style={{width:(width + 50)}}
                 ref={svgRef} />

@@ -25,9 +25,8 @@ function Pixalate() {
         setPlotWidth(window.getComputedStyle(divRefFour.current).width);
        
      }else if(divRefTwo.current){
-    
         setPlotWidth(window.getComputedStyle(divRefTwo.current).width);
-  
+
      }
    }, [divRefTwo.current, divRefFour.current]);
 
@@ -47,7 +46,7 @@ function Pixalate() {
           <div>score</div>
           <PredScorePlot width={440} height={200} />
           </div>
-
+          {/* PIVOT PLOT HAD THE RIGHT TOP */}
           <PivotPlot />
 
           <div className="r-bottom">

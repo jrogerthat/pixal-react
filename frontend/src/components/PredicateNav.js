@@ -10,7 +10,7 @@ function PredicateNav({setHighlightPred, hiddenPreds, setHiddenPreds}) {
   const [addPredMode, setAddPredMode] = useState(false);
   const [{editMode, predicateArray}, dispatch] = useContext(DataContext);
 
-  console.log("rendering predicate nav");
+ 
  
   return (
     <div className="pred-exp-nav">

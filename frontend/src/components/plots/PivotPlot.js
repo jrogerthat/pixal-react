@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
@@ -16,11 +16,20 @@ export const  PivotPlot = () => {
     const [xCoord, setXCoord] = useState('Score');
     const [yCoord, setYCoord] = useState('');
     const [filterByArray, setFilterByArray] = useState([]);
-   
+    const divRef = useRef();
+    const [width, setWidth] = useState(600);
+    const [height, setHeight] = useState(200);
 
-    useEffect(()=> {
-
-    }, [encoding, xCoord, yCoord, filterByArray]);
+  
+    
+    useLayoutEffect(()=> {
+        if(divRef.current){
+            let tempW = window.getComputedStyle(divRef.current).width;
+            setWidth(tempW.split('px')[0]);
+            let tempH = window.getComputedStyle(divRef.current).height;
+            setHeight(tempH.split('px')[0]);
+        }
+    }, [divRef])
 
     return (
         <div className="r-top">
@@ -30,9 +39,8 @@ export const  PivotPlot = () => {
         setYCoord={setYCoord} 
         setFilterByArray={setFilterByArray}
         />
-        <div>plot
-
-            <FeatureBarPlot selectedParam={xCoord} width={600} height={100} />
+        <div ref={divRef}>plot
+            <FeatureBarPlot selectedParam={xCoord} width={width} height={height} />
         </div>
       </div>
     )
