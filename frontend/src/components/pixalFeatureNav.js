@@ -7,8 +7,6 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
-
-    console.log('selected pred',selectedPredicate, feature)
  
     const [width, setWidth] = useState(400);
     const [height, setHeight] = useState(200);
@@ -17,7 +15,7 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
        
         if(divWidth && typeof divWidth === 'string'){
             setWidth((+divWidth.split('px')[0]) - 65)
-            setHeight((width * .6))
+            setHeight((width * .5))
         }
        
     }, [divWidth])
@@ -25,7 +23,7 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
    
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, width]).padding(0.2);
-    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([height, 0])
+    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(height - 50), 0])
     const svgRef = useRef(null);
     
     const featureValues = (valArr) => {
@@ -86,17 +84,27 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
         <div 
         className="feature-nav"
         onClick={handleClick}
+        style={{
+            padding:5,
+            // backgroundColor:'yellow'
+        }}
         >
             <div
             style={{
                 fontSize:14, 
                 fontWeight:600,
-                margin:5
+                margin:5,
+                // backgroundColor:'blue'
             }}
             >{`${feature[0]}: `}
             {/* {featureValues(feature[1])} */}
             </div>
-            <div style={{marginTop:10}}>
+            <div style={{
+                marginTop:10, 
+                padding:3, 
+                margin:5, 
+                // backgroundColor:'red'
+                }}>
                 <svg ref={svgRef} width={divWidth}/>
             </div>
         </div>

@@ -6,13 +6,12 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { FeatureBarPlot } from "./featureBarPlot";
+import { FeatureDotPlot } from "./featureDotPlot";
 
 export const  PivotPlot = () => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    console.log('sel p',selectedPredicate);
-
-    const [encoding, setEncoding] = useState('bar');
+    const [encoding, setEncoding] = useState(null);
     const [xCoord, setXCoord] = useState('Score');
     const [yCoord, setYCoord] = useState('');
     const [filterByArray, setFilterByArray] = useState([]);
@@ -20,8 +19,8 @@ export const  PivotPlot = () => {
     const [width, setWidth] = useState(600);
     const [height, setHeight] = useState(200);
 
-  
-    
+    console.log('ENCODING',encoding)
+
     useLayoutEffect(()=> {
         if(divRef.current){
             let tempW = window.getComputedStyle(divRef.current).width;
@@ -34,33 +33,29 @@ export const  PivotPlot = () => {
     return (
         <div className="r-top">
         <MarksControlComponent 
-        setEncoding={setEncoding} 
-        setXCoord={setXCoord} 
-        setYCoord={setYCoord} 
-        setFilterByArray={setFilterByArray}
+            setEncoding={setEncoding} 
+            setXCoord={setXCoord} 
+            setYCoord={setYCoord} 
+            setFilterByArray={setFilterByArray}
         />
         <div ref={divRef}>plot
-            <FeatureBarPlot selectedParam={xCoord} width={width} height={height} />
+           <WhichPlot xCoord={xCoord} width={width} height={height} encoding={encoding} />
         </div>
       </div>
     )
-
 }
 
-
-export const MarksControlComponent = ({setXCoord}) => {
+export const MarksControlComponent = ({setXCoord, setEncoding}) => {
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
-
-  
     let xOptions = ['Score', ...keys]
 
 
     return(
         <div className="marksControl">
             <div>
-                <CoordDrop options={['point', 'bar', 'line']} label={"marks"} />
+                <CoordDrop options={['point', 'bar', 'line']} label={"marks"} setHandle={setEncoding} />
             </div>
             <div>
                 <div>encoding</div>
@@ -73,6 +68,23 @@ export const MarksControlComponent = ({setXCoord}) => {
                 <CoordDrop options={selectedPredicate.features} label={"Filter by"} />
             </div>
         </div>
+    )
+}
+
+const WhichPlot = ({encoding, xCoord, width, height}) => {
+    const [{categoricalFeatures, selectedPredicate}, dispatch] = useContext(DataContext);
+
+    if(encoding === null){
+        if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
+            return  <FeatureBarPlot selectedParam={xCoord} width={width} height={height} />
+        }else{
+            return <FeatureDotPlot selectedParam={xCoord} width={width} height={height}/>
+        }
+    }else if(encoding === 'point'){
+        return <FeatureDotPlot selectedParam={xCoord} width={width} height={height}/>
+    }
+    return (
+        <FeatureBarPlot selectedParam={xCoord} width={width} height={height} />
     )
 }
 

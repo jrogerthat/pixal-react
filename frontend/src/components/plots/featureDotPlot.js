@@ -3,24 +3,27 @@ import { DataContext } from "../../context";
 import * as d3 from "d3";
 
 
-export const FeatureBarPlot = ({selectedParam, width, height}) => {
+export const FeatureDotPlot = ({selectedParam, width, height}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
 
     const feature = selectedPredicate.feature[0];
+
+    console.log('selectedPredicate', feature, categoricalFeatures);
 
     // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 
     let plotData = plotDataOptions[selectedParam];
 
+    console.log('PLOT DATAAA',plotData);
+
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, width]).padding(0.2);
     let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(+height - 50), 0])
    
     
     const svgRef = useRef(null);
-
     const divRef = useRef();
 
     const [divWidth, setDivWidth] = useState();
@@ -34,7 +37,7 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
 
         let wrap = svgElement.append('g');
 
-        wrap.attr("transform", 'translate(40, 10)')
+        wrap.attr("transform", 'translate(0, 20)')
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (height) + ")")
@@ -48,14 +51,8 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
         .attr("transform", "translate(-5, 0)")
         .call(d3.axisLeft(yScale));
 
-        let bars = wrap.selectAll('rect.bar').data(plotData)
-        .join('rect').attr("x", function(d) { return xScale(d[feature]); })
-        .attr("y", function(d) { return yScale(d[selectedParam === 'Score' ? 'score' : selectedParam]); })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return height - yScale(d[selectedParam === 'Score' ? 'score' : selectedParam]); })
-        .attr("fill", (d) => {
-            return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
-        })
+
+
 
 
     }, [selectedPredicate, selectedParam, yScale]);
