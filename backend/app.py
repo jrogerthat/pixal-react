@@ -187,8 +187,5 @@ def delete_predicate():
 def copy_predicate():
     pass
 
-res = get_selected_data(2, max_pivot_bins=25)
-# print(res['attribute_score_data']['State'])
-
-# if __name__ == "__main__":
-#     api.run(host='localhost',port=5000)
+if __name__ == "__main__":
+    api.run(host='localhost',port=5000)
