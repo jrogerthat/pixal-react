@@ -19,7 +19,7 @@ export const  PivotPlot = () => {
     const [width, setWidth] = useState(600);
     const [height, setHeight] = useState(200);
 
-    console.log('ENCODING',encoding)
+  
 
     useLayoutEffect(()=> {
         if(divRef.current){

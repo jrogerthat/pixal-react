@@ -3,36 +3,54 @@ import { DataContext } from "../context";
 import * as d3 from "d3";
 
 
-export const PixalFeatureNav = ({feature, divWidth}) => {
+export const PixalFeatureNavWrap = ({classN, ref, predicateFeatureArray}) => {
+    
+    
+    return(
+        <div className={classN} ref={ref}>
+        <div>Feature Navigation</div>
+        <div className="feat-nav-wrap">
+        {
+        predicateFeatureArray.map(f => (
+            <PixalFeatureNav key={`${f[0]}`} feature={f} />
+        ))
+        }
+        </div>
+    </div>)
+}
+
+export const PixalFeatureNav = ({feature}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
  
     const [width, setWidth] = useState(400);
     const [height, setHeight] = useState(200);
+
+    const ref = useRef();
   
     useEffect(()=> {
-       
-        if(divWidth && typeof divWidth === 'string'){
-            setWidth((+divWidth.split('px')[0]) - 65)
-            setHeight((width * .5))
+        if(ref.current){
+            setWidth(window.getComputedStyle(ref.current).width.split("px")[0]);
+            setHeight(window.getComputedStyle(ref.current).height.split("px")[0]);
+
+            console.log(width, height)
         }
        
-    }, [divWidth])
+    }, [ref, selectedPredicate])
 
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
    
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, width]).padding(0.2);
-    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(height - 50), 0])
+    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(height), 0])
     const svgRef = useRef(null);
     
     const featureValues = (valArr) => {
         
-        console.log('feature val', valArr, categoricalFeatures.indexOf(valArr[0]))
         if(categoricalFeatures.indexOf(valArr[0]) > -1){
             let arr = Object.entries(valArr[1]);
             let chosen = arr[0][1].filter(f => f.predicate === 1);
-            console.log('chosen',chosen[0][valArr[0]])
+          
             return chosen[0][valArr[0]]
         }
 
@@ -90,6 +108,7 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
 
     return(
         <div 
+        ref={ref}
         className="feature-nav"
         onClick={handleClick}
         style={{
@@ -113,7 +132,7 @@ export const PixalFeatureNav = ({feature, divWidth}) => {
                 margin:5, 
                 // backgroundColor:'red'
                 }}>
-                <svg ref={svgRef} width={divWidth}/>
+                <svg ref={svgRef} width={width}/>
             </div>
         </div>
     )
