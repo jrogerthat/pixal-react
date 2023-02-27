@@ -9,8 +9,9 @@ import numpy as np
 # import plot_pred
 # from predicate_induction_main import Predicate
 import all_fun
-from predicate_induction import Predicate, PredicateInduction, infer_dtypes
+# from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 import random
+from predicates import Predicate, PredicateInduction, infer_dtypes
 
 from flask import Flask
 
@@ -105,7 +106,7 @@ def get_pred_dis():
     return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
 @api.route('/get_selected_data/<predicate_id>')
-def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
+def get_selected_data(predicate_id, max_pivot_bins=25):
     print('preddddd',predicate_id)
     # predicate_induction = session['predicate']['predicate_induction']
     # predicate = session['predicate']['predicates'][predicate_id]
@@ -116,6 +117,8 @@ def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
     # numeric = session['data']['dtypes']['numeric']
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes}
 
+    print(predicate)
+    print(pivots['State'].data[pivots['State'].mask])
     predicate_data = {
         'predicate_id': predicate_id,
         'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records'),
@@ -182,8 +185,8 @@ def delete_predicate():
 def copy_predicate():
     pass
 
-# res = get_selected_data(1, max_pivot_bins=25)
-# print(res)
+res = get_selected_data(2, max_pivot_bins=25)
+# print(res['attribute_score_data']['State'])
 
-if __name__ == "__main__":
-    api.run(host='localhost',port=5000)
+# if __name__ == "__main__":
+#     api.run(host='localhost',port=5000)
