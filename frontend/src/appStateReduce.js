@@ -287,13 +287,6 @@ export const getAppStateReducer = () => {
         return action.data;
       }
 
-      case 'TEST' : {
-        console.log('THIS IS A TEST');
-        return {...state, testParam: 'test'}
-      }
-   
-   
-
       case 'HOVER_OVER_ACTIVITY': {
         return {
           ...state,

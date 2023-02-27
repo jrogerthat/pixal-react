@@ -9,7 +9,8 @@ const initialState = {
   predicateDistributionArray: [],
   selectedPredicate:null,
   highlightedPred:null,
-  editMode: true
+  editMode: true,
+  categoricalFeatures: ["Sub-Category", "Segment", "State"]
 };
 
 const reducer = (state, action) => {

@@ -1,39 +1,35 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import '../App.css';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
-import { PixalFeatureNav } from './pixalFeatureNav';
+import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
+import { MarksControlComponent } from './markComponent';
+import { PivotPlot } from './plots/PivotPlot';
 
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-  console.log('pixalate rendering')
-
   let predicateFeatureArray = useMemo(()=> {
-    return selectedPredicate ? Object.entries(selectedPredicate.predicate_features.predicate) : [];
+    return selectedPredicate ? Object.entries(selectedPredicate.attribute_data) : [];
   }, [selectedPredicate]);
+
+
 
   if(selectedPredicate && !!selectedPredicate.feature){
     return(
       <div className="pixalate">
-        <div className="l-top">
-          <div>score</div>
-          <PredScorePlot width={440} height={300} />
-          </div>
+      
+           <PixalFeatureNavWrap 
+           classN={"l-top"} 
+           predicateFeatureArray={predicateFeatureArray}/>
         
           <div className="l-bottom">
-            <div>features</div>
-            {
-              predicateFeatureArray.map(f => (
-                <PixalFeatureNav key={`${f[0]}`} feature={f}/>
-              ))
-            }
+          <div>Predicate I_Forest Score</div>
+          <PredScorePlot width={440} height={200} />
           </div>
-
-          <div className="r-top">
-            <div>marks</div>
-          </div>
+          {/* PIVOT PLOT HAD THE RIGHT TOP */}
+          <PivotPlot />
 
           <div className="r-bottom">
           <div>explanation</div>
@@ -43,19 +39,13 @@ function Pixalate() {
   }else if(selectedPredicate){
     return (
       <div className="pixalate-two">
-        
-        
-          <div className="left">
-            <div>feature</div>
-            {
-              predicateFeatureArray.map(f => (
-                <PixalFeatureNav key={`${f[0]}`} feature={f}/>
-              ))
-            }
-          </div>
+      
+          <PixalFeatureNavWrap 
+          classN={"left"} 
+          predicateFeatureArray={predicateFeatureArray}/>
 
           <div className="right">
-          <div>score</div>
+          <div>Predicate I_Forest Score</div>
           <PredScorePlot predScoreArray={selectedPredicate.predicate_scores} width={600} height={300} />
           </div>
 

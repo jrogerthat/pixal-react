@@ -21,7 +21,7 @@ import axios from "axios";
 async function useGetDistributions(){
 
   let data = await axios.get('/get_pred_dis')
-  console.log('data in axios dist',data);
+ 
 
   return data;
 }

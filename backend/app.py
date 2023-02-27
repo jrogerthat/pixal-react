@@ -5,7 +5,7 @@ import json
 import pandas as pd
 import numpy as np
 # from predicates import PredicateControl 
-# import edit_predicates
+import edit_predicates
 # import plot_pred
 # from predicate_induction_main import Predicate
 import all_fun
@@ -66,18 +66,18 @@ These work!
 def index():
    pass
 
-@api.route("/load_test_score")
-def load_test_score():
-    job = []
-    with open(f"static/data/test_pred_score.json", 'rb') as f:
-        scores = json.load(f)
-        for ob in scores["scores_test"]:
-            ob["density"] = random.randrange(0, 8) * .1
-            job.append(ob)
-    finob = {}
-    finob["predicate_scores"] = job
-    print('firing dat load')
-    return finob
+# @api.route("/load_test_score")
+# def load_test_score():
+#     job = []
+#     with open(f"static/data/test_pred_score.json", 'rb') as f:
+#         scores = json.load(f)
+#         for ob in scores["scores_test"]:
+#             ob["density"] = random.randrange(0, 8) * .1
+#             job.append(ob)
+#     finob = {}
+#     finob["predicate_scores"] = job
+#     print('firing dat load')
+#     return finob
 
 @api.route('/load_predicates_dist_list')
 def load_predicates_dist_list():
@@ -88,13 +88,13 @@ def load_predicates_dist_list():
     all_fun.save_predicate_id(0, predicate_id_path)
 
     job['pred_dist'] = all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
-
+  
     return job
 
 @api.route('/load_predicates')
 def load_predicates():
     test = edit_predicates.load_predicate_data(my_path, 'augmented_superstore_predicates.json')
-    # print(test)
+    print('FEATURES',features)
     return test
 
 @api.route('/get_pred_dis')
@@ -105,12 +105,13 @@ def get_pred_dis():
 
     return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
-@api.route('/get_selected_data/<predicate_id>')
-def get_selected_data(predicate_id, max_pivot_bins=25):
-    print('preddddd',predicate_id)
+
+@api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
+def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
+    print('preddddd', int(predicate_id))
     # predicate_induction = session['predicate']['predicate_induction']
     # predicate = session['predicate']['predicates'][predicate_id]
-    predicate = predicates[predicate_id]
+    predicate = predicates[int(predicate_id)]
 
     # target = predicate_induction.target
     target = pd.Series(np.random.uniform(0, 1, size=data.shape[0]))
@@ -120,10 +121,11 @@ def get_selected_data(predicate_id, max_pivot_bins=25):
     print(predicate)
     print(pivots['State'].data[pivots['State'].mask])
     predicate_data = {
+        'features': features,
         'predicate_id': predicate_id,
         'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records'),
-        'attribute_score_data': {attr: pivot.get_plot_data(target, max_bins=max_pivot_bins).to_dict('records') for attr,pivot in pivots.items()},
-        'attribute_data': {attr: {num_attr: pivot.get_plot_data(num_attr, max_bins=max_pivot_bins).to_dict('records') for num_attr in numeric if num_attr != attr} for attr,pivot in pivots.items()}
+        'attribute_score_data': {attr: pivot.get_plot_data(target, max_bins=num_pivot_bins).to_dict('records') for attr,pivot in pivots.items()},
+        'attribute_data': {attr: {num_attr: pivot.get_plot_data(num_attr, max_bins=num_pivot_bins).to_dict('records') for num_attr in numeric if num_attr != attr} for attr,pivot in pivots.items()}
     }
     return predicate_data
 
