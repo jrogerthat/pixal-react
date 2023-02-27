@@ -10,7 +10,6 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
 
     const feature = selectedPredicate.feature[0];
 
-    // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 
     let plotData = plotDataOptions[selectedParam][0];
