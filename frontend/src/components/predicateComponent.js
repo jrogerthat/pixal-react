@@ -11,7 +11,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
  
     const features = Object.entries(predicateData.predicate)
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [{editMode, selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     
     const featureValues = (valArr) => {
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
@@ -29,7 +29,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
     }
 
     let isHidden = () => {
-        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
+        if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
             return 1
         }else{
             return .5
@@ -76,10 +76,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
                     <InvertButton />
                     {/* <ColorLensTwoToneIcon /> */}
                     <DeleteButton />
-                    <HideButton 
-                    predicateData={predicateData} 
-                    hiddenPreds={hiddenPreds} 
-                    setHiddenPreds={setHiddenPreds}/>
+                    <HideButton predicateData={predicateData} />
 
                     </div>
                 )

@@ -7,17 +7,24 @@ import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
 import { useState } from 'react';
 
-const HideButton = ({predicateData, hiddenPreds, setHiddenPreds}) => {
+const HideButton = ({predicateData}) => {
     const [hidden, setHidden] = useState(false);
+
+    const [{hiddenPredicates}, dispatch] = useContext(DataContext);
+
+    console.log(hiddenPredicates)
 
     const handleHides = () => {
      
-        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
-            setHiddenPreds(oldArray => [...oldArray, predicateData.id]);
+        if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
+            let hidden = [...hiddenPredicates, predicateData.id]
+            // setHiddenPreds(oldArray => [...oldArray, predicateData.id]);
+            dispatch({type: "UPDATE_HIDDEN_PREDS", hidden})
             setHidden(true);
         }else{
-            let newPreds = [...hiddenPreds].filter(f => f != predicateData.id);
-            setHiddenPreds(newPreds);
+            let hidden = [...hiddenPredicates].filter(f => f != predicateData.id);
+            // setHiddenPreds(newPreds);
+            dispatch({type: "UPDATE_HIDDEN_PREDS", hidden})
             setHidden(false);
         }
     }
