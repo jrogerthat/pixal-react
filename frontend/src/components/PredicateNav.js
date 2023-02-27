@@ -5,13 +5,11 @@ import AddPredBox from './addPredicateBox';
 import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
 
-function PredicateNav({setHighlightPred, hiddenPreds, setHiddenPreds}) {
+function PredicateNav({setHighlightPred}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
   const [{editMode, predicateArray}, dispatch] = useContext(DataContext);
 
- 
- 
   return (
     <div className="pred-exp-nav">
       {
@@ -31,8 +29,6 @@ function PredicateNav({setHighlightPred, hiddenPreds, setHiddenPreds}) {
            key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
-           hiddenPreds={hiddenPreds}
-           setHiddenPreds={setHiddenPreds}
            />
           ))
         }

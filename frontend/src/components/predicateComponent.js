@@ -7,7 +7,7 @@ import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData, hiddenPreds, setHiddenPreds}) {
+export default function PredicateComp({predicateData}) {
  
     const features = Object.entries(predicateData.predicate)
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));

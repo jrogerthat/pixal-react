@@ -16,9 +16,7 @@ function App() {
   
    // new line start
 
-  const [hiddenPreds, setHiddenPreds] = useState([]);
-
-  const [{predicateArray, selectedPredicate, editMode}, dispatch] = useContext(DataContext);
+  const [{editMode}, dispatch] = useContext(DataContext);
 
 
   /**NEED TO INCORPORATE SELECTED PRED >> SELECTED FEATURE FOR PIVOT
@@ -50,14 +48,9 @@ function App() {
         <BasicDrop />
       </AppBar>
       <div className="main-wrapper">
-        <PredicateNav 
-          hiddenPreds={hiddenPreds}
-          setHiddenPreds={setHiddenPreds}
-        ></PredicateNav> 
+        <PredicateNav /> 
         {editMode ? (
-          <PredicateExplore 
-          hiddenPreds={hiddenPreds}
-          />
+          <PredicateExplore />
         ): (
           <Pixalate />
         )}

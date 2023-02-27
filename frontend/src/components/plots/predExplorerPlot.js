@@ -2,18 +2,18 @@ import * as d3 from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { DataContext } from "../../context";
 
-const PredExplorePlot = ({width, height, hiddenPreds}) => {
+const PredExplorePlot = ({width, height}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, predicateDistributionArray}, dispatch] = useContext(DataContext);
+    const [{predicateArray, predicateDistributionArray, hiddenPredicates}, dispatch] = useContext(DataContext);
 
    
 
     let filteredDist = [...predicateDistributionArray].filter(f => {
-        if(hiddenPreds.length === 0){
+        if(hiddenPredicates.length === 0){
             return f
         }else{
-            return hiddenPreds.indexOf(f[0]) === -1
+            return hiddenPredicates.indexOf(f[0]) === -1
         }
     });
 
