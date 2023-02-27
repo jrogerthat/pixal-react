@@ -118,8 +118,8 @@ def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
     # numeric = session['data']['dtypes']['numeric']
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes}
 
-    print(predicate)
-    print(pivots['State'].data[pivots['State'].mask])
+    # print(predicate)
+    # print(pivots['State'].data[pivots['State'].mask])
     predicate_data = {
         'features': features,
         'predicate_id': predicate_id,
