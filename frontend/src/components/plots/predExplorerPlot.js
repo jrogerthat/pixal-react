@@ -7,8 +7,6 @@ const PredExplorePlot = ({width, height}) => {
     const axesRef = useRef(null);
     const [{predicateArray, predicateDistributionArray, hiddenPredicates}, dispatch] = useContext(DataContext);
 
-   
-
     let filteredDist = [...predicateDistributionArray].filter(f => {
         if(hiddenPredicates.length === 0){
             return f

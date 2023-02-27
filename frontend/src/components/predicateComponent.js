@@ -43,6 +43,7 @@ export default function PredicateComp({predicateData}) {
     let handleClick = () => {
         if(!editMode){
             axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
+
                 let predSel = data.data;
                 predSel.predicate_info = predicateData;
                 dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
