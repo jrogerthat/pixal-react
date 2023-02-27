@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 
 
@@ -27,31 +27,35 @@ function kernelDensityEstimator(kernel, X) {
   }
 
 
-const PredScorePlot = ({width, height}) => {
+const PredScorePlot = () => {
    
     const svgRef = useRef(null);
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     const data = selectedPredicate.predicate_scores;
-    const margin = {top: 20, right: 30, bottom: 30, left: 40}
+    // const margin = {top: 20, right: 30, bottom: 50, left: 40}
     const bandwidth = .06
 
     let maxScore = d3.max(data.map(m => m.score));
 
-    let x = useMemo(()=> {
-        return d3.scaleLinear()
-        .domain([0, maxScore])
-        .range([margin.left, width - margin.right]);
+    let [svgWidth, setSvgWidth] = useState(600);
+    let [svgHeight, setSvgHeight] = useState(400);
+    let [svgMargin, setSvgMargin] = useState({x:100, y:100})
 
-    }, [width, selectedPredicate]);
-
-    const thresholds = x.ticks(50)
-
-    let densityAll = kde(epanechnikov(bandwidth), thresholds, data);
     let groupData = Array.from(d3.group(data, d => d.predicate));
     let predData = groupData.filter(f => f[0] === true)[0][1];
     let notPredData = groupData.filter(f => f[0] === false)[0][1];
 
+    let x = useMemo(()=> {
+        return d3.scaleLinear()
+        .domain([0, maxScore])
+        .range([(svgMargin.x / 2), svgWidth]);
+
+    }, [svgWidth, selectedPredicate]);
+
+    const thresholds = x.ticks(50)
+
+    // let densityAll = kde(epanechnikov(bandwidth), thresholds, data);
 
     let densityP = useMemo(() => {
         return [[0,0], ...kde(epanechnikov(bandwidth), thresholds, predData), [1, 0]];
@@ -62,7 +66,7 @@ const PredScorePlot = ({width, height}) => {
     }, [selectedPredicate])
     
 
-    let yMaxAll = d3.extent(densityAll.map(m => m[1]))
+    // let yMaxAll = d3.extent(densityAll.map(m => m[1]))
 
     let yMaxP = d3.extent(densityP.map(m => m[1]))
 
@@ -74,9 +78,8 @@ const PredScorePlot = ({width, height}) => {
     let y = useMemo(()=> {
         return d3.scaleLinear()
         .domain([0, testMax])
-        // .range([height - margin.bottom, margin.top])
-        .range([height - margin.bottom, 0])
-    }, [height, selectedPredicate]);
+        .range([(svgHeight - (svgMargin.y / 2)), 0])
+    }, [svgHeight, selectedPredicate]);
    
 
     const line = d3.line()
@@ -89,17 +92,30 @@ const PredScorePlot = ({width, height}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
+        console.log('SVG NODE', svg.node().parentNode.getBoundingClientRect())
+        let newH = svg.node().parentNode.getBoundingClientRect().height;
+        let newW = svg.node().parentNode.getBoundingClientRect().width;
+        
+        let newMargX = newW * .2;
+        let newMargY = newH * .3;
+
+        setSvgHeight((newH - (newH * .3)))
+        setSvgWidth((newW - (newW * .2)))
+        setSvgMargin({x: newMargX, y: newMargY})
+
         const xAxis = d3.axisBottom(x);
 
         svg
         .append("g")
-        .attr("transform", "translate(0," + (height-margin.bottom) + ")")
+        .attr("transform", "translate(0," + (svgHeight - (svgMargin.y/2)) + ")")
         .call(xAxis);
 
         const yAxis = d3.axisLeft(y);
 
-        svg.append("g").call(yAxis)
-        .attr("transform", "translate("+margin.left+",0)");
+        let xAxisGroup = svg.append("g").call(yAxis)
+        .attr("transform", "translate("+(svgMargin.x / 2)+",0)");
+
+        // xAxisGroup.append('label').text('Score')
 
         svg.append("path")
             .datum(densityN)
@@ -120,45 +136,14 @@ const PredScorePlot = ({width, height}) => {
             .attr("stroke-linejoin", "round")
             .attr("d", line);
 
-    }, [selectedPredicate]);
+    }, [selectedPredicate, selectedPredicate.feature]);
 
     return(
-        <svg ref={svgRef} width={width} height={height} />
-    )
-}
-
-const ScoreGroup = ({data, xScale, yScale}) => {
-    let color = data[0] ? 'blue' : 'gray';
-
-    const gRef = useRef(null);
-
-    useEffect(()=> {
-
-        const gElement = d3.select(gRef.current);
-        gElement.append("path")
-        .attr("class", "mypath")
-        .datum(data[1])
-        .attr("fill", color)
-        .attr("opacity", ".6")
-        .attr("stroke", "#000")
-        .attr("stroke-width", 1)
-        .attr("stroke-linejoin", "round")
-        .attr("d",  d3.line()
-            .curve(d3.curveBasis)
-            .x(function(d) { return xScale(d.iforest_score); })
-            .y(function(d) { return yScale(d.density); })
-        );
-
-    }, [data]);
-
-    return(
-        <g ref={gRef}>{data[0]}</g>
+        <svg ref={svgRef} width={svgWidth} height={svgHeight} />
     )
 }
 
 export {PredScorePlot}
-
-
 
 // const x = useMemo(() => {
 //     return d3.scaleLinear().range([0, (width - 50)]).domain([0, d3.max(sortedScores.map(f => f.score))]);

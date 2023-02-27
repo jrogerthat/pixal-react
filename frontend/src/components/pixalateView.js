@@ -14,7 +14,15 @@ function Pixalate() {
     return selectedPredicate ? Object.entries(selectedPredicate.attribute_data) : [];
   }, [selectedPredicate]);
 
+  const [predScoreWidth, setPredScoreWidth] = useState(600);
 
+  const rightDivRef = useRef();
+
+  useEffect(()=> {
+    if(rightDivRef.current){
+
+    }
+  }, [rightDivRef])
 
   if(selectedPredicate && !!selectedPredicate.feature){
     return(
@@ -26,7 +34,7 @@ function Pixalate() {
         
           <div className="l-bottom">
           <div>Predicate I_Forest Score</div>
-          <PredScorePlot width={440} height={200} />
+          <PredScorePlot />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
           <PivotPlot />
@@ -44,9 +52,11 @@ function Pixalate() {
           classN={"left"} 
           predicateFeatureArray={predicateFeatureArray}/>
 
-          <div className="right">
+          <div className="right"
+          ref={rightDivRef}
+          >
           <div>Predicate I_Forest Score</div>
-          <PredScorePlot predScoreArray={selectedPredicate.predicate_scores} width={600} height={300} />
+          <PredScorePlot />
           </div>
 
     </div>
