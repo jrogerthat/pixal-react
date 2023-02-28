@@ -12,7 +12,7 @@ import { BookmarkComponent } from './bookmarkComp';
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
-  const [xCoord, setXCoord] = useState('Score');
+  const [yCoord, setYCoord] = useState('Score');
   const [explanationBool, setExplanationBool] = useState(true);
 
   let predicateFeatureArray = useMemo(()=> {
@@ -20,8 +20,6 @@ function Pixalate() {
   }, [selectedPredicate]);
 
   const rightDivRef = useRef();
-
- console.log(selectedPredicate)
 
   if(selectedPredicate && !selectedPredicate.attribute_data){
     return(
@@ -40,7 +38,7 @@ function Pixalate() {
           <PredScorePlot />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
-          <PivotPlot xCoord={xCoord} setXCoord={setXCoord} />
+          <PivotPlot yCoord={yCoord} setYCoord={setYCoord} />
 
           <div className="r-bottom">
             <div>
@@ -53,7 +51,7 @@ function Pixalate() {
             </div>
          
             {
-              explanationBool ?  <ExplanationComponent xCoord={xCoord}/>
+              explanationBool ?  <ExplanationComponent yCoord={yCoord}/>
               : <BookmarkComponent />
             }
          

@@ -88,13 +88,10 @@ const PredScorePlot = () => {
     .y(d => y(d[1]))
 
     useEffect(()=> {
-        console.log('selectedPREDICATE', selectedPredicate);
         
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log('SVG NODE', svg.node().parentNode, svg.node().parentNode.getBoundingClientRect())
-        // let newH = svg.node().parentNode.getBoundingClientRect().height;
         let newW = svg.node().parentNode.getBoundingClientRect().width;
         
         let newMargX = newW * .3;

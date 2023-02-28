@@ -39,14 +39,11 @@ export const FeatureBarPlot = ({selectedParam}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log('SVG NODE', svg.node().parentNode.parentNode.parentNode.parentNode, svg.node().parentNode.getBoundingClientRect())
-        // let newH = svg.node().parentNode.getBoundingClientRect().height;
         let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
         
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 
-        // setSvgHeight(newH)
         setSvgWidth(newW)
         setSvgMargin({x: newMargX, y: newMargY})
 

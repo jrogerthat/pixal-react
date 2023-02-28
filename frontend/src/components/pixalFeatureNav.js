@@ -30,8 +30,6 @@ export const PixalFeatureNav = ({feature}) => {
 
     const ref = useRef();
 
-    console.log('plot no data', selectedPredicate.attribute_score_data, feature[0]);
-
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]][0]}, [selectedPredicate]);
    
     let xScale = useMemo(()=> {
@@ -81,14 +79,10 @@ export const PixalFeatureNav = ({feature}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log('SVG NODE', svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width)
-        // let newH = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().height;
         let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
         
         let newMargX = newW * .3;
-        // let newMargY = newH * .3;
-
-        // setSvgHeight(newH)
+      
         setSvgWidth(newW)
         setSvgMargin({x: newMargX, y: 30})
 
@@ -117,8 +111,6 @@ export const PixalFeatureNav = ({feature}) => {
         .attr("fill", (d) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         })
-
-        console.log(xScale.range(), feature)
 
     }, [selectedPredicate, feature]);
 

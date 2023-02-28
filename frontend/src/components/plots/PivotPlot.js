@@ -9,14 +9,15 @@ import { FeatureBarPlot } from "./featureBarPlot";
 import { FeatureDotPlot } from "./featureDotPlot";
 import { Button } from "@mui/material";
 
-export const  PivotPlot = ({xCoord, setXCoord}) => {
+export const  PivotPlot = ({yCoord, setYCoord}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     const [encoding, setEncoding] = useState(null);
-    // const [xCoord, setXCoord] = useState('Score');
-    const [yCoord, setYCoord] = useState('');
+    const [xCoord, setXCoord] = useState(selectedPredicate.feature[0]);
     const [filterByArray, setFilterByArray] = useState([]);
     const divRef = useRef();
+
+    console.log('seleceteddd', selectedPredicate);
   
     return (
         <div className="r-top">
@@ -28,7 +29,7 @@ export const  PivotPlot = ({xCoord, setXCoord}) => {
         />
         <div ref={divRef}>
             <div>plot</div>
-           <WhichPlot xCoord={xCoord} encoding={encoding} />
+           <WhichPlot xCoord={xCoord} yCoord={yCoord} encoding={encoding} />
            <div className="bookmark-button">
             <Button
             onClick={() => console.log('button')}
@@ -65,20 +66,22 @@ export const MarksControlComponent = ({setXCoord, setEncoding}) => {
     )
 }
 
-const WhichPlot = ({encoding, xCoord}) => {
+const WhichPlot = ({encoding, xCoord, yCoord}) => {
     const [{categoricalFeatures, selectedPredicate}, dispatch] = useContext(DataContext);
+
+    let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
     if(encoding === null){
         if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
-            return  <FeatureBarPlot selectedParam={xCoord} />
+            return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} />
         }else{
-            return <FeatureDotPlot selectedParam={xCoord} />
+            return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
         }
     }else if(encoding === 'point'){
-        return <FeatureDotPlot selectedParam={xCoord} />
+        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
     }
     return (
-        <FeatureBarPlot selectedParam={xCoord} />
+        <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
     )
 }
 
