@@ -76,15 +76,15 @@ const WhichPlot = ({encoding, xCoord, width, height}) => {
 
     if(encoding === null){
         if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
-            return  <FeatureBarPlot selectedParam={xCoord} width={width} height={height} />
+            return  <FeatureBarPlot selectedParam={xCoord} />
         }else{
-            return <FeatureDotPlot selectedParam={xCoord} width={width} height={height}/>
+            return <FeatureDotPlot selectedParam={xCoord} />
         }
     }else if(encoding === 'point'){
-        return <FeatureDotPlot selectedParam={xCoord} width={width} height={height}/>
+        return <FeatureDotPlot selectedParam={xCoord} />
     }
     return (
-        <FeatureBarPlot selectedParam={xCoord} width={width} height={height} />
+        <FeatureBarPlot selectedParam={xCoord} />
     )
 }
 
