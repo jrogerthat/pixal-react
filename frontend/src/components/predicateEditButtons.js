@@ -5,19 +5,22 @@ import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { DataContext } from '../context';
 
-const HideButton = ({predicateData, hiddenPreds, setHiddenPreds}) => {
+const HideButton = ({predicateData}) => {
     const [hidden, setHidden] = useState(false);
+    const [{hiddenPredicates}, dispatch] = useContext(DataContext);
 
     const handleHides = () => {
      
-        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
-            setHiddenPreds(oldArray => [...oldArray, predicateData.id]);
+        if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
+            let hidden = [...hiddenPredicates, predicateData.id]
+            dispatch({type: "UPDATE_HIDDEN_PREDS", hidden})
             setHidden(true);
         }else{
-            let newPreds = [...hiddenPreds].filter(f => f != predicateData.id);
-            setHiddenPreds(newPreds);
+            let hidden = [...hiddenPredicates].filter(f => f != predicateData.id);
+            dispatch({type: "UPDATE_HIDDEN_PREDS", hidden})
             setHidden(false);
         }
     }
@@ -39,7 +42,12 @@ const HideButton = ({predicateData, hiddenPreds, setHiddenPreds}) => {
     )
 }
 
-const DeleteButton = () => {
+const DeleteButton = ({predicateData}) => {
+    const [{deletedPredicates}, dispatch] = useContext(DataContext);
+    const handleDelete = () => {
+        let deleted = [...deletedPredicates, predicateData.id]
+        dispatch({type: "DELETE_PREDICATE", deleted})
+    }
     return(
         <Button 
         variant="outlined" 
@@ -50,6 +58,7 @@ const DeleteButton = () => {
             padding:0,
             marginRight: 5
         }}
+        onClick={handleDelete}
         ><DeleteForeverTwoToneIcon /></Button>
     )
 

@@ -7,11 +7,11 @@ import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData, hiddenPreds, setHiddenPreds}) {
+export default function PredicateComp({predicateData}) {
  
     const features = Object.entries(predicateData.predicate)
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [{editMode, selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     
     const featureValues = (valArr) => {
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
@@ -29,7 +29,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
     }
 
     let isHidden = () => {
-        if(hiddenPreds.length === 0 || hiddenPreds.indexOf(predicateData.id) === -1){
+        if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
             return 1
         }else{
             return .5
@@ -43,6 +43,7 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
     let handleClick = () => {
         if(!editMode){
             axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
+
                 let predSel = data.data;
                 predSel.predicate_info = predicateData;
                 dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
@@ -75,11 +76,8 @@ export default function PredicateComp({predicateData, hiddenPreds, setHiddenPred
                     <div className="pred-edit-bar">
                     <InvertButton />
                     {/* <ColorLensTwoToneIcon /> */}
-                    <DeleteButton />
-                    <HideButton 
-                    predicateData={predicateData} 
-                    hiddenPreds={hiddenPreds} 
-                    setHiddenPreds={setHiddenPreds}/>
+                    <DeleteButton predicateData={predicateData} />
+                    <HideButton predicateData={predicateData} />
 
                     </div>
                 )

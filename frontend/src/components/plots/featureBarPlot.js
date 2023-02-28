@@ -10,10 +10,11 @@ export const FeatureBarPlot = ({selectedParam, width, height}) => {
 
     const feature = selectedPredicate.feature[0];
 
-    // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 
-    let plotData = plotDataOptions[selectedParam];
+    let plotData = plotDataOptions[selectedParam][0];
+
+    console.log('PLOT DATA',plotData);
 
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, width]).padding(0.2);
     let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(+height - 50), 0])

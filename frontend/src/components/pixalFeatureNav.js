@@ -33,13 +33,13 @@ export const PixalFeatureNav = ({feature}) => {
         if(ref.current){
             setWidth(window.getComputedStyle(ref.current).width.split("px")[0]);
             setHeight(window.getComputedStyle(ref.current).height.split("px")[0]);
-
-            console.log(width, height)
         }
        
     }, [ref, selectedPredicate])
 
-    let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
+    console.log('plot no data', selectedPredicate.attribute_score_data, feature[0]);
+
+    let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]][0]}, [selectedPredicate]);
    
     let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, width]).padding(0.2);
     let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(height), 0])
@@ -48,10 +48,12 @@ export const PixalFeatureNav = ({feature}) => {
     const featureValues = (valArr) => {
         
         if(categoricalFeatures.indexOf(valArr[0]) > -1){
+
             let arr = Object.entries(valArr[1]);
-            let chosen = arr[0][1].filter(f => f.predicate === 1);
-          
+            let chosen = arr[0][1][0].filter(f => f.predicate === 1);
+         
             return chosen[0][valArr[0]]
+            
         }
 
         return ""

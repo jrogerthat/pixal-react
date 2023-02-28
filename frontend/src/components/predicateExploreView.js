@@ -5,15 +5,13 @@ import { PredExplorePlot } from './plots/predExplorerPlot';
 
 
 
-function PredicateExplore({hiddenPreds}) {
+function PredicateExplore() {
 
-  
   return (
     <div className="pred-exp-view">
 
       <div className="pred-dist-plot">
         <PredExplorePlot 
-        hiddenPreds={hiddenPreds}
         width={900} 
         height={600} 
         />
