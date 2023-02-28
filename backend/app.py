@@ -26,13 +26,20 @@ data_path = 'static/data/superstore_data.csv'
 predicates_path = 'static/data/augmented_superstore_predicates.json'
 
 data = pd.read_csv(f'{path}/{data_path}')
+data.columns = [col.replace(' ', '-') for col in data.columns]
+data['precipitation'] = np.random.uniform(0, 10, size=data.shape[0])
+data['temperature'] = np.random.normal(60, 10, size=data.shape[0])
+
 dtypes = infer_dtypes(data)
+for col in data.columns:
+    if dtypes[col] == 'date':
+        data[col] = pd.to_datetime(data[col])
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f)
 # predicate_dicts = {k:v for k,v in predicate_dicts.items() if k not in ('3','4','5')}
 numeric = [attr for attr in dtypes['numeric'] if attr != 'iforest_score']
 
-predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) if _ not in ('3', '4', '5') else None for _,predicate_dict in predicate_dicts.items()]
+predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for predicate_dict in predicate_dicts.values()]
 
 # session['data'] = {'data': data, 'dtypes': dtypes}
 # session['predicates'] = {'predicates': predicates}
