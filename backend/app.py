@@ -124,13 +124,13 @@ def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
     target = pd.Series(np.random.uniform(0, 1, size=data.shape[0]))
     # numeric = session['data']['dtypes']['numeric']
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
-
+    
     predicate_data = {
         'features': features,
         'predicate_id': predicate_id,
         'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records') if predicate is not None else None,
-        'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=num_pivot_bins, to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
-        'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=num_pivot_bins, to_dict=True) for num_attr in numeric if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
+        'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
+        'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in numeric if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
     }
     return predicate_data
 
