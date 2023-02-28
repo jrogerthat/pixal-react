@@ -11,7 +11,8 @@ const initialState = {
   highlightedPred:null,
   editMode: true,
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
-  hiddenPredicates : []
+  hiddenPredicates: [],
+  deletedPredicates: []
 };
 
 const reducer = (state, action) => {
@@ -42,6 +43,9 @@ const reducer = (state, action) => {
 
     case "UPDATE_HIDDEN_PREDS":
       return {...state, hiddenPredicates: action.hidden}
+
+    case "DELETE_PREDICATE":
+      return {...state, deletedPredicates: action.deleted}
 
     default:
       throw new Error();

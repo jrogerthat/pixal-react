@@ -10,7 +10,6 @@ import { DataContext } from '../context';
 
 const HideButton = ({predicateData}) => {
     const [hidden, setHidden] = useState(false);
-
     const [{hiddenPredicates}, dispatch] = useContext(DataContext);
 
     const handleHides = () => {
@@ -43,7 +42,12 @@ const HideButton = ({predicateData}) => {
     )
 }
 
-const DeleteButton = () => {
+const DeleteButton = ({predicateData}) => {
+    const [{deletedPredicates}, dispatch] = useContext(DataContext);
+    const handleDelete = () => {
+        let deleted = [...deletedPredicates, predicateData.id]
+        dispatch({type: "DELETE_PREDICATE", deleted})
+    }
     return(
         <Button 
         variant="outlined" 
@@ -54,6 +58,7 @@ const DeleteButton = () => {
             padding:0,
             marginRight: 5
         }}
+        onClick={handleDelete}
         ><DeleteForeverTwoToneIcon /></Button>
     )
 

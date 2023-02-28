@@ -5,13 +5,13 @@ import { DataContext } from "../../context";
 const PredExplorePlot = ({width, height}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, predicateDistributionArray, hiddenPredicates}, dispatch] = useContext(DataContext);
+    const [{predicateArray, predicateDistributionArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
     let filteredDist = [...predicateDistributionArray].filter(f => {
         if(hiddenPredicates.length === 0){
             return f
         }else{
-            return hiddenPredicates.indexOf(f[0]) === -1
+            return hiddenPredicates.indexOf(f[0]) === -1 && deletedPredicates.indexOf(f[0]) === -1
         }
     });
 

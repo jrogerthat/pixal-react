@@ -8,7 +8,7 @@ import { DataContext } from '../context';
 function PredicateNav({setHighlightPred}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
-  const [{editMode, predicateArray, hiddenPredicates}, dispatch] = useContext(DataContext);
+  const [{editMode, predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
   return (
     <div className="pred-exp-nav">
@@ -24,13 +24,13 @@ function PredicateNav({setHighlightPred}) {
       }
       <div>
         {
-          editMode ? predicateArray.map(p => (
+          editMode ? predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).map(p => (
            <PredicateComp
            key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
            />
-          )) : predicateArray.filter(f => hiddenPredicates.indexOf(f.id) === -1).map(p => (
+          )) : predicateArray.filter(f => hiddenPredicates.indexOf(f.id) === -1 && deletedPredicates.indexOf(f.id) === -1).map(p => (
             <PredicateComp
             key={`pred-edir-${p.id}`} 
             predicateData={p} 
