@@ -6,11 +6,14 @@ import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
 import { MarksControlComponent } from './markComponent';
 import { PivotPlot } from './plots/PivotPlot';
 import { ExplanationComponent } from './explanationComp';
+import { Button } from '@mui/material';
+import { BookmarkComponent } from './bookmarkComp';
 
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
   const [xCoord, setXCoord] = useState('Score');
+  const [explanationBool, setExplanationBool] = useState(true);
 
   let predicateFeatureArray = useMemo(()=> {
     return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
@@ -40,8 +43,20 @@ function Pixalate() {
           <PivotPlot xCoord={xCoord} setXCoord={setXCoord} />
 
           <div className="r-bottom">
-          <div>explanation</div>
-          <ExplanationComponent xCoord={xCoord}/>
+            <div>
+            <Button
+              onClick={() => setExplanationBool(true)}
+              >Explanation</Button>
+            <Button
+              onClick={() => setExplanationBool(false)}
+              >Bookmarked</Button>
+            </div>
+         
+            {
+              explanationBool ?  <ExplanationComponent xCoord={xCoord}/>
+              : <BookmarkComponent />
+            }
+         
         </div>
     </div>
     )

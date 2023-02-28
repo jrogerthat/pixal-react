@@ -12,7 +12,8 @@ const initialState = {
   editMode: true,
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   hiddenPredicates: [],
-  deletedPredicates: []
+  deletedPredicates: [],
+  bookmarkedPlots: []
 };
 
 const reducer = (state, action) => {
