@@ -174,7 +174,7 @@ body {
   /* border: 1px solid gray; */
   display:flex;
   flex-direction: column;
-
+  width:inherit;
 }
 
 .r-top {
@@ -218,6 +218,7 @@ body {
   display:flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   border-radius: 25px;
 }
 

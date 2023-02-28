@@ -8,28 +8,15 @@ import Select from '@mui/material/Select';
 import { FeatureBarPlot } from "./featureBarPlot";
 import { FeatureDotPlot } from "./featureDotPlot";
 
-export const  PivotPlot = () => {
+export const  PivotPlot = ({xCoord, setXCoord}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     const [encoding, setEncoding] = useState(null);
-    const [xCoord, setXCoord] = useState('Score');
+    // const [xCoord, setXCoord] = useState('Score');
     const [yCoord, setYCoord] = useState('');
     const [filterByArray, setFilterByArray] = useState([]);
     const divRef = useRef();
-    const [width, setWidth] = useState(600);
-    const [height, setHeight] = useState(200);
-
   
-
-    useLayoutEffect(()=> {
-        if(divRef.current){
-            let tempW = window.getComputedStyle(divRef.current).width;
-            setWidth(tempW.split('px')[0]);
-            let tempH = window.getComputedStyle(divRef.current).height;
-            setHeight(tempH.split('px')[0]);
-        }
-    }, [divRef])
-
     return (
         <div className="r-top">
         <MarksControlComponent 
@@ -39,7 +26,7 @@ export const  PivotPlot = () => {
             setFilterByArray={setFilterByArray}
         />
         <div ref={divRef}>plot
-           <WhichPlot xCoord={xCoord} width={width} height={height} encoding={encoding} />
+           <WhichPlot xCoord={xCoord} encoding={encoding} />
         </div>
       </div>
     )
@@ -71,7 +58,7 @@ export const MarksControlComponent = ({setXCoord, setEncoding}) => {
     )
 }
 
-const WhichPlot = ({encoding, xCoord, width, height}) => {
+const WhichPlot = ({encoding, xCoord}) => {
     const [{categoricalFeatures, selectedPredicate}, dispatch] = useContext(DataContext);
 
     if(encoding === null){

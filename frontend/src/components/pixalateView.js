@@ -5,16 +5,16 @@ import { DataContext } from '../context';
 import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
 import { MarksControlComponent } from './markComponent';
 import { PivotPlot } from './plots/PivotPlot';
+import { ExplanationComponent } from './explanationComp';
 
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
+  const [xCoord, setXCoord] = useState('Score');
 
   let predicateFeatureArray = useMemo(()=> {
     return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
   }, [selectedPredicate]);
-
-  const [predScoreWidth, setPredScoreWidth] = useState(600);
 
   const rightDivRef = useRef();
 
@@ -37,10 +37,11 @@ function Pixalate() {
           <PredScorePlot />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
-          <PivotPlot />
+          <PivotPlot xCoord={xCoord} setXCoord={setXCoord} />
 
           <div className="r-bottom">
           <div>explanation</div>
+          <ExplanationComponent xCoord={xCoord}/>
         </div>
     </div>
     )

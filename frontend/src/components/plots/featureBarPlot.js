@@ -9,7 +9,7 @@ export const FeatureBarPlot = ({selectedParam}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     let [svgWidth, setSvgWidth] = useState(600);
-    let [svgHeight, setSvgHeight] = useState(400);
+    let [svgHeight, setSvgHeight] = useState(300);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
 
     const feature = selectedPredicate.feature[0];
@@ -24,7 +24,7 @@ export const FeatureBarPlot = ({selectedParam}) => {
     }, [svgWidth])
     
     let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(svgHeight - (svgMargin.y / 2)), 0])
+        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(svgHeight - (svgMargin.y)), 0])
     }, [svgHeight])
    
     const svgRef = useRef(null);
@@ -39,14 +39,14 @@ export const FeatureBarPlot = ({selectedParam}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log('SVG NODE', svg.node().parentNode.getBoundingClientRect())
-        let newH = svg.node().parentNode.getBoundingClientRect().height;
-        let newW = svg.node().parentNode.getBoundingClientRect().width;
+        console.log('SVG NODE', svg.node().parentNode.parentNode.parentNode.parentNode, svg.node().parentNode.getBoundingClientRect())
+        // let newH = svg.node().parentNode.getBoundingClientRect().height;
+        let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
         
         let newMargX = newW * .3;
-        let newMargY = newH * .3;
+        let newMargY = svgHeight * .3;
 
-        setSvgHeight(newH)
+        // setSvgHeight(newH)
         setSvgWidth(newW)
         setSvgMargin({x: newMargX, y: newMargY})
 
@@ -56,7 +56,7 @@ export const FeatureBarPlot = ({selectedParam}) => {
         wrap.attr("transform", 'translate(40, 10)')
 
         let xAxis = wrap.append("g")
-        .attr("transform", "translate(0," + (svgHeight - (svgMargin.y / 2)) + ")")
+        .attr("transform", "translate(0," + (svgHeight - (svgMargin.y)) + ")")
 
         .call(d3.axisBottom(xScale))
         .selectAll("text")
@@ -71,7 +71,7 @@ export const FeatureBarPlot = ({selectedParam}) => {
         .join('rect').attr("x", function(d) { return xScale(d[feature]); })
         .attr("y", function(d) { return yScale(d[selectedParam === 'Score' ? 'score' : selectedParam]); })
         .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return svgHeight - yScale(d[selectedParam === 'Score' ? 'score' : selectedParam]); })
+        .attr("height", function(d) { return (svgHeight - svgMargin.y) - yScale(d[selectedParam === 'Score' ? 'score' : selectedParam]); })
         .attr("fill", (d) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         })

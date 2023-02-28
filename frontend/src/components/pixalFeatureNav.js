@@ -23,26 +23,19 @@ export const PixalFeatureNav = ({feature}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
- 
-    const [width, setWidth] = useState(400);
-    const [height, setHeight] = useState(200);
+
+    let [svgWidth, setSvgWidth] = useState(600);
+    let [svgHeight, setSvgHeight] = useState(200);
+    let [svgMargin, setSvgMargin] = useState({x:100, y:30})
 
     const ref = useRef();
-  
-    useEffect(()=> {
-        if(ref.current){
-            setWidth(window.getComputedStyle(ref.current).width.split("px")[0]);
-            setHeight(window.getComputedStyle(ref.current).height.split("px")[0]);
-        }
-       
-    }, [ref, selectedPredicate])
 
     console.log('plot no data', selectedPredicate.attribute_score_data, feature[0]);
 
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]][0]}, [selectedPredicate]);
    
-    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, width]).padding(0.2);
-    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(height), 0])
+    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, svgWidth - svgMargin.x]).padding(0.2);
+    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(svgHeight - svgMargin.y), 0])
     const svgRef = useRef(null);
     
     const featureValues = (valArr) => {
@@ -77,13 +70,25 @@ export const PixalFeatureNav = ({feature}) => {
 
     useEffect(()=> {
 
-        const svgElement = d3.select(svgRef.current);
-        svgElement.selectAll('*').remove();
-        let wrap = svgElement.append('g');
-        wrap.attr("transform", "translate(30, 0)")
+        const svg = d3.select(svgRef.current);
+        svg.selectAll("*").remove();
+
+        console.log('SVG NODE', svg.node().parentNode.parentNode.parentNode.parentNode)
+        // let newH = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().height;
+        let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
+        
+        let newMargX = newW * .3;
+        // let newMargY = newH * .3;
+
+        // setSvgHeight(newH)
+        setSvgWidth(newW)
+        setSvgMargin({x: newMargX, y: 30})
+
+        let wrap = svg.append('g');
+        wrap.attr("transform", `translate(${svgMargin.x/2}, 0)`)
 
         let xAxis = wrap.append("g")
-        .attr("transform", "translate(10," + height + ")")
+        .attr("transform", "translate(10," + (svgHeight - (svgMargin.y)) + ")")
         .call(d3.axisBottom(xScale))
         .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
@@ -100,7 +105,7 @@ export const PixalFeatureNav = ({feature}) => {
         .join('rect').attr("x", function(d) { return xScale(d[feature[0]]); })
         .attr("y", function(d) { return yScale(d.score); })
         .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return height - yScale(d.score); })
+        .attr("height", function(d) { return (svgHeight - svgMargin.y) - yScale(d.score); })
         .attr("fill", (d) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         })
@@ -128,13 +133,14 @@ export const PixalFeatureNav = ({feature}) => {
             >{`${feature[0]}: `}
             {featureValues(feature)}
             </div>
+            
             <div style={{
                 marginTop:10, 
                 padding:3, 
                 margin:5, 
                 // backgroundColor:'red'
                 }}>
-                <svg ref={svgRef} width={width}/>
+                <svg ref={svgRef} width={svgWidth} height={svgHeight} />
             </div>
         </div>
     )
