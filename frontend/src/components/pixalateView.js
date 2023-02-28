@@ -11,20 +11,20 @@ function Pixalate() {
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
   let predicateFeatureArray = useMemo(()=> {
-    return selectedPredicate ? Object.entries(selectedPredicate.attribute_data) : [];
+    return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
   }, [selectedPredicate]);
 
   const [predScoreWidth, setPredScoreWidth] = useState(600);
 
   const rightDivRef = useRef();
 
-  useEffect(()=> {
-    if(rightDivRef.current){
+ console.log(selectedPredicate)
 
-    }
-  }, [rightDivRef])
-
-  if(selectedPredicate && !!selectedPredicate.feature){
+  if(selectedPredicate && !selectedPredicate.attribute_data){
+    return(
+      <div className="splash-select">Unable to process, please choose another predicate.</div>
+    )
+  }else if(selectedPredicate && !!selectedPredicate.feature){
     return(
       <div className="pixalate">
       
