@@ -39,7 +39,7 @@ const PredScorePlot = () => {
     let maxScore = d3.max(data.map(m => m.score));
 
     let [svgWidth, setSvgWidth] = useState(600);
-    let [svgHeight, setSvgHeight] = useState(400);
+    let [svgHeight, setSvgHeight] = useState(300);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
 
     let groupData = Array.from(d3.group(data, d => d.predicate));
@@ -51,7 +51,7 @@ const PredScorePlot = () => {
         .domain([0, maxScore])
         .range([(svgMargin.x / 2), svgWidth]);
 
-    }, [svgWidth, selectedPredicate]);
+    }, [svgWidth, selectedPredicate, selectedPredicate.feature]);
 
     const thresholds = x.ticks(50)
 
@@ -93,14 +93,14 @@ const PredScorePlot = () => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log('SVG NODE', svg.node().parentNode.getBoundingClientRect())
-        let newH = svg.node().parentNode.getBoundingClientRect().height;
+        console.log('SVG NODE', svg.node().parentNode, svg.node().parentNode.getBoundingClientRect())
+        // let newH = svg.node().parentNode.getBoundingClientRect().height;
         let newW = svg.node().parentNode.getBoundingClientRect().width;
         
         let newMargX = newW * .3;
-        let newMargY = newH * .3;
+        let newMargY = svgHeight * .3;
 
-        setSvgHeight(newH)
+        // setSvgHeight(newH)
         setSvgWidth(newW)
         setSvgMargin({x: newMargX, y: newMargY})
 

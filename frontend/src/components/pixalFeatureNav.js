@@ -26,7 +26,7 @@ export const PixalFeatureNav = ({feature}) => {
 
     let [svgWidth, setSvgWidth] = useState(600);
     let [svgHeight, setSvgHeight] = useState(200);
-    let [svgMargin, setSvgMargin] = useState({x:100, y:30})
+    let [svgMargin, setSvgMargin] = useState({x:100, y:50})
 
     const ref = useRef();
 
@@ -34,8 +34,16 @@ export const PixalFeatureNav = ({feature}) => {
 
     let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]][0]}, [selectedPredicate]);
    
-    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, svgWidth - svgMargin.x]).padding(0.2);
-    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(svgHeight - svgMargin.y), 0])
+    let xScale = useMemo(()=> {
+        return d3.scaleBand().domain(plotData.map(m => m[feature[0]])).range([0, svgWidth - svgMargin.x]).padding(0.2);
+    }, [selectedPredicate, selectedPredicate.feature, feature])
+
+    
+ 
+    let yScale = useMemo(() => {
+        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m.score))]).range([(svgHeight - svgMargin.y), 0])
+    }, [selectedPredicate, selectedPredicate.feature, feature])
+    
     const svgRef = useRef(null);
     
     const featureValues = (valArr) => {
@@ -73,7 +81,7 @@ export const PixalFeatureNav = ({feature}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log('SVG NODE', svg.node().parentNode.parentNode.parentNode.parentNode)
+        console.log('SVG NODE', svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width)
         // let newH = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().height;
         let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
         
@@ -110,8 +118,9 @@ export const PixalFeatureNav = ({feature}) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         })
 
+        console.log(xScale.range(), feature)
 
-    }, [selectedPredicate]);
+    }, [selectedPredicate, feature]);
 
     return(
         <div 

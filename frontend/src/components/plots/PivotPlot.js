@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { FeatureBarPlot } from "./featureBarPlot";
 import { FeatureDotPlot } from "./featureDotPlot";
+import { Button } from "@mui/material";
 
 export const  PivotPlot = ({xCoord, setXCoord}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
@@ -25,8 +26,14 @@ export const  PivotPlot = ({xCoord, setXCoord}) => {
             setYCoord={setYCoord} 
             setFilterByArray={setFilterByArray}
         />
-        <div ref={divRef}>plot
+        <div ref={divRef}>
+            <div>plot</div>
            <WhichPlot xCoord={xCoord} encoding={encoding} />
+           <div className="bookmark-button">
+            <Button
+            onClick={() => console.log('button')}
+            >Bookmark Plot</Button>
+            </div>
         </div>
       </div>
     )

@@ -17,18 +17,21 @@ export const FeatureDotPlot = ({selectedParam}) => {
     // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[feature[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 
-    let plotData = plotDataOptions[selectedParam];
+    let plotData = plotDataOptions[selectedParam][0];
 
-    let xScale = d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, svgWidth]).padding(0.2);
-    let yScale = d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(svgHeight), 0])
-   
+    console.log('plotdata',plotData)
+
+    let xScale = useMemo(()=> {
+        return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
+    }, [svgWidth]);
+    
+    let yScale = useMemo(()=> {
+        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[selectedParam === 'Score' ? 'score' : selectedParam]))]).range([(svgHeight - (svgMargin.y)), 0])
+    }, [svgHeight]);
     
     const svgRef = useRef(null);
     const divRef = useRef();
 
-   
-    
-    
     useEffect(()=> {
 
         const svg = d3.select(svgRef.current);
@@ -47,23 +50,19 @@ export const FeatureDotPlot = ({selectedParam}) => {
 
         let wrap = svg.append('g');
 
-        wrap.attr("transform", 'translate(0, 20)')
+        wrap.attr('transform', 'translate(20, 0)')
+
 
         let xAxis = wrap.append("g")
-        .attr("transform", "translate(0," + (svgHeight) + ")")
-
+        .attr("transform", "translate(0," + (svgHeight - svgMargin.y) + ")")
         .call(d3.axisBottom(xScale))
         .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
             .style("text-anchor", "end");
 
         let yAxis = wrap.append('g')
-        .attr("transform", "translate(-5, 0)")
+        .attr("transform", "translate(0, 0)")
         .call(d3.axisLeft(yScale));
-
-
-
-
 
     }, [selectedPredicate, selectedParam, yScale]);
 
