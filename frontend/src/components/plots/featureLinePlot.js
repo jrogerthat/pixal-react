@@ -7,7 +7,7 @@ export const FeatureLinePlot = ({xCoord, yCoord}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    console.log(selectedPredicate.attribute_data[xCoord], xCoord, yCoord);
+    console.log("LINE PLOT");
 
     let [svgWidth, setSvgWidth] = useState(600);
     let [svgHeight, setSvgHeight] = useState(400);
@@ -80,7 +80,7 @@ export const FeatureLinePlot = ({xCoord, yCoord}) => {
         pathG.attr('transform', 'translate(20, 0)')
 
     
-    }, [selectedPredicate, xCoord, yCoord, y, x]);
+    }, [xCoord, yCoord, y, x]);
 
     return(
         <div 

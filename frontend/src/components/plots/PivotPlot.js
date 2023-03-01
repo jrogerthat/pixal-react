@@ -73,7 +73,7 @@ const WhichPlot = ({encoding, xCoord, yCoord}) => {
    
     if(encoding === null){
         if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
-            return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} />
+            return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
         }else if(selectedPredicate.feature[0] === "Order-Date"){
             return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} />
         }else{
@@ -83,7 +83,7 @@ const WhichPlot = ({encoding, xCoord, yCoord}) => {
         return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
     }
     return (
-        <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
+        <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
     )
 }
 

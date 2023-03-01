@@ -73,7 +73,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
                
                 return yScale(+d[yCoord])}).attr('r', 4)
 
-    }, [selectedPredicate, xCoord, yCoord, yScale, xScale]);
+    }, [xCoord, yCoord, yScale, xScale]);
 
     return(
         <div 

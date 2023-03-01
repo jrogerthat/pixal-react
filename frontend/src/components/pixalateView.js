@@ -15,10 +15,6 @@ function Pixalate() {
   const [yCoord, setYCoord] = useState('Score');
   const [explanationBool, setExplanationBool] = useState(true);
 
-  let predicateFeatureArray = useMemo(()=> {
-    return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
-  }, [selectedPredicate]);
-
   const rightDivRef = useRef();
 
   if(selectedPredicate && !selectedPredicate.attribute_data){
@@ -30,8 +26,8 @@ function Pixalate() {
       <div className="pixalate">
       
            <PixalFeatureNavWrap 
-           classN={"l-top"} 
-           predicateFeatureArray={predicateFeatureArray}/>
+           classN={"l-top"}
+          />
         
           <div className="l-bottom">
           <div>Predicate I_Forest Score</div>
@@ -64,7 +60,7 @@ function Pixalate() {
       
           <PixalFeatureNavWrap 
           classN={"left"} 
-          predicateFeatureArray={predicateFeatureArray}/>
+          />
 
           <div className="right"
           ref={rightDivRef}
