@@ -15,7 +15,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
 
 
     const handleClick = (d) => {
-        console.log('USE CLICK', d)
+      
         dispatch({type:'FEATURE_SELECTED', feature: d})
     }
 

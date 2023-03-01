@@ -6,7 +6,9 @@ import randomColor from 'randomcolor'
  */
 const formatPredicateArray = (preds) => {
     return Object.entries(preds).map((m) => {
-        return {"id": m[0], "predicate": m[1], color: randomColor()}
+        
+        let predOb = m[1].attribute_values ? m[1] : {'attribute_values': m[1], 'negated': false};
+        return {id: m[0], predicate: predOb, color: randomColor()}
     })
 }
 

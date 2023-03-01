@@ -24,13 +24,13 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
        
     }, [svgWidth, xCoord]);
 
-    console.log(plotData, xScale.domain())
+    
     
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
     }, [yCoord]);
 
-    console.log(yScale.domain())
+ 
     
     const svgRef = useRef(null);
     const divRef = useRef();

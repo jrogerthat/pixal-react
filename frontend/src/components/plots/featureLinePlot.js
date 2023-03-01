@@ -30,17 +30,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
 
     let selectedRange = selectedPredicate.predicate_info.predicate[xCoord]
-
-    let selected = plotData.filter(f => {
-        // // console.log('low',new Date(f[xCoord]).getTime() > new Date(selectedRange[0]).getTime())
-        // console.log('high', new Date(f[xCoord]).getTime() < new Date(selectedRange[1]).getTime(), new Date(f[xCoord]).getTime(), new Date(selectedRange[1]).getTime())
-        // return new Date(f[xCoord]).getTime() >= new Date(selectedRange[0]).getTime() && new Date(f[xCoord]).getTime() <= new Date(selectedRange[1]).getTime()
-        compareDates(f[xCoord], selectedRange[0], selectedRange[1])
-    })
-
-    console.log('SELECTED',selected)
-
-    console.log('plotData', plotData, xCoord, yCoord, selectedPredicate.predicate_info.predicate[xCoord])
     
     let x = useMemo(()=> {
         return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (svgWidth - svgMargin.x)])

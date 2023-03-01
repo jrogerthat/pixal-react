@@ -7,7 +7,6 @@ import Pixalate from './components/pixalateView';
 import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
 import { useAxiosGet, useGetAxiosAsync } from './axiosUtil';
-import formatPredicateArray from './dataFormating';
 import { DataContext } from './context';
 
 
@@ -25,9 +24,9 @@ function App() {
  
   useEffect(() => {
     if(loaded){
-      let arr = formatPredicateArray(data.pred_list);
+    
       let pred_dist = Object.entries(data.pred_dist)
-      let predData = {'pred_list': arr, 'pred_dist': pred_dist}
+      let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
     }
     
