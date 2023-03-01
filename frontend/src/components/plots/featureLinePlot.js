@@ -13,8 +13,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
     // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[xCoord[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
 
-    console.log('plotDataOptions',plotDataOptions)
-
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
 
     let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
@@ -38,8 +36,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        // let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
-        let newW = navBool ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 700;
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 
@@ -87,7 +84,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
         .style('opacity', .5)
 
     
-    }, [xCoord, yCoord, y, x]);
+    }, [xCoord, yCoord, y, x, selectedPredicate.predicate_info.id]);
 
     return(
         <div 

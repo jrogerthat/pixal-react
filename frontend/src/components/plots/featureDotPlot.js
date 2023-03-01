@@ -30,8 +30,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
     }, [yCoord]);
 
- 
-    
     const svgRef = useRef(null);
     const divRef = useRef();
 
@@ -40,8 +38,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        // let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
-        let newW = navBool ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 700;
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 

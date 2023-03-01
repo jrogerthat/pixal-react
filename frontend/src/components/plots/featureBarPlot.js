@@ -33,9 +33,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        let newW = navBool ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 700;
-        //svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
-        
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 
@@ -68,7 +66,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         })
 
 
-    }, [feature, yCoord, yScale]);
+    }, [feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
 
     return(
         <div 
