@@ -13,9 +13,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
       }, [selectedPredicate]);
 
-
     const handleClick = (d) => {
-      
         dispatch({type:'FEATURE_SELECTED', feature: d})
     }
 
@@ -53,7 +51,7 @@ const featureValues = (categoricalFeatures, valArr) => {
 }
 
 export const PixalFeatureNav = ({feature}) => {
-    console.log('FEATURE', feature)
+   
     const [{categoricalFeatures}, dispatch] = useContext(DataContext);
 
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;

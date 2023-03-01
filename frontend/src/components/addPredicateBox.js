@@ -1,6 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import { useContext, useEffect, useState } from 'react'
-import { useAddPredicate } from '../axiosUtil';
+import { useAddPredicate, useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
 import formatPredicateArray from '../dataFormating';
 
@@ -26,7 +26,9 @@ function AddPredBox({setAddPredMode}){
         setNewPred(null);
         setAddPredMode(null);
 
-        dispatch({ type: "ADD_PREDICATE", newPredicate})
+        useGetAxiosAsync(`add_predicate?${newPred}`).then(data => {
+            dispatch({type:"UPDATE_PREDICATE_ARRAY", predicateArray:data.data})
+        })
        
         
     }

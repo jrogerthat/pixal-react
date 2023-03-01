@@ -2,18 +2,6 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-const compareDates = (d, rangeDateLow, rangeDateHigh) => {
-    let date = new Date(d).getTime();
-    let low = new Date(rangeDateLow).getTime();
-    let high = new Date(rangeDateHigh).getTime();
-  
-    if (date > low && date < high) {
-      console.log(`${d} in range`, rangeDateLow, rangeDateHigh);
-    } else {
-      console.log(`Not in range`, d, rangeDateLow, rangeDateHigh)
-    }
-  };
-  
 export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
@@ -29,7 +17,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
 
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
 
-    let selectedRange = selectedPredicate.predicate_info.predicate[xCoord]
+    let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
     
     let x = useMemo(()=> {
         return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (svgWidth - svgMargin.x)])
@@ -42,6 +30,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
     
     const svgRef = useRef(null);
     const divRef = useRef();
+
+    console.log("POPT DATA", plotData);
 
     useEffect(()=> {
 

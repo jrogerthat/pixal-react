@@ -37,6 +37,7 @@ async function useGetAxiosAsync(url){
 
 // THIS THROWS A 505 ERROR
 // {"State": ["Vermont"], "Segment": ["Corporate"]}
+// precipitation=[1, 10],"Segment"=["Corporate"]
 async function useAddPredicate (dataOb){
 
   // const [data, setData] = useState(null);

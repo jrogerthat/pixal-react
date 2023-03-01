@@ -33,8 +33,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        console.log(d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width)
-
         let newW = navBool ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 700;
         //svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
         

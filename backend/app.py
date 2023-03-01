@@ -170,7 +170,11 @@ def save_predicates(path, predicates, predicates_path):
 @api.route('/add_predicate', methods=['GET', 'POST'])
 def add_predicate():
     attribute_values = request.args.to_dict()
-    print('VALUES', attribute_values)
+
+    # attribute_values = json.loads(pred).to_dict()
+    # json.loads(pred)
+   
+    # print('pred', json.loads(pred))
     predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
     print(predicate)
     predicates.append(predicate)

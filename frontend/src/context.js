@@ -35,7 +35,7 @@ const reducer = (state, action) => {
         return {...state, predicateArray: pArr}
 
     case "ADD_PREDICATE":
-        console.log('NEED TO FILL THIS OUT')
+        
       return {
         ...state
       };

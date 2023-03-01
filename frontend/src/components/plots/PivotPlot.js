@@ -17,8 +17,6 @@ export const  PivotPlot = ({yCoord, setYCoord}) => {
     const [xCoord, setXCoord] = useState(selectedPredicate.feature[0]);
     const [filterByArray, setFilterByArray] = useState([]);
     const divRef = useRef();
-
-    
   
     return (
         <div className="r-top">
