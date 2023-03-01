@@ -7,13 +7,12 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 
 
 export const PixalFeatureNavWrap = ({classN}) => {
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
 
     let predicateFeatureArray = useMemo(()=> {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
       }, [selectedPredicate]);
 
-    console.log('PRED FEAT',predicateFeatureArray)
 
     const handleClick = (d) => {
         console.log('USE CLICK', d)
@@ -21,15 +20,17 @@ export const PixalFeatureNavWrap = ({classN}) => {
     }
 
     return(
-        <div className={classN} >
+        <div className={classN} id="feat-nav-wrap-left">
         <div>Feature Navigation</div>
         <div className="feat-nav-wrap">
         {
-        predicateFeatureArray.map(f => (
+        predicateFeatureArray.map((f, i) => (
             <div
-            key={`${f[0]}`}
+            className="feature-nav"
+            key={`${f[0]}-${i}`}
             onClick={() => handleClick(f)}
             >
+            <div style={{marginBottom:10}}>{`${f[0]} :`}{featureValues(categoricalFeatures, f)}</div>
             <PixalFeatureNav feature={f[0]} />
             </div>
         ))
@@ -52,17 +53,17 @@ const featureValues = (categoricalFeatures, valArr) => {
 }
 
 export const PixalFeatureNav = ({feature}) => {
- 
+    console.log('FEATURE', feature)
     const [{categoricalFeatures}, dispatch] = useContext(DataContext);
 
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;
 
     if(categoricalBool){
-        return <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} />
+        return <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
     }else if(feature === "Order-Date"){
-        return <FeatureLinePlot xCoord={feature} yCoord={'Score'} />
+        return <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
     }else{
-       return <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} />
+       return <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
     }
      
 }

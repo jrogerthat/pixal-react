@@ -101,7 +101,7 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-auto-rows: repeat(2, 1fr);
-  gap: 10px;
+  gap: 20px;
   margin-top: 10px;
 }
 
@@ -113,7 +113,7 @@ body {
   align-content: space-evenly; */
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+  gap: 20px;
   margin-top: 10px;
 
 }
@@ -130,14 +130,20 @@ body {
   /* grid-row: 1; */
 }
 
-.pixalate-two .left .feature-nav {
+.feature-nav-wrap{
+  width: inherit;
+}
+
+.pixalate-two .left .feature-nav,
+.pixalate .feature-nav {
   border: 1px solid gray;
   border-radius: 20px;
   padding:5px;
-  margin: 5px;
+  width: calc(inherit - 10);
 }
 
-.pixalate-two .left .feature-nav:hover {
+.pixalate-two .left .feature-nav:hover,
+.pixalate .feature-nav:hover {
   border: 3px solid gray;
   background-color: #d0cecee0;
 }

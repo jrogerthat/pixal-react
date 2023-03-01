@@ -3,21 +3,19 @@ import { DataContext } from "../../context";
 import * as d3 from "d3";
 
 
-export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
+export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
     let [svgWidth, setSvgWidth] = useState(600);
-    let [svgHeight, setSvgHeight] = useState(400);
+    let [svgHeight, setSvgHeight] = useState(navBool ? 200 : 300);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
 
-    // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[xCoord[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
 
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
-    
         if(categorical){
             return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
         }else{
@@ -25,11 +23,14 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
         }
        
     }, [svgWidth, xCoord]);
+
+    console.log(plotData, xScale.domain())
     
     let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord.toLowerCase()]))]).range([(svgHeight - (svgMargin.y)), 0])
-        // return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
-    }, [svgHeight]);
+        return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
+    }, [yCoord]);
+
+    console.log(yScale.domain())
     
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -39,8 +40,8 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
-        
+        // let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 
@@ -68,10 +69,8 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
         .call(d3.axisLeft(yScale));
 
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
-        points.attr('cx', (d) => {
-            return xScale(+d[xCoord])}).attr('cy', (d)=> {
-               
-                return yScale(+d[yCoord])}).attr('r', 4)
+        points.attr('cx', (d) => xScale(+d[xCoord]))
+        points.attr('cy', (d)=> yScale(+d[yCoord])).attr('r', 4)
 
     }, [xCoord, yCoord, yScale, xScale]);
 

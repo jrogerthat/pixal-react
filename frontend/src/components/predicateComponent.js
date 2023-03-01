@@ -75,7 +75,6 @@ export default function PredicateComp({predicateData}) {
                 editMode && (
                     <div className="pred-edit-bar">
                     <InvertButton />
-                    {/* <ColorLensTwoToneIcon /> */}
                     <DeleteButton predicateData={predicateData} />
                     <HideButton predicateData={predicateData} />
 

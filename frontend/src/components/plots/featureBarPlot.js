@@ -4,13 +4,12 @@ import * as d3 from "d3";
 
 
 
-export const FeatureBarPlot = ({yCoord, feature}) => {
-    // xCoord={feature[0]} yCoord={'Score'} categorical={categoricalBool} feature={feature[0]}
-    const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
+   
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     let [svgWidth, setSvgWidth] = useState(600);
-    let [svgHeight, setSvgHeight] = useState(300);
+    let [svgHeight, setSvgHeight] = useState(navBool ? 200 : 300);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
 
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
@@ -19,11 +18,11 @@ export const FeatureBarPlot = ({yCoord, feature}) => {
 
     let xScale = useMemo(()=> {
         return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
-    }, [svgWidth])
+    }, [svgWidth, feature])
     
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
-    }, [svgHeight])
+    }, [yCoord])
    
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -34,7 +33,10 @@ export const FeatureBarPlot = ({yCoord, feature}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
+        console.log(d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width)
+
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 700;
+        //svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
         
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;

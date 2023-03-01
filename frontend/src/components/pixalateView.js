@@ -56,7 +56,7 @@ function Pixalate() {
     )
   }else if(selectedPredicate){
     return (
-      <div className="pixalate-two">
+      <div className="pixalate-two" id="pixalate-two-group">
       
           <PixalFeatureNavWrap 
           classN={"left"} 
