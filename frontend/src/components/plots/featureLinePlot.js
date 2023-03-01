@@ -3,10 +3,12 @@ import { DataContext } from "../../context";
 import * as d3 from "d3";
 
 
-export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
+export const FeatureLinePlot = ({xCoord, yCoord}) => {
  
-    const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-    const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+
+    console.log("LINE PLOT");
+
     let [svgWidth, setSvgWidth] = useState(600);
     let [svgHeight, setSvgHeight] = useState(400);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
@@ -14,22 +16,20 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
     // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[xCoord[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
 
-    let plotData = plotDataOptions[yCoord][0];
+    console.log('plotDataOptions',plotDataOptions)
 
-    let xScale = useMemo(()=> {
+    let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
+
+    console.log('plotData', plotData)
     
-        if(categorical){
-            return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
-        }else{
-            return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
-        }
-       
+    let x = useMemo(()=> {
+        return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (svgWidth - svgMargin.x)])
     }, [svgWidth, xCoord]);
+
     
-    let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord.toLowerCase()]))]).range([(svgHeight - (svgMargin.y)), 0])
-        // return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
-    }, [svgHeight]);
+    let y = useMemo(()=> {
+        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
+    }, [svgHeight, yCoord]);
     
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -44,6 +44,10 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 
+        const line = d3.line()
+        .x(d => x(new Date(d[xCoord])))
+        .y(d => y(+d[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))
+
         // setSvgHeight(newH)
         setSvgWidth(newW)
         setSvgMargin({x: newMargX, y: newMargY})
@@ -54,30 +58,33 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - svgMargin.y) + ")")
-        .call(d3.axisBottom(xScale))
+        .call(d3.axisBottom(x))
 
-        if(categorical){
-            xAxis.selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
-        }
-       
-
+        xAxis.selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    
         let yAxis = wrap.append('g')
         .attr("transform", "translate(0, 0)")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(y));
 
-        let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
-        points.attr('cx', (d) => {
-            return xScale(+d[xCoord])}).attr('cy', (d)=> {
-               
-                return yScale(+d[yCoord])}).attr('r', 4)
+        let pathG = svg.append("path")
+        .datum(plotData)
+        .attr("fill", "none")
+        .attr("stroke", "gray")
+        .attr("fill-opacity", 0.4)
+        .attr("stroke-width", 1.5)
+        .attr("stroke-linejoin", "round")
+        .attr("d", line);
 
-    }, [xCoord, yCoord, yScale, xScale]);
+        pathG.attr('transform', 'translate(20, 0)')
+
+    
+    }, [xCoord, yCoord, y, x]);
 
     return(
         <div 
-        className="feature-bar"
+        className="feature-line"
         >
             <div ref={divRef}>
                 <svg 

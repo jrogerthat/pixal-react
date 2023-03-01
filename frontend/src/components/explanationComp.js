@@ -1,19 +1,19 @@
 import React, { useContext, useEffect, useState } from "react"
 import { DataContext } from "../context"
 
-export const ExplanationComponent = ({xCoord}) => {
+export const ExplanationComponent = ({yCoord}) => {
 
     const [{selectedPredicate}] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
 
     useEffect(() => {
         
-        if(xCoord === 'Score'){
+        if(yCoord === 'Score'){
             setExplanation(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1])
         }else{
-            setExplanation(selectedPredicate.attribute_data[selectedPredicate.feature[0]][xCoord][1])
+            setExplanation(selectedPredicate.attribute_data[selectedPredicate.feature[0]][yCoord][1])
         }
-    }, [xCoord])
+    }, [yCoord])
 
     return (
         <React.Fragment>

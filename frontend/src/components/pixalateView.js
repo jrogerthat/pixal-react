@@ -12,16 +12,10 @@ import { BookmarkComponent } from './bookmarkComp';
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
-  const [xCoord, setXCoord] = useState('Score');
+  const [yCoord, setYCoord] = useState('Score');
   const [explanationBool, setExplanationBool] = useState(true);
 
-  let predicateFeatureArray = useMemo(()=> {
-    return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
-  }, [selectedPredicate]);
-
   const rightDivRef = useRef();
-
- console.log(selectedPredicate)
 
   if(selectedPredicate && !selectedPredicate.attribute_data){
     return(
@@ -32,15 +26,15 @@ function Pixalate() {
       <div className="pixalate">
       
            <PixalFeatureNavWrap 
-           classN={"l-top"} 
-           predicateFeatureArray={predicateFeatureArray}/>
+           classN={"l-top"}
+          />
         
           <div className="l-bottom">
           <div>Predicate I_Forest Score</div>
           <PredScorePlot />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
-          <PivotPlot xCoord={xCoord} setXCoord={setXCoord} />
+          <PivotPlot yCoord={yCoord} setYCoord={setYCoord} />
 
           <div className="r-bottom">
             <div>
@@ -53,7 +47,7 @@ function Pixalate() {
             </div>
          
             {
-              explanationBool ?  <ExplanationComponent xCoord={xCoord}/>
+              explanationBool ?  <ExplanationComponent yCoord={yCoord}/>
               : <BookmarkComponent />
             }
          
@@ -66,7 +60,7 @@ function Pixalate() {
       
           <PixalFeatureNavWrap 
           classN={"left"} 
-          predicateFeatureArray={predicateFeatureArray}/>
+          />
 
           <div className="right"
           ref={rightDivRef}

@@ -8,27 +8,28 @@ import Select from '@mui/material/Select';
 import { FeatureBarPlot } from "./featureBarPlot";
 import { FeatureDotPlot } from "./featureDotPlot";
 import { Button } from "@mui/material";
+import { FeatureLinePlot } from "./featureLinePlot";
 
-export const  PivotPlot = ({xCoord, setXCoord}) => {
+export const  PivotPlot = ({yCoord, setYCoord}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     const [encoding, setEncoding] = useState(null);
-    // const [xCoord, setXCoord] = useState('Score');
-    const [yCoord, setYCoord] = useState('');
+    const [xCoord, setXCoord] = useState(selectedPredicate.feature[0]);
     const [filterByArray, setFilterByArray] = useState([]);
     const divRef = useRef();
+
+    
   
     return (
         <div className="r-top">
         <MarksControlComponent 
             setEncoding={setEncoding} 
-            setXCoord={setXCoord} 
             setYCoord={setYCoord} 
             setFilterByArray={setFilterByArray}
         />
         <div ref={divRef}>
             <div>plot</div>
-           <WhichPlot xCoord={xCoord} encoding={encoding} />
+           <WhichPlot xCoord={xCoord} yCoord={yCoord} encoding={encoding} />
            <div className="bookmark-button">
             <Button
             onClick={() => console.log('button')}
@@ -39,11 +40,11 @@ export const  PivotPlot = ({xCoord, setXCoord}) => {
     )
 }
 
-export const MarksControlComponent = ({setXCoord, setEncoding}) => {
+export const MarksControlComponent = ({setYCoord, setEncoding}) => {
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
-    let xOptions = ['Score', ...keys]
+    let yOptions = ['Score', ...keys]
 
 
     return(
@@ -54,7 +55,7 @@ export const MarksControlComponent = ({setXCoord, setEncoding}) => {
             <div>
                 <div>encoding</div>
                 <div>
-                    <CoordDrop options={xOptions} label={"x"} setHandle={setXCoord} />
+                    <CoordDrop options={yOptions} label={"x"} setHandle={setYCoord} />
                     {/* <CoordDrop options={selectedPredicate.features} label={"y"} /> */}
                 </div>
             </div>
@@ -65,20 +66,24 @@ export const MarksControlComponent = ({setXCoord, setEncoding}) => {
     )
 }
 
-const WhichPlot = ({encoding, xCoord}) => {
+const WhichPlot = ({encoding, xCoord, yCoord}) => {
     const [{categoricalFeatures, selectedPredicate}, dispatch] = useContext(DataContext);
 
+    let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
+   
     if(encoding === null){
         if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
-            return  <FeatureBarPlot selectedParam={xCoord} />
+            return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
+        }else if(selectedPredicate.feature[0] === "Order-Date"){
+            return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} />
         }else{
-            return <FeatureDotPlot selectedParam={xCoord} />
+            return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
         }
     }else if(encoding === 'point'){
-        return <FeatureDotPlot selectedParam={xCoord} />
+        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
     }
     return (
-        <FeatureBarPlot selectedParam={xCoord} />
+        <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
     )
 }
 
