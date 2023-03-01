@@ -11,7 +11,7 @@ import edit_predicates
 import all_fun
 # from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 import random
-from predicates import Predicate, PredicateInduction, infer_dtypes
+from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_string
 
 from flask import Flask
 
@@ -167,30 +167,35 @@ def save_predicates(path, predicates, predicates_path):
         json.dump(predicates, f)
     return predicates
 
-@api.route('/add_predicate', methods=['POST'])
+@api.route('/add_predicate', methods=['GET', 'POST'])
 def add_predicate():
-    attribute_values = request.json['pred']
+    attribute_values = request.args.to_dict()
     print('VALUES', attribute_values)
-    predicate = Predicate(session['data']['data'], session['data']['dtypes'], attribute_values)
-    predicate_id = len(session['predicate']['predicates'])
-    session['predicate']['predicates'].append(predicate)
-    
-    predicates = load_predicate_data(path, predicates_path)
-    predicates[predicate_id] = predicates
-    save_predicates(path, predicates, predicates_path)
-    return predicates
+    predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
+    print(predicate)
+    predicates.append(predicate)
+    return {i: predicates[i].to_dict() for i in range(len(predicates))}
 
-@api.route('/edit_predicate', methods=['POST'])
-def edit_predicate(predicate_id, negate=False, attribute_values=None):
-    pass
+@api.route('/edit_predicate/<predicate_id>/<negate>', methods=['GET', 'POST'])
+def edit_predicate(predicate_id, negate=0):
+    predicate_id = int(predicate_id)
+    attribute_values = request.args.to_dict()
+    predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
+    predicate.is_negated = bool(int(negate))
+    predicates[predicate_id] = predicate
+    return {i: predicates[i].to_dict() for i in range(len(predicates))}
 
-@api.route('/delete_predicate', methods=['POST'])
-def delete_predicate():
-    pass
+@api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
+def delete_predicate(predicate_id):
+    predicate_id = int(predicate_id)
+    del predicates[predicate_id]
+    return {i: predicates[i].to_dict() for i in range(len(predicates))}
 
-@api.route('/copy_predicate', methods=['POST'])
-def copy_predicate():
-    pass
+@api.route('/copy_predicate/<predicate_id>', methods=['GET', 'POST'])
+def copy_predicate(predicate_id):
+    predicate_id = int(predicate_id)
+    predicates.append(predicates[predicate_id])
+    return {i: predicates[i].to_dict() for i in range(len(predicates))}
 
 if __name__ == "__main__":
     api.run(host='localhost',port=5000)
