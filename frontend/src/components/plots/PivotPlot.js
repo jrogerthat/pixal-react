@@ -8,6 +8,7 @@ import Select from '@mui/material/Select';
 import { FeatureBarPlot } from "./featureBarPlot";
 import { FeatureDotPlot } from "./featureDotPlot";
 import { Button } from "@mui/material";
+import { FeatureLinePlot } from "./featureLinePlot";
 
 export const  PivotPlot = ({yCoord, setYCoord}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
@@ -17,13 +18,12 @@ export const  PivotPlot = ({yCoord, setYCoord}) => {
     const [filterByArray, setFilterByArray] = useState([]);
     const divRef = useRef();
 
-    console.log('seleceteddd', selectedPredicate);
+    
   
     return (
         <div className="r-top">
         <MarksControlComponent 
             setEncoding={setEncoding} 
-            setXCoord={setXCoord} 
             setYCoord={setYCoord} 
             setFilterByArray={setFilterByArray}
         />
@@ -40,11 +40,11 @@ export const  PivotPlot = ({yCoord, setYCoord}) => {
     )
 }
 
-export const MarksControlComponent = ({setXCoord, setEncoding}) => {
+export const MarksControlComponent = ({setYCoord, setEncoding}) => {
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
-    let xOptions = ['Score', ...keys]
+    let yOptions = ['Score', ...keys]
 
 
     return(
@@ -55,7 +55,7 @@ export const MarksControlComponent = ({setXCoord, setEncoding}) => {
             <div>
                 <div>encoding</div>
                 <div>
-                    <CoordDrop options={xOptions} label={"x"} setHandle={setXCoord} />
+                    <CoordDrop options={yOptions} label={"x"} setHandle={setYCoord} />
                     {/* <CoordDrop options={selectedPredicate.features} label={"y"} /> */}
                 </div>
             </div>
@@ -70,10 +70,12 @@ const WhichPlot = ({encoding, xCoord, yCoord}) => {
     const [{categoricalFeatures, selectedPredicate}, dispatch] = useContext(DataContext);
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
-
+   
     if(encoding === null){
         if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
             return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} />
+        }else if(selectedPredicate.feature[0] === "Order-Date"){
+            return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} />
         }else{
             return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
         }

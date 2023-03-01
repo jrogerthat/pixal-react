@@ -7,9 +7,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
  
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
-
-    console.log('SET UP', xCoord, yCoord.toLowerCase(), categorical)
-
     let [svgWidth, setSvgWidth] = useState(600);
     let [svgHeight, setSvgHeight] = useState(400);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
@@ -19,10 +16,8 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
 
     let plotData = plotDataOptions[yCoord][0];
 
-    console.log('PLOT DATA', xCoord, yCoord, plotData)
-
     let xScale = useMemo(()=> {
-        console.log(xCoord)
+    
         if(categorical){
             return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
         }else{
@@ -75,7 +70,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical}) => {
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => {
             return xScale(+d[xCoord])}).attr('cy', (d)=> {
-                console.log(d)
+               
                 return yScale(+d[yCoord])}).attr('r', 4)
 
     }, [selectedPredicate, xCoord, yCoord, yScale, xScale]);
