@@ -25,7 +25,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
     const svgRef = useRef(null);
     const divRef = useRef();
 
-    
     useEffect(()=> {
 
         const svg = d3.select(svgRef.current);
@@ -40,7 +39,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
 
         let wrap = svg.append('g');
 
-        wrap.attr("transform", 'translate(40, 10)')
+        wrap.attr("transform", `translate(${svgMargin.x/2}, 10)`)
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (svgMargin.y)) + ")")

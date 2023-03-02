@@ -33,7 +33,9 @@ const PredScorePlot = () => {
 
     console.log('oin pred score plot',selectedPredicate);
     return(
-        <KDEPlot />
+        // <KDEPlot />
+        <DensityBarPlot />
+
     )
     
 }
@@ -155,6 +157,68 @@ const KDEPlot = () => {
 
 }
 
-const DensityBarPlot = () => {
+const DensityBarPlot = ({navBool}) => {
+    const [{selectedPredicate},dispatch] = useContext(DataContext);
 
+    let [width, setWidth] = useState(600);
+    let [height, setHeight] = useState(navBool ? 200 : 300);
+    let [margin, setMargin] = useState({x:100, y:100})
+
+    const svgRef = useRef(null);
+
+  
+    let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
+    
+    console.log(groupData)
+
+    const yScale = useMemo(() => {
+        return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
+      }, [selectedPredicate.id]);
+
+    const xScale = useMemo(() => {
+        return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.score))]);
+        }, [selectedPredicate.id]);
+  
+
+    useEffect(()=> {
+        const svg = d3.select(svgRef.current);
+        svg.selectAll("*").remove();
+
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
+        let newMargX = newW * .3;
+        let newMargY = height * .2;
+
+        setWidth(newW)
+        setMargin({x: newMargX, y: newMargY})
+
+        let wrap = svg.append('g');
+
+        wrap.attr('transform', `translate(${margin.x/2}, ${margin.y/2})`)
+
+        const xAxisGenerator = d3.axisBottom(xScale);
+
+        wrap
+        .append("g")
+        .attr("transform", "translate(0," + (height-(margin.y)) + ")")
+        .call(xAxisGenerator);
+
+        const yAxisGenerator = d3.axisLeft(yScale);
+        wrap.append("g").call(yAxisGenerator);
+
+        let groups = wrap.selectAll('g.group').data(groupData).join('g').classed('group', true);
+
+        let bars = groups.selectAll('rect.bar').data(d => d[1])
+        .join('rect').attr("x", function(d) { return xScale(+d.score); })
+        .attr("y", function(d) { return yScale(+d.density); })
+        .attr("width", 15)
+        .attr("height", function(d) { return (height - margin.y) - yScale(+d.density); })
+        .attr("fill", (d) => {
+            return d.predicate === true ? selectedPredicate.predicate_info.color : 'gray'
+        }).attr('fill-opacity', .5)
+    }, [selectedPredicate]);
+
+
+    return(
+        <div><svg ref={svgRef} width={width} height={height} /></div>
+    )
 }
