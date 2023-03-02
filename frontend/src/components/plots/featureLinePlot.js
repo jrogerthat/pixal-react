@@ -2,25 +2,20 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-
-export const FeatureLinePlot = ({xCoord, yCoord}) => {
+export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    console.log("LINE PLOT");
-
     let [svgWidth, setSvgWidth] = useState(600);
-    let [svgHeight, setSvgHeight] = useState(400);
+    let [svgHeight, setSvgHeight] = useState(navBool ? 200 : 300);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
 
     // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[xCoord[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
 
-    console.log('plotDataOptions',plotDataOptions)
-
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
 
-    console.log('plotData', plotData)
+    let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
     
     let x = useMemo(()=> {
         return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (svgWidth - svgMargin.x)])
@@ -34,13 +29,14 @@ export const FeatureLinePlot = ({xCoord, yCoord}) => {
     const svgRef = useRef(null);
     const divRef = useRef();
 
+    console.log("POPT DATA", plotData);
+
     useEffect(()=> {
 
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        let newW = svg.node().parentNode.parentNode.parentNode.parentNode.getBoundingClientRect().width;
-        
+        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
         let newMargY = svgHeight * .3;
 
@@ -79,8 +75,16 @@ export const FeatureLinePlot = ({xCoord, yCoord}) => {
 
         pathG.attr('transform', 'translate(20, 0)')
 
+
+        wrap.append('rect')
+        .attr('height', svgHeight - svgMargin.y)
+        .attr('width', x(new Date(selectedRange[1])) - x(new Date(selectedRange[0])))
+        .attr('x', x(new Date(selectedRange[0])))
+        .attr('fill', selectedPredicate.predicate_info.color)
+        .style('opacity', .5)
+
     
-    }, [xCoord, yCoord, y, x]);
+    }, [xCoord, yCoord, y, x, selectedPredicate.predicate_info.id]);
 
     return(
         <div 

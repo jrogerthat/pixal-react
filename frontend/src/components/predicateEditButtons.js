@@ -2,11 +2,13 @@ import { Button, TextField } from '@mui/material';
 
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
+import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyTwoTone';
 
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import DoNotDisturbTwoToneIcon from '@mui/icons-material/DoNotDisturbTwoTone';
 import { useContext, useState } from 'react';
 import { DataContext } from '../context';
+import { useGetAxiosAsync } from '../axiosUtil';
 
 const HideButton = ({predicateData}) => {
     const [hidden, setHidden] = useState(false);
@@ -44,7 +46,7 @@ const HideButton = ({predicateData}) => {
 
 const DeleteButton = ({predicateData}) => {
     const [{deletedPredicates}, dispatch] = useContext(DataContext);
-    const handleDelete = () => {
+    const HandleDelete = () => {
         let deleted = [...deletedPredicates, predicateData.id]
         dispatch({type: "DELETE_PREDICATE", deleted})
     }
@@ -58,10 +60,37 @@ const DeleteButton = ({predicateData}) => {
             padding:0,
             marginRight: 5
         }}
-        onClick={handleDelete}
+        onClick={HandleDelete}
         ><DeleteForeverTwoToneIcon /></Button>
     )
 
+}
+
+
+
+const CopyButton = ({predicateData}) => {
+    
+    const HandleCopy = () => {
+        useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
+            dispatch({type: "UPDATE_PREDICATE_ARRAY", predicateArray: data.data})
+        })
+    }
+    
+    const[{predicateArray},dispatch] = useContext(DataContext);
+
+    return(
+        <Button 
+        variant="outlined" 
+        color="error" 
+        size="small"
+        style={{
+            borderRadius: 40,
+            padding:0,
+            marginRight: 5
+        }}
+        onClick={HandleCopy}
+        ><FileCopyTwoToneIcon /></Button>
+    )
 }
 
 const InvertButton = () => {
@@ -80,4 +109,4 @@ const InvertButton = () => {
 
 }
 
-export {HideButton, DeleteButton, InvertButton}
+export {HideButton, DeleteButton, InvertButton, CopyButton}

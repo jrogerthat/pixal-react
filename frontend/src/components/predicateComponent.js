@@ -2,18 +2,23 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
-import { DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
+import { CopyButton, DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 
 /*
 TODO: hook this up to actually create a predicate
 */
 export default function PredicateComp({predicateData}) {
  
-    const features = Object.entries(predicateData.predicate)
+    const features = Object.entries(predicateData.predicate.attribute_values)
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
+
+  
     
-    const featureValues = (valArr) => {
+    const featureValues = (data) => {
+
+        let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
+
         if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
             return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
             </span></div>
@@ -75,10 +80,9 @@ export default function PredicateComp({predicateData}) {
                 editMode && (
                     <div className="pred-edit-bar">
                     <InvertButton />
-                    {/* <ColorLensTwoToneIcon /> */}
                     <DeleteButton predicateData={predicateData} />
                     <HideButton predicateData={predicateData} />
-
+                    <CopyButton predicateData={predicateData} />
                     </div>
                 )
             }

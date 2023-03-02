@@ -33,7 +33,7 @@ const PredScorePlot = () => {
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     const data = selectedPredicate.predicate_scores;
-    // const margin = {top: 20, right: 30, bottom: 50, left: 40}
+   
     const bandwidth = .06
 
     let maxScore = d3.max(data.map(m => m.score));
@@ -51,7 +51,7 @@ const PredScorePlot = () => {
         .domain([0, maxScore])
         .range([(svgMargin.x / 2), svgWidth]);
 
-    }, [svgWidth, selectedPredicate, selectedPredicate.feature]);
+    }, [svgWidth, data, selectedPredicate.feature]);
 
     const thresholds = x.ticks(50)
 
