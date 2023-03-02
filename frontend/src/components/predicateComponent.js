@@ -42,7 +42,7 @@ export default function PredicateComp({predicateData}) {
     }
 
     let isSelected = () => {
-        return (selectedPredicate && predicateData.id === selectedPredicate.predicate_id) ? predicateData.color : '#e8e4e4e0';
+        return (selectedPredicate && predicateData.id === selectedPredicate.predicate_id) ? predicateData.color : 'white';//'#e8e4e4e0';
     }
 
     let handleClick = () => {

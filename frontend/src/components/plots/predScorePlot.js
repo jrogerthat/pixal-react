@@ -29,6 +29,19 @@ function kernelDensityEstimator(kernel, X) {
 
 const PredScorePlot = () => {
    
+    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+
+    console.log('oin pred score plot',selectedPredicate);
+    return(
+        <KDEPlot />
+    )
+    
+}
+
+export {PredScorePlot}
+
+const KDEPlot = () => {
+
     const svgRef = useRef(null);
 
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
@@ -139,14 +152,9 @@ const PredScorePlot = () => {
     return(
         <svg ref={svgRef} width={svgWidth} height={svgHeight} />
     )
-}
-
-export {PredScorePlot}
-
-const KDEPlot = () => {
 
 }
 
 const DensityBarPlot = () => {
-    
+
 }

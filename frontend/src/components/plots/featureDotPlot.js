@@ -17,16 +17,9 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
 
 
     let xScale = useMemo(()=> {
-        // if(categorical){
-        //     return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
-        // }else{
-        //     return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
-        // }
        return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
     }, [svgWidth, xCoord]);
 
-    
-    
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
     }, [yCoord, svgHeight]);

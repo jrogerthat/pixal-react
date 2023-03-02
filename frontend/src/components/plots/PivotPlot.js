@@ -73,7 +73,7 @@ const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
-   
+    console.log('COOOORDS',xCoord, yCoord)
     // if(encoding === null){
 
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
