@@ -15,22 +15,14 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
 
     let plotData = plotDataOptions[yCoord][0];
 
-    console.log('d3 max!!', d3.max(plotData.map(m => m[xCoord])))
 
     let xScale = useMemo(()=> {
-        // if(categorical){
-        //     return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
-        // }else{
-        //     return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
-        // }
        return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
     }, [svgWidth, xCoord]);
 
-    
-    
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
-    }, [yCoord]);
+    }, [yCoord, svgHeight]);
 
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -69,7 +61,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => xScale(+d[xCoord]))
         points.attr('cy', (d)=> {
-            console.log(d[yCoord], d, yCoord)
             return yScale(+d[yCoord.toLowerCase()])}).attr('r', 4)
 
     }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);

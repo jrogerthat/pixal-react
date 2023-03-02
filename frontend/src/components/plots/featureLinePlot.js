@@ -17,19 +17,17 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
 
     let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
     
-    let x = useMemo(()=> {
+    let xScale = useMemo(()=> {
         return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (svgWidth - svgMargin.x)])
     }, [svgWidth, xCoord]);
 
     
-    let y = useMemo(()=> {
+    let yScale = useMemo(()=> {
         return d3.scaleLinear().domain([0,d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
     }, [svgHeight, yCoord]);
     
     const svgRef = useRef(null);
     const divRef = useRef();
-
-    console.log("POPT DATA", plotData);
 
     useEffect(()=> {
 
@@ -41,8 +39,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
         let newMargY = svgHeight * .3;
 
         const line = d3.line()
-        .x(d => x(new Date(d[xCoord])))
-        .y(d => y(+d[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))
+        .x(d => xScale(new Date(d[xCoord])))
+        .y(d => yScale(+d[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))
 
         // setSvgHeight(newH)
         setSvgWidth(newW)
@@ -53,8 +51,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
         wrap.attr('transform', 'translate(20, 0)')
 
         let xAxis = wrap.append("g")
-        .attr("transform", "translate(0," + (svgHeight - svgMargin.y) + ")")
-        .call(d3.axisBottom(x))
+        .attr("transform", "translate(0," + (svgHeight - (svgMargin.y)) + ")")
+        .call(d3.axisBottom(xScale))
 
         xAxis.selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -62,7 +60,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
     
         let yAxis = wrap.append('g')
         .attr("transform", "translate(0, 0)")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(yScale));
 
         let pathG = svg.append("path")
         .datum(plotData)
@@ -78,13 +76,13 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
 
         wrap.append('rect')
         .attr('height', svgHeight - svgMargin.y)
-        .attr('width', x(new Date(selectedRange[1])) - x(new Date(selectedRange[0])))
-        .attr('x', x(new Date(selectedRange[0])))
+        .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))
+        .attr('x', xScale(new Date(selectedRange[0])))
         .attr('fill', selectedPredicate.predicate_info.color)
         .style('opacity', .5)
 
     
-    }, [xCoord, yCoord, y, x, selectedPredicate.predicate_info.id]);
+    }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
 
     return(
         <div 

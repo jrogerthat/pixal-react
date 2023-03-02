@@ -12,34 +12,43 @@ const initialState = {
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   hiddenPredicates: [],
   deletedPredicates: [],
-  bookmarkedPlots: []
+  bookmarkedPlots: [],
+  xCoord: null,
+  yCoord: "score"
 };
 
 const reducer = (state, action) => {
 
   switch (action.type) {
+
+    case "ADD_BOOKMARK_PLOT":
+      let newBooks = [...state.bookmarkedPlots, action.bookmarked]
+      return {...state, bookmarkedPlots: newBooks}
+
     case "UPDATE_EDIT_MODE":
       return {...state, editMode: action.editMode}
 
     case "SET_PREDICATE_EXPLORE_DATA":
-       
         let arr = formatPredicateArray(action.predData.pred_list);
-
         return {...state, predicateArray: arr, predicateDistributionArray: action.predData.pred_dist}
 
     case "UPDATE_PREDICATE_ARRAY":
         let pArr = formatPredicateArray(action.predicateArray);
-       
         return {...state, predicateArray: pArr}
 
-
     case "UPDATE_SELECTED_PREDICATE":
-        return {...state, selectedPredicate : action.predSel};
+        return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};
+
+    case "UPDATE_AXIS":
+      return {...state, xCoord: action.coords.x, yCoord: action.coords.y}
+
+    case "UPDATE_PRED_AND_AXIS":
+      return {...state, xCoord: action.coords.x, yCoord: action.coords.y, selectedPredicate: action.coords.selectedPredicate}
 
     case "FEATURE_SELECTED":
       let newSelectedPred = {...state.selectedPredicate}
       newSelectedPred.feature = action.feature;
-      return {...state, selectedPredicate : newSelectedPred}
+      return {...state, selectedPredicate : newSelectedPred, xCoord: action.feature[0]}
 
     case "PREDICATE_HOVER":
       return {...state, highlightedPred: action.pred}

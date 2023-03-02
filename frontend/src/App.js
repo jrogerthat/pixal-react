@@ -23,8 +23,7 @@ function App() {
   let {data, error, loaded} = useAxiosGet('/load_predicates_dist_list');
  
   useEffect(() => {
-    if(loaded){
-    
+    if(loaded){ 
       let pred_dist = Object.entries(data.pred_dist)
       let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})

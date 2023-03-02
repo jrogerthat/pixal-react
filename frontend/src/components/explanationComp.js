@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react"
 import { DataContext } from "../context"
 
-export const ExplanationComponent = ({yCoord}) => {
+export const ExplanationComponent = () => {
 
-    const [{selectedPredicate}] = useContext(DataContext);
+
+    const [{selectedPredicate, yCoord}] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
 
     useEffect(() => {

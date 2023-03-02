@@ -42,14 +42,17 @@ export default function PredicateComp({predicateData}) {
     }
 
     let isSelected = () => {
-        return (selectedPredicate && predicateData.id === selectedPredicate.predicate_id) ? predicateData.color : '#e8e4e4e0';
+        return (selectedPredicate && predicateData.id === selectedPredicate.predicate_id) ? predicateData.color : 'white';//'#e8e4e4e0';
     }
 
     let handleClick = () => {
         if(!editMode){
             axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
+                console.log(typeof data.data);
 
-                let predSel = data.data;
+                console.log(data.data);
+
+                let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
                 predSel.predicate_info = predicateData;
                 dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
             })

@@ -3,17 +3,13 @@ import '../App.css';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
 import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
-import { MarksControlComponent } from './markComponent';
 import { PivotPlot } from './plots/PivotPlot';
-import { ExplanationComponent } from './explanationComp';
-import { Button } from '@mui/material';
-import { BookmarkComponent } from './bookmarkComp';
+import TabComponent from './tabComponent';
 
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
-  const [yCoord, setYCoord] = useState('Score');
-  const [explanationBool, setExplanationBool] = useState(true);
+  // const [yCoord, setYCoord] = useState('Score');
 
   const rightDivRef = useRef();
 
@@ -34,23 +30,12 @@ function Pixalate() {
           <PredScorePlot />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
-          <PivotPlot yCoord={yCoord} setYCoord={setYCoord} />
+          <PivotPlot />
 
           <div className="r-bottom">
             <div>
-            <Button
-              onClick={() => setExplanationBool(true)}
-              >Explanation</Button>
-            <Button
-              onClick={() => setExplanationBool(false)}
-              >Bookmarked</Button>
+              <TabComponent />
             </div>
-         
-            {
-              explanationBool ?  <ExplanationComponent yCoord={yCoord}/>
-              : <BookmarkComponent />
-            }
-         
         </div>
     </div>
     )
