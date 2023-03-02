@@ -62,6 +62,10 @@ body {
   cursor: pointer;
 }
 
+.feature-line{
+  padding-top: 15px;
+}
+
 .pred-wrap.hidden {
   opacity: .1;
 }

@@ -68,7 +68,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => xScale(+d[xCoord]))
         points.attr('cy', (d)=> {
-            console.log(d[yCoord], d, yCoord)
             return yScale(+d[yCoord.toLowerCase()])}).attr('r', 4)
 
     }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);

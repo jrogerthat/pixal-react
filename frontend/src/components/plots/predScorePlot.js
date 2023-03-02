@@ -38,7 +38,6 @@ const PredScorePlot = () => {
 
     let maxScore = d3.max(data.map(m => m.score));
 
-    console.log('IN PRED SCORE PLOT', data)
     let [svgWidth, setSvgWidth] = useState(selectedPredicate.feature ? 300 : 600);
     let [svgHeight, setSvgHeight] = useState(300);
     let [svgMargin, setSvgMargin] = useState({x:100, y:100})
@@ -92,8 +91,6 @@ const PredScorePlot = () => {
         
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
-
-        console.log('console of svg', svg.node().parentNode, selectedPredicate.feature)
 
         let newW = svg.node().parentNode.getBoundingClientRect().width;
         

@@ -5,6 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ExplanationComponent } from './explanationComp';
+import { BookmarkedPlots } from './bookmarkedPlotComponent';
+import { DataContext } from '../context';
 
 function TabPanel({ children, value, index, ...other }) {
 
@@ -40,14 +42,14 @@ function a11yProps(index) {
 
 
 
-export default function TabComponent({yCoord}) {
+export default function TabComponent() {
+
   const [value, setValue] = React.useState(0);
+  const [{yCoord}] = React.useContext(DataContext);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  console.log('yCOORD',yCoord)
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -58,10 +60,10 @@ export default function TabComponent({yCoord}) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <ExplanationComponent yCoord={yCoord}/>
+        <ExplanationComponent />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <BookmarkedPlots />
       </TabPanel>
     </Box>
   );
