@@ -129,7 +129,7 @@ def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
     predicate_data = {
         'features': features,
         'predicate_id': predicate_id,
-        'predicate_scores': predicate.get_distribution(target, 25).fillna(0).to_dict('records'),
+        'predicate_scores': predicate.get_distribution(target, num_bins=25, include_compliment=True).fillna(0).to_dict('records'),
         # 'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records') if predicate is not None else None,
         'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
         'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in numeric if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
@@ -182,7 +182,7 @@ def add_predicate():
     predicates.append(predicate)
     
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
     # with open(f"{path}/{new_predicates_path}", 'wb') as f:
     #     json.dump(predicates_dict, f)
@@ -196,7 +196,7 @@ def edit_predicate(predicate_id, negate=0):
     predicates[predicate_id] = predicate
 
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
 
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
@@ -204,7 +204,7 @@ def delete_predicate(predicate_id):
     predicate_id = int(predicate_id)
     del predicates[predicate_id]
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
 
 @api.route('/copy_predicate/<predicate_id>', methods=['GET', 'POST'])
@@ -212,7 +212,7 @@ def copy_predicate(predicate_id):
     predicate_id = int(predicate_id)
     predicates.append(predicates[predicate_id])
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
 
 if __name__ == "__main__":
