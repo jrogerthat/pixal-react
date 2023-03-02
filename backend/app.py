@@ -24,6 +24,7 @@ my_path = 'static/data'
 
 data_path = 'static/data/superstore_data.csv'
 predicates_path = 'static/data/augmented_superstore_predicates.json'
+new_predicates_path = 'static/data/augmented_superstore_predicates_new.json'
 
 data = pd.read_csv(f'{path}/{data_path}')
 data.columns = [col.replace(' ', '-') for col in data.columns]
@@ -178,7 +179,12 @@ def add_predicate():
     predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
     print(predicate)
     predicates.append(predicate)
-    return {i: predicates[i].to_dict() for i in range(len(predicates))}
+    
+    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    return predicates_dict
+    # with open(f"{path}/{new_predicates_path}", 'wb') as f:
+    #     json.dump(predicates_dict, f)
 
 @api.route('/edit_predicate/<predicate_id>/<negate>', methods=['GET', 'POST'])
 def edit_predicate(predicate_id, negate=0):
@@ -187,19 +193,26 @@ def edit_predicate(predicate_id, negate=0):
     predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
     predicate.is_negated = bool(int(negate))
     predicates[predicate_id] = predicate
-    return {i: predicates[i].to_dict() for i in range(len(predicates))}
+
+    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    return predicates_dict
 
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
 def delete_predicate(predicate_id):
     predicate_id = int(predicate_id)
     del predicates[predicate_id]
-    return {i: predicates[i].to_dict() for i in range(len(predicates))}
+    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    return predicates_dict
 
 @api.route('/copy_predicate/<predicate_id>', methods=['GET', 'POST'])
 def copy_predicate(predicate_id):
     predicate_id = int(predicate_id)
     predicates.append(predicates[predicate_id])
-    return {i: predicates[i].to_dict() for i in range(len(predicates))}
+    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, 25) for i in range(len(predicates))}
+    return predicates_dict
 
 if __name__ == "__main__":
     api.run(host='localhost',port=5000)
