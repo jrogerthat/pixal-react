@@ -143,56 +143,10 @@ const PredScorePlot = () => {
 
 export {PredScorePlot}
 
-// const x = useMemo(() => {
-//     return d3.scaleLinear().range([0, (width - 50)]).domain([0, d3.max(sortedScores.map(f => f.score))]);
-// }, [sortedScores, width]);
+const KDEPlot = () => {
 
-// var histogram = d3.bin()
-//   .value(function(d) { return +d.score; })   // I need to give the vector of value
-//   .domain(x.domain())  // then the domain of the graphic
-//   .thresholds(x.ticks(50)); // then the numbers of bins
+}
 
-
-//  // And apply twice this function to data to get the bins.
-// var bins1 = histogram(sortedScores.filter( function(d){return d.predicate === false} ));
-// var bins2 = histogram(sortedScores.filter( function(d){return d.predicate === true} ));
-
-// // Y axis: scale and draw:
-// let y = d3.scaleLinear()
-//   .range([(height - 50), 0]);
-//   y.domain([0, d3.max(bins1, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
-
-
-
-//   // Render the X axis using d3.js, not react
-// useEffect(() => {
-//     const svg = d3.select(axesRef.current);
-//     svg.selectAll("*").remove();
-//     const xAxisGenerator = d3.axisBottom(x);
+const DensityBarPlot = () => {
     
-//     svg.append("g")
-//     .call(d3.axisLeft(y));
-
-// // append the bars for series 1
-// svg.selectAll("rect.notPred")
-//     .data(bins1)
-//     .join("rect")
-//     .classed("notPred", true)
-//       .attr("x", 1)
-//       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-//       .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-//       .attr("height", function(d) { return (height - 50) - y(d.length); })
-//       .style("fill", "#69b3a2")
-//       .style("opacity", 0.5)
-
-// // append the bars for series 2
-// svg.selectAll("rect.pred")
-//     .data(bins2)
-//     .join("rect")
-//     .classed("pred", true)
-//       .attr("x", 1)
-//       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-//       .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-//       .attr("height", function(d) { return (height - 50) - y(d.length); })
-//       .style("fill", "#404080")
-//       .style("opacity", 0.5)
+}
