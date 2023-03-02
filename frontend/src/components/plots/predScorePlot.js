@@ -173,11 +173,11 @@ const DensityBarPlot = ({navBool}) => {
 
     const yScale = useMemo(() => {
         return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
-      }, [selectedPredicate.id]);
+      }, [selectedPredicate.id, selectedPredicate.feature]);
 
     const xScale = useMemo(() => {
         return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.score))]);
-        }, [selectedPredicate.id]);
+        }, [selectedPredicate.id, selectedPredicate.feature]);
   
 
     useEffect(()=> {
@@ -215,7 +215,7 @@ const DensityBarPlot = ({navBool}) => {
         .attr("fill", (d) => {
             return d.predicate === true ? selectedPredicate.predicate_info.color : 'gray'
         }).attr('fill-opacity', .5)
-    }, [selectedPredicate]);
+    }, [selectedPredicate.id, selectedPredicate.feature]);
 
 
     return(
