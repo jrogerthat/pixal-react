@@ -10,6 +10,13 @@ import { FeatureDotPlot } from "./featureDotPlot";
 import { Button } from "@mui/material";
 import { FeatureLinePlot } from "./featureLinePlot";
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 export const  PivotPlot = () => {
 
@@ -42,14 +49,11 @@ export const MarksControlComponent = () => {
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
 
+    console.log(selectedPredicate.predicate_info)
 
     return(
         <div className="marksControl">
-            {/* <div>
-                <CoordDrop options={['point', 'bar', 'line']} label={"marks"} setHandle={setEncoding} />
-            </div> */}
 
-           
             <div>
                 <div>encoding</div>
                 <div>
@@ -63,18 +67,58 @@ export const MarksControlComponent = () => {
                 </div>
             </div>
             <div>
-                <CoordDrop options={selectedPredicate.features} label={"Filter by"} />
+                {/* <CoordDrop options={selectedPredicate.features} label={"Filter by"} /> */}
+                <div><FilterList /></div>
             </div>
         </div>
     )
 }
 
+const tableValues = (arr) => {
+
+}
+
+const FilterList = () => {
+    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    let rows = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values);
+    console.log('rows',rows)
+    return (
+        <TableContainer component={Paper}>
+        <Table 
+        sx={{ backgroundColor: '#f4efefe0', fontSize: 9}} 
+        aria-label="simple table">
+            <TableHead>
+            <TableRow>
+                <TableCell>Filtered By:</TableCell>
+            </TableRow>
+            </TableHead>
+            <TableBody>
+            {rows.map((row, i) => (
+                <TableRow
+                key={`fil-${i}`}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    
+                <TableCell component="th" scope="row">
+                <span>{`${row[0]}: `}</span> 
+                </TableCell>
+                <TableCell align="right">{row[1].join(", ")}</TableCell>
+                {/* <TableCell align="right">{row.fat}</TableCell>
+                <TableCell align="right">{row.carbs}</TableCell>
+                <TableCell align="right">{row.protein}</TableCell> */}
+                </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+        </TableContainer>
+    );
+}
+
+
 const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
-    console.log('COOOORDS',xCoord, yCoord)
-    // if(encoding === null){
 
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
         setEncoding('bar')
@@ -86,12 +130,6 @@ const WhichPlot = ({setEncoding}) => {
         setEncoding('dot')
         return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
     }
-    // }else if(encoding === 'point'){
-    //     return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
-    // }
-    // return (
-    //     <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
-    // )
 }
 
 const CoordDrop = ({options, label, setHandle, type}) => {
