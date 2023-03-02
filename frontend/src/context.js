@@ -1,6 +1,4 @@
-import axios from "axios";
 import React, { useReducer, createContext } from "react";
-import { useAxiosGet, useGetAxiosAsync } from "./axiosUtil";
 import formatPredicateArray from "./dataFormating";
 
 export const DataContext = createContext();
@@ -34,11 +32,6 @@ const reducer = (state, action) => {
        
         return {...state, predicateArray: pArr}
 
-    case "ADD_PREDICATE":
-        
-      return {
-        ...state
-      };
 
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate : action.predSel};

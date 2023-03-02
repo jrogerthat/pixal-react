@@ -2,8 +2,6 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-
-
 export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
@@ -35,7 +33,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
 
         let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
-        let newMargY = svgHeight * .3;
+        let newMargY = svgHeight * .2;
 
         setSvgWidth(newW)
         setSvgMargin({x: newMargX, y: newMargY})

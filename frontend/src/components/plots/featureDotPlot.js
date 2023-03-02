@@ -15,13 +15,15 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
 
     let plotData = plotDataOptions[yCoord][0];
 
+    console.log('d3 max!!', d3.max(plotData.map(m => m[xCoord])))
+
     let xScale = useMemo(()=> {
-        if(categorical){
-            return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
-        }else{
-            return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
-        }
-       
+        // if(categorical){
+        //     return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
+        // }else{
+        //     return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
+        // }
+       return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
     }, [svgWidth, xCoord]);
 
     
@@ -40,7 +42,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
 
         let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
         let newMargX = newW * .3;
-        let newMargY = svgHeight * .3;
+        let newMargY = svgHeight * .2;
 
         // setSvgHeight(newH)
         setSvgWidth(newW)
@@ -48,7 +50,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
 
         let wrap = svg.append('g');
 
-        wrap.attr('transform', 'translate(20, 0)')
+        wrap.attr('transform', 'translate(20, 20)')
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - svgMargin.y) + ")")
@@ -60,16 +62,17 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
             .style("text-anchor", "end");
         }
        
-
         let yAxis = wrap.append('g')
         .attr("transform", "translate(0, 0)")
         .call(d3.axisLeft(yScale));
 
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => xScale(+d[xCoord]))
-        points.attr('cy', (d)=> yScale(+d[yCoord])).attr('r', 4)
+        points.attr('cy', (d)=> {
+            console.log(d[yCoord], d, yCoord)
+            return yScale(+d[yCoord.toLowerCase()])}).attr('r', 4)
 
-    }, [xCoord, yCoord, yScale, xScale]);
+    }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
 
     return(
         <div 
@@ -77,7 +80,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:(svgWidth), height:(svgHeight)}}
+                style={{width:(svgWidth - (svgMargin.x / 2)), height:(svgHeight)}}
                 ref={svgRef} />
             </div>
         </div>
