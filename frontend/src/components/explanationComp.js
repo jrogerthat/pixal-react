@@ -3,6 +3,8 @@ import { DataContext } from "../context"
 
 export const ExplanationComponent = ({yCoord}) => {
 
+    console.log('yCOord',yCoord)
+
     const [{selectedPredicate}] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
 

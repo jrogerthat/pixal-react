@@ -15,7 +15,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
 
     let plotData = plotDataOptions[yCoord][0];
 
-    console.log('d3 max!!', d3.max(plotData.map(m => m[xCoord])))
 
     let xScale = useMemo(()=> {
         // if(categorical){
@@ -30,7 +29,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
     
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
-    }, [yCoord]);
+    }, [yCoord, svgHeight]);
 
     const svgRef = useRef(null);
     const divRef = useRef();

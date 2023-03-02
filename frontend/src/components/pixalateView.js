@@ -8,6 +8,8 @@ import { PivotPlot } from './plots/PivotPlot';
 import { ExplanationComponent } from './explanationComp';
 import { Button } from '@mui/material';
 import { BookmarkComponent } from './bookmarkComp';
+import Tabs from './tabComponent';
+import TabComponent from './tabComponent';
 
 function Pixalate() {
 
@@ -38,18 +40,19 @@ function Pixalate() {
 
           <div className="r-bottom">
             <div>
-            <Button
+              <TabComponent yCoord={yCoord}/>
+            {/* <Button
               onClick={() => setExplanationBool(true)}
               >Explanation</Button>
             <Button
               onClick={() => setExplanationBool(false)}
-              >Bookmarked</Button>
+              >Bookmarked</Button> */}
             </div>
          
-            {
+            {/* {
               explanationBool ?  <ExplanationComponent yCoord={yCoord}/>
               : <BookmarkComponent />
-            }
+            } */}
          
         </div>
     </div>

@@ -29,8 +29,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
     const svgRef = useRef(null);
     const divRef = useRef();
 
-    console.log("POPT DATA", plotData);
-
     useEffect(()=> {
 
         const svg = d3.select(svgRef.current);
