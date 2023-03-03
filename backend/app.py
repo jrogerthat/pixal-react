@@ -217,5 +217,11 @@ def copy_predicate(predicate_id):
     predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
 
+@api.route('/get_predicate_data', methods=['GET', 'POST'])
+def get_predicate_data():
+    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    return predicates_dict
+
 if __name__ == "__main__":
     api.run(host='localhost',port=5000)
