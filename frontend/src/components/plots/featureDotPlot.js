@@ -32,7 +32,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool}) => {
         if(d3.select('#feat-nav-wrap-left') != null){
             setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
         }
-    }, [d3.select('#feat-nav-wrap-left')]);
+    }, [d3.select('#feat-nav-wrap-left'), yCoord, xCoord]);
 
     let xScale = useMemo(()=> {
         return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])

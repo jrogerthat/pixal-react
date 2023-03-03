@@ -8,7 +8,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
 
     let initWidth = () => {
         if(navBool){
-            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
+            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 300;
         }else{
             return 700
         }
@@ -22,7 +22,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         if(d3.select('#feat-nav-wrap-left') != null){
             setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
         }
-    }, [d3.select('#feat-nav-wrap-left')]);
+    }, [d3.select('#feat-nav-wrap-left'), yCoord, feature]);
 
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 

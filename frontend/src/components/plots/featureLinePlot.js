@@ -10,7 +10,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
 
     let initWidth = () => {
         if(navBool){
-            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
+            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 300;
         }else{
             return 700
         }
@@ -24,7 +24,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool}) => {
         if(d3.select('#feat-nav-wrap-left') != null){
             setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
         }
-    }, [d3.select('#feat-nav-wrap-left')]);
+    }, [d3.select('#feat-nav-wrap-left'), yCoord, xCoord]);
 
     // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[xCoord[0]]}, [selectedPredicate]);
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
