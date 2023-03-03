@@ -26,6 +26,8 @@ function App() {
     if(loaded){ 
       let pred_dist = Object.entries(data.pred_dist)
       let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
+
+      console.log('DIST', predData)
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
     }
     

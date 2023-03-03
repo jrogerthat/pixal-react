@@ -93,7 +93,14 @@ const CopyButton = ({predicateData}) => {
     )
 }
 
-const InvertButton = () => {
+const InvertButton = ({predicateData}) => {
+    
+    const HandleClick = () => {
+        console.log(predicateData)
+        useGetAxiosAsync("/edit_predicate/0/1").then((d) => {
+            console.log('in AXIOS COMMAND',d)
+        })
+    }
     return(
         <Button 
         variant="outlined" 
@@ -104,6 +111,7 @@ const InvertButton = () => {
             padding:0,
             marginRight: 5
         }}
+        onClick={HandleClick}
         ><DoNotDisturbTwoToneIcon /></Button>
     )
 

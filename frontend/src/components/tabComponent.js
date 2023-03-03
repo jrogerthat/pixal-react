@@ -45,7 +45,7 @@ function a11yProps(index) {
 export default function TabComponent() {
 
   const [value, setValue] = React.useState(0);
-  const [{yCoord}] = React.useContext(DataContext);
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

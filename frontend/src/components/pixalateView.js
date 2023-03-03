@@ -5,6 +5,7 @@ import { DataContext } from '../context';
 import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
 import { PivotPlot } from './plots/PivotPlot';
 import TabComponent from './tabComponent';
+import Typography from '@mui/material/Typography';
 
 function Pixalate() {
 
@@ -26,7 +27,7 @@ function Pixalate() {
           />
         
           <div className="l-bottom">
-          <div>Predicate I_Forest Score</div>
+          <div className="head-3">Predicate I_Forest Scores</div>
           <PredScorePlot />
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
@@ -50,7 +51,7 @@ function Pixalate() {
           <div className="right"
           ref={rightDivRef}
           >
-          <div>Predicate I_Forest Score</div>
+            <div className="head-3">Predicate I_Forest Scores</div>
           <PredScorePlot />
           </div>
 

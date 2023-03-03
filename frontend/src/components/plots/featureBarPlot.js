@@ -6,21 +6,36 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    let [svgWidth, setSvgWidth] = useState(600);
+    let initWidth = () => {
+        if(navBool){
+            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
+        }else{
+            return 700
+        }
+    }
+
+    let [svgWidth, setSvgWidth] = useState(initWidth());
     let [svgHeight, setSvgHeight] = useState(navBool ? 200 : 300);
-    let [svgMargin, setSvgMargin] = useState({x:100, y:100})
+    let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
+
+    useEffect(() => {
+        if(d3.select('#feat-nav-wrap-left') != null){
+            setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
+        }
+    }, [d3.select('#feat-nav-wrap-left')]);
 
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
+        console.log('is this running again')
         return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
     }, [svgWidth, feature])
     
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
-    }, [yCoord])
+    }, [svgHeight, yCoord])
    
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -30,16 +45,9 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
-        let newMargX = newW * .3;
-        let newMargY = svgHeight * .2;
-
-        setSvgWidth(newW)
-        setSvgMargin({x: newMargX, y: newMargY})
-
         let wrap = svg.append('g');
 
-        wrap.attr("transform", `translate(${svgMargin.x/2}, 10)`)
+        wrap.attr("transform", `translate(${svgMargin.x/2}, ${svgMargin.y/2})`)
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (svgMargin.y)) + ")")
@@ -60,7 +68,9 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         .attr("height", function(d) { return (svgHeight - svgMargin.y) - yScale(d[yCoord === 'Score' ? 'score' : yCoord]); })
         .attr("fill", (d) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
-        })
+        }).attr('fill-opacity', .6)
+        .attr('stroke', 'gray')
+        // .attr('stroke-width', 1)
 
 
     }, [feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
@@ -71,7 +81,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:(svgWidth), height:(svgHeight)}}
+                style={{width:svgWidth, height:svgHeight}}
                 ref={svgRef} />
             </div>
         </div>

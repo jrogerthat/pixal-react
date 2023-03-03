@@ -13,6 +13,12 @@ body {
   position: absolute;
 }
 
+.head-3{
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: gray
+}
+
 .main-wrapper {
   display:flex;
   flex-direction:row;

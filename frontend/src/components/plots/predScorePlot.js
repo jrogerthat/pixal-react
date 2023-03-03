@@ -160,13 +160,11 @@ const KDEPlot = () => {
 const DensityBarPlot = ({navBool}) => {
     const [{selectedPredicate},dispatch] = useContext(DataContext);
 
-    let [width, setWidth] = useState(600);
+    let [width, setWidth] = useState(navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700);
     let [height, setHeight] = useState(navBool ? 200 : 300);
-    let [margin, setMargin] = useState({x:100, y:100})
+    let [margin, setMargin] = useState({x:(width * .2), y:(height * .3)});
 
     const svgRef = useRef(null);
-
-  
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
     
     console.log(groupData)
@@ -184,15 +182,8 @@ const DensityBarPlot = ({navBool}) => {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        let newW = navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700;
-        let newMargX = newW * .3;
-        let newMargY = height * .2;
-
-        setWidth(newW)
-        setMargin({x: newMargX, y: newMargY})
 
         let wrap = svg.append('g');
-
         wrap.attr('transform', `translate(${margin.x/2}, ${margin.y/2})`)
 
         const xAxisGenerator = d3.axisBottom(xScale);
@@ -215,7 +206,7 @@ const DensityBarPlot = ({navBool}) => {
         .attr("fill", (d) => {
             return d.predicate === true ? selectedPredicate.predicate_info.color : 'gray'
         }).attr('fill-opacity', .5)
-    }, [selectedPredicate.id, selectedPredicate.feature]);
+    }, [selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
 
 
     return(

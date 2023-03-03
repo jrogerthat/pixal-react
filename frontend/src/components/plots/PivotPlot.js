@@ -49,13 +49,11 @@ export const MarksControlComponent = () => {
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
 
-    console.log(selectedPredicate.predicate_info)
-
     return(
         <div className="marksControl">
 
             <div>
-                <div>encoding</div>
+                <div className="head-3">encoding</div>
                 <div>
                     <CoordDrop 
                     options={yOptions} 
@@ -81,7 +79,7 @@ const tableValues = (arr) => {
 const FilterList = () => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     let rows = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values);
-    console.log('rows',rows)
+   
     return (
         <TableContainer component={Paper}>
         <Table 
@@ -103,9 +101,7 @@ const FilterList = () => {
                 <span>{`${row[0]}: `}</span> 
                 </TableCell>
                 <TableCell align="right">{row[1].join(", ")}</TableCell>
-                {/* <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell> */}
+                
                 </TableRow>
             ))}
             </TableBody>

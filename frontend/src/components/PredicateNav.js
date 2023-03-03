@@ -16,7 +16,7 @@ function PredicateNav({setHighlightPred}) {
         editMode ? <Button
         variant="outlined"
         onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
-      >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span>Predicates</span>
+      >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span className='head-3'>Predicates</span>
       }
       
       {
