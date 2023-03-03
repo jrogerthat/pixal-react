@@ -82,7 +82,7 @@ export default function PredicateComp({predicateData}) {
             {
                 editMode && (
                     <div className="pred-edit-bar">
-                    <InvertButton />
+                    <InvertButton predicateData={predicateData} />
                     <DeleteButton predicateData={predicateData} />
                     <HideButton predicateData={predicateData} />
                     <CopyButton predicateData={predicateData} />

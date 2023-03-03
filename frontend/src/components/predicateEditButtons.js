@@ -95,16 +95,26 @@ const CopyButton = ({predicateData}) => {
 
 const InvertButton = ({predicateData}) => {
     const [{}, dispatch] = useContext(DataContext);
+
+    const [negated, setNegated] = useState(0);
+
     const HandleClick = () => {
-        console.log(predicateData)
-        useGetAxiosAsync("/edit_predicate/0/1").then((d) => {
-            // dispatch({type:"", })
+       
+        negated === 0 ? setNegated(1) : setNegated(0);
+
+        useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
+            let pred_dist = Object.entries(data.data).map(m => {
+                return [m[0], m[1].dist]
+              })
+        
+              let predData = {'pred_list': data.data, 'pred_dist': pred_dist}
+              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
         })
     }
     return(
         <Button 
         variant="outlined" 
-        color="error" 
+        color={negated === 0 ? "secondary" : "error"} 
         size="small"
         style={{
             borderRadius: 40,
