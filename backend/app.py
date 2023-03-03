@@ -191,11 +191,13 @@ def add_predicate():
 def edit_predicate(predicate_id, negate=0):
     predicate_id = int(predicate_id)
     attribute_values = request.args.to_dict()
-    predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
+    if len(attribute_values) == 0:
+        predicate = predicates[predicate_id]
+    else:
+        predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
     predicate.is_negated = bool(int(negate))
     predicates[predicate_id] = predicate
-
-    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    target_ = pd.Series(np.random.normal(size=len(predicate.mask)))
     predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
 
