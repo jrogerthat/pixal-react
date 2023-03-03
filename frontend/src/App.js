@@ -20,18 +20,38 @@ function App() {
   /**
    * This loads an object with pred_dist (list of predicate distribtutions) and pred_list (pred_list)
    */
-  let {data, error, loaded} = useAxiosGet('/load_predicates_dist_list');
+  let {data, error, loaded} = useAxiosGet('/get_predicate_data');
  
   useEffect(() => {
     if(loaded){ 
-      let pred_dist = Object.entries(data.pred_dist)
-      let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
 
-      console.log('DIST', predData)
+      let pred_dist = Object.entries(data).map(m => {
+        console.log(m)
+        return [m[0], m[1].dist]
+      })
+      
+      console.log('PRED', pred_dist);
+
+      let predData = {'pred_list': data, 'pred_dist': pred_dist}
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
     }
     
   }, [loaded])
+
+  // let {data, error, loaded} = useAxiosGet('/load_predicates_dist_list');
+
+  // useEffect(() => {
+  //   if(loaded){ 
+
+  //     console.log('DATA!!!!',data)
+  //     let pred_dist = Object.entries(data.pred_dist)
+
+  //     console.log(pred_dist)
+  //     let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
+  //     dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
+  //   }
+    
+  // }, [loaded])
 
 
   return (

@@ -7,6 +7,9 @@ const PredExplorePlot = ({width, height}) => {
     const axesRef = useRef(null);
     const [{predicateArray, predicateDistributionArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
+    console.log('FORMAT PRED ARRAY', predicateDistributionArray);
+
+
     let filteredDist = [...predicateDistributionArray].filter(f => {
         if(hiddenPredicates.length === 0){
             return f
@@ -25,8 +28,8 @@ const PredExplorePlot = ({width, height}) => {
 
     const xScale = useMemo(() => {
         if(predicateDistributionArray.length > 0){
-            let maxArr = predicateDistributionArray.flatMap(m => m[1]).map(m => m.bin)
-            return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
+            let maxArr = predicateDistributionArray.flatMap(m => m[1]).map(m => m.score)
+            return d3.scaleLinear().range([0, width]).domain(d3.extent(maxArr));
         }else{
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
         }}, [predicateDistributionArray, width]);
@@ -82,10 +85,11 @@ const PredicateGroup = ({predData, yScale, xScale, height, color}) => {
             predData.map((p, i) => (
                 <rect key={`b-${i}`}
                     fill={calcColor}
-                    x={xScale(p.bin)} 
-                    width="5px" 
+                    x={xScale(p.score)} 
+                    width="7px" 
                     height={(height - 50)-yScale(p.density)}
                     transform={`translate(0,${yScale(p.density) + 30})`}
+                    style={{fillOpacity: .6, stroke: calcColor}}
                 />
             ))
         }

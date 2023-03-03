@@ -94,11 +94,11 @@ const CopyButton = ({predicateData}) => {
 }
 
 const InvertButton = ({predicateData}) => {
-    
+    const [{}, dispatch] = useContext(DataContext);
     const HandleClick = () => {
         console.log(predicateData)
         useGetAxiosAsync("/edit_predicate/0/1").then((d) => {
-            console.log('in AXIOS COMMAND',d)
+            // dispatch({type:"", })
         })
     }
     return(

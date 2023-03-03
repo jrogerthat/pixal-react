@@ -29,8 +29,14 @@ const reducer = (state, action) => {
       return {...state, editMode: action.editMode}
 
     case "SET_PREDICATE_EXPLORE_DATA":
-        let arr = formatPredicateArray(action.predData.pred_list);
-        return {...state, predicateArray: arr, predicateDistributionArray: action.predData.pred_dist}
+      let arr = formatPredicateArray(action.predData.pred_list);
+      
+      return {...state, predicateArray: arr, predicateDistributionArray: action.predData.pred_dist}
+
+        // let arr = formatPredicateArray(action.predData);
+        // console.log('array in dist context', action.predData);
+      
+        // return {...state, predicateArray: arr}
 
     case "UPDATE_PREDICATE_ARRAY":
         let pArr = formatPredicateArray(action.predicateArray);
