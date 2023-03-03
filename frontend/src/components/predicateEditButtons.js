@@ -113,7 +113,7 @@ const InvertButton = ({predicateData}) => {
     }
     return(
         <Button 
-        variant="outlined" 
+        variant={negated === 0 ? "outlined" : "contained"} 
         color={negated === 0 ? "secondary" : "error"} 
         size="small"
         style={{

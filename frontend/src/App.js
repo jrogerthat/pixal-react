@@ -26,11 +26,8 @@ function App() {
     if(loaded){ 
 
       let pred_dist = Object.entries(data).map(m => {
-        console.log(m)
         return [m[0], m[1].dist]
-      })
-      
-      console.log('PRED', pred_dist);
+      });
 
       let predData = {'pred_list': data, 'pred_dist': pred_dist}
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})

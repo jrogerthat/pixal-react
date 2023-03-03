@@ -30,7 +30,6 @@ const reducer = (state, action) => {
 
     case "SET_PREDICATE_EXPLORE_DATA":
       let arr = formatPredicateArray(action.predData.pred_list);
-      
       return {...state, predicateArray: arr, predicateDistributionArray: action.predData.pred_dist}
 
         // let arr = formatPredicateArray(action.predData);
