@@ -81,7 +81,7 @@ const CopyButton = ({predicateData}) => {
     return(
         <Button 
         variant="outlined" 
-        color="error" 
+        color="primary" 
         size="small"
         style={{
             borderRadius: 40,
@@ -114,7 +114,7 @@ const InvertButton = ({predicateData}) => {
     return(
         <Button 
         variant={negated === 0 ? "outlined" : "contained"} 
-        color={negated === 0 ? "secondary" : "error"} 
+        color={negated === 0 ? "primary" : "error"} 
         size="small"
         style={{
             borderRadius: 40,

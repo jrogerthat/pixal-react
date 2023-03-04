@@ -13,8 +13,6 @@ export default function PredicateComp({predicateData}) {
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
 
-  
-    
     const featureValues = (data) => {
 
         let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];

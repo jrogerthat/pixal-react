@@ -7,6 +7,10 @@ export const ExplanationComponent = () => {
     const [{selectedPredicate, yCoord}] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
 
+    let keys = Object.entries(selectedPredicate.attribute_data[selectedPredicate.feature[0]]);
+
+    console.log('KEYS', keys)
+
     useEffect(() => {
         
         if(yCoord === 'Score'){
@@ -18,9 +22,17 @@ export const ExplanationComponent = () => {
 
     return (
         <React.Fragment>
-        <div style={{marginTop:10}}>{
+        {/* <div style={{marginTop:10}}>{
             explanation.map((ex, i) => <span key={`${i}-ex`}>{` ${ex}`}</span>)
-            }</div>
+            }</div> */}
+            {
+                keys.map(k => (
+                    <div>
+                        <div>test</div>
+                        <div>{k[1][1].join(" ")}</div>
+                    </div>
+                ))
+            }
         </React.Fragment>
     )
 }
