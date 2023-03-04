@@ -2,24 +2,38 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureBarPlot = ({yCoord, feature, navBool}) => {
+export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     let initWidth = () => {
         if(navBool){
             return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 300;
+        }else if(explanBool){
+            return 200;
         }else{
-            return 700
+            return 700;
+        }
+    }
+
+    let initHeight = () => {
+        if(navBool){
+            return 200;
+        }else if(explanBool){
+            return 100;
+        }else{
+            return 300;
         }
     }
 
     let [svgWidth, setSvgWidth] = useState(initWidth());
-    let [svgHeight, setSvgHeight] = useState(navBool ? 200 : 300);
+    let [svgHeight, setSvgHeight] = useState(initHeight());
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
 
     useEffect(() => {
-        if(d3.select('#feat-nav-wrap-left') != null){
+        if(explanBool){
+            // setSvgWidth(200)
+        }else if(d3.select('#feat-nav-wrap-left') != null){
             setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
         }
     }, [d3.select('#feat-nav-wrap-left'), yCoord, feature]);

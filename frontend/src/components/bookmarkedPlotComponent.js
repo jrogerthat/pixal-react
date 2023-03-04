@@ -26,10 +26,10 @@ export const BookmarkedPlots = () => {
         return (
             <Fragment>
                 <div><WhichPlot data={book} /></div>
-                <span
+                {/* <span
                 style={{marginRight: 20, fontWeight:700}}>
                     <PlotIcon encoding={book.encoding}/>
-                </span>
+                </span> */}
                 <span style={{marginRight: 5, fontWeight:700}}>X Axis:</span>
                 <span style={{marginRight: 10}}>{book.x}</span>
                 <span style={{marginRight: 5, fontWeight:700}}>Y Axis:</span>
@@ -59,12 +59,12 @@ const WhichPlot = ({data}) => {
 
     if(data.encoding === 'bar'){
         // setEncoding('bar')
-        return  <FeatureBarPlot xCoord={data.x} yCoord={data.y} categorical={categoricalBool} feature={data.x} />
+        return  <FeatureBarPlot xCoord={data.x} yCoord={data.y} categorical={categoricalBool} feature={data.x} explanBool={true} />
     }else if(data.encoding === 'line'){
         // setEncoding('line')
-        return <FeatureLinePlot xCoord={data.x} yCoord={data.y} />
+        return <FeatureLinePlot xCoord={data.x} yCoord={data.y} explanBool={true}/>
     }else{
         // setEncoding('dot')
-        return <FeatureDotPlot xCoord={data.x} yCoord={data.y} categorical={categoricalBool}/>
+        return <FeatureDotPlot xCoord={data.x} yCoord={data.y} categorical={categoricalBool} explanBool={true}/>
     }
 }

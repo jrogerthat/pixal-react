@@ -30,9 +30,11 @@ export const ExplanationComponent = () => {
             }</div> */}
             {
                 keys.map(k => (
-                    <div>
-                        <div><WhichPlot yCoord={k[0]} /></div>
-                        <div>{k[1][1].join(" ")}</div>
+                    <div style={{display:'flex', flexDirection:'row', marginBottom: 10}}>
+                        <div
+                        style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3}}
+                        ><WhichPlot yCoord={k[0]} /></div>
+                        <div style={{padding:10, marginTop:10}}>{k[1][1].join(" ")}</div>
                     </div>
                 ))
             }
@@ -48,12 +50,12 @@ const WhichPlot = ({yCoord}) => {
 
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
         // setEncoding('bar')
-        return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
+        return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]}explanBool={true} />
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         // setEncoding('line')
-        return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} />
+        return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} explanBool={true}/>
     }else{
         // setEncoding('dot')
-        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
+        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} explanBool={true}/>
     }
 }
