@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from "react"
 import { DataContext } from "../context"
+import { FeatureBarPlot } from "./plots/featureBarPlot";
+import { FeatureDotPlot } from "./plots/featureDotPlot";
+import { FeatureLinePlot } from "./plots/featureLinePlot";
 
 export const ExplanationComponent = () => {
 
@@ -28,11 +31,29 @@ export const ExplanationComponent = () => {
             {
                 keys.map(k => (
                     <div>
-                        <div>test</div>
+                        <div><WhichPlot yCoord={k[0]} /></div>
                         <div>{k[1][1].join(" ")}</div>
                     </div>
                 ))
             }
         </React.Fragment>
     )
+}
+
+
+const WhichPlot = ({yCoord}) => {
+    const [{categoricalFeatures, selectedPredicate, xCoord }, dispatch] = useContext(DataContext);
+
+    let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
+
+    if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
+        // setEncoding('bar')
+        return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
+    }else if(selectedPredicate.feature[0] === "Order-Date"){
+        // setEncoding('line')
+        return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} />
+    }else{
+        // setEncoding('dot')
+        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
+    }
 }
