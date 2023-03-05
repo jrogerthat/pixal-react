@@ -31,7 +31,7 @@ const PredScorePlot = () => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    console.log('oin pred score plot',selectedPredicate);
+
     return(
         // <KDEPlot />
         <DensityBarPlot />
@@ -167,7 +167,7 @@ const DensityBarPlot = ({navBool}) => {
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
     
-    console.log(groupData)
+   
 
     const yScale = useMemo(() => {
         return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);

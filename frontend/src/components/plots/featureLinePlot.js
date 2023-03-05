@@ -6,7 +6,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    console.log("SORTING OUT CLIENT", d3.select('#feat-nav-wrap-left'))
 
     let initWidth = () => {
         if(navBool){

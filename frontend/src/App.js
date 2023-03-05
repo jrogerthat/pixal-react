@@ -24,7 +24,7 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-      console.log('DATA',data)
+     
       let pred_dist = Object.entries(data).map(m => {
         return [m[0], m[1].dist]
       });
@@ -40,10 +40,10 @@ function App() {
   // useEffect(() => {
   //   if(loaded){ 
 
-  //     console.log('DATA!!!!',data)
+ 
   //     let pred_dist = Object.entries(data.pred_dist)
 
-  //     console.log(pred_dist)
+
   //     let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
   //     dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
   //   }

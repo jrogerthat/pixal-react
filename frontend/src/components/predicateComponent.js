@@ -46,9 +46,6 @@ export default function PredicateComp({predicateData}) {
     let handleClick = () => {
         if(!editMode){
             axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
-                console.log(typeof data.data);
-
-                console.log(data.data);
 
                 let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
                 predSel.predicate_info = predicateData;

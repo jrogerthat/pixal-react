@@ -35,12 +35,21 @@ export const  PivotPlot = () => {
            <WhichPlot setEncoding={setEncoding} />
            <div className="bookmark-button">
             <Button
-            onClick={() => dispatch({type: "ADD_BOOKMARK_PLOT", bookmarked: {'x': xCoord, 'y': yCoord, 'encoding': encoding, 'selectedPredicate': {...selectedPredicate}, 'feature': selectedPredicate.feature}})}
+            onClick={() => {
+                dispatch({type: "ADD_BOOKMARK_PLOT", bookmarked: {'x': xCoord, 'y': yCoord, 'encoding': encoding, 'selectedPredicate': {...selectedPredicate}, 'feature': selectedPredicate.feature, 'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
             ><BookmarkAddIcon/>Bookmark Plot</Button>
             </div>
         </div>
       </div>
     )
+}
+
+const getExplanation = (xC, yC, selectedPredicate) => {
+    if(yC === 'Score'){
+        return selectedPredicate.attribute_score_data[xC][1];
+    }else{
+        return selectedPredicate.feature[1][yC][1];
+    }
 }
 
 export const MarksControlComponent = () => {
@@ -109,7 +118,6 @@ const FilterList = () => {
         </TableContainer>
     );
 }
-
 
 const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);

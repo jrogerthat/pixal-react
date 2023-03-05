@@ -11,7 +11,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
 
     let plotData = plotDataOptions[yCoord][0];
 
-    console.log('plotdataaaa', plotData)
+  
 
     const svgRef = useRef(null);
     const divRef = useRef();

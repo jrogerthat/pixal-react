@@ -12,41 +12,37 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const BookmarkedPlots = () => {
     const [{bookmarkedPlots}, dispatch] = useContext(DataContext);
 
-    const PlotIcon = ({encoding}) => {
-        if(encoding === 'bar'){
-            return <PollTwoToneIcon />
-        }else if(encoding === 'point'){
-            return <ScatterPlotTwoToneIcon />
-        }
-        return <ShowChartTwoToneIcon />
-    }
-
     const ParseBookmark = ({book}) => {
-        
+        console.log(book)
         return (
-            <Fragment>
-                <div><WhichPlot data={book} /></div>
+            <div>
+                <div
+                 style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3, cursor:'pointer'}}
+                ><WhichPlot data={book} /></div>
                 {/* <span
                 style={{marginRight: 20, fontWeight:700}}>
                     <PlotIcon encoding={book.encoding}/>
                 </span> */}
-                <span style={{marginRight: 5, fontWeight:700}}>X Axis:</span>
-                <span style={{marginRight: 10}}>{book.x}</span>
-                <span style={{marginRight: 5, fontWeight:700}}>Y Axis:</span>
-                <span style={{marginRight: 10}}>{book.y}</span>
-            </Fragment>
+            </div>
         )
     }
 
     return(
         <div>{
             bookmarkedPlots.map((b, i)=> (
-                <div key={`book-${i}`}><Button 
+                <div key={`book-${i}`}
+                style={{display:'flex', flexDirection:'row'}}
                 onClick={() => {
-                    console.log(b)
                     dispatch({type:"UPDATE_SELECTED_PREDICATE", predSel: b.selectedPredicate})
                 }}
-                ><ParseBookmark book={b} /></Button></div>
+                ><ParseBookmark book={b} />
+                <div>
+                <span style={{marginRight: 5, fontWeight:700}}>X Axis:</span>
+                <span style={{marginRight: 10}}>{b.x}</span>
+                <span style={{marginRight: 5, fontWeight:700}}>Y Axis:</span>
+                <span style={{marginRight: 10}}>{b.y}</span>
+                {b.explanation.join(' ')}</div>
+                </div>
             ))
         }</div>
     )

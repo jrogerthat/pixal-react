@@ -46,7 +46,7 @@ const FeatureValues = (categoricalFeatures, valArr) => {
         let arr = Object.entries(valArr[1]);
         let chosen = arr[0][1][0].filter(f => f.predicate === 1);
 
-        console.log(chosen[0][valArr[0]])
+       
      
         return chosen[0][valArr[0]]
     }else{

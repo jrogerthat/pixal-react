@@ -43,7 +43,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
-        console.log('is this running again')
         return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (svgWidth - svgMargin.x)]).padding(0.2);
     }, [svgWidth, feature])
     
