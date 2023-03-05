@@ -7,7 +7,7 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const ExplanationComponent = () => {
 
 
-    const [{selectedPredicate, yCoord, xCoord}] = useContext(DataContext);
+    const [{selectedPredicate, yCoord, xCoord}, dispatch] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
 
     let keys = Object.entries(selectedPredicate.attribute_data[selectedPredicate.feature[0]]);
@@ -25,19 +25,20 @@ export const ExplanationComponent = () => {
 
     return (
         <React.Fragment>
-        {/* <div style={{marginTop:10}}>{
-            explanation.map((ex, i) => <span key={`${i}-ex`}>{` ${ex}`}</span>)
-            }</div> */}
             {
                 keys.map(k => (
                     <div 
                     style={{display:'flex', flexDirection:'row', marginBottom: 10}}
-                    onClick={()=> console.log("yCoord", k[0], "xCoord", xCoord)}
+                    onClick={()=> dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: selectedPredicate, x: xCoord,  y: k[0]  })}
                     >
                         <div
                         style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3}}
                         ><WhichPlot yCoord={k[0]} /></div>
-                        <div style={{padding:10, marginTop:10}}>{k[1][1].join(" ")}</div>
+                        <div style={{padding:10, marginTop:10}}>
+                        <span style={{marginRight: 5, fontWeight:700}}>{`X Axis: ${xCoord}`}</span>
+                        <span style={{marginRight: 10}}>{"|"}</span>
+                        <span style={{marginRight: 5, fontWeight:700}}>{`Y Axis: ${k[0]}`}</span>
+                            {k[1][1].join(" ")}</div>
                     </div>
                 ))
             }

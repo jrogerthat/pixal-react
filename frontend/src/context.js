@@ -42,6 +42,9 @@ const reducer = (state, action) => {
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};
 
+    case "UPDATE_SELECTED_PRED_X_Y":
+      return {...state, selectedPredicate: action.predSel, xCoord:action.x, yCoord:action.y }
+      // predSel: b.selectedPredicate, x: b.x, y: b.y
     case "UPDATE_AXIS":
       return {...state, xCoord: action.coords.x, yCoord: action.coords.y}
 

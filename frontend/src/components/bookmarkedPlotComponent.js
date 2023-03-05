@@ -19,10 +19,7 @@ export const BookmarkedPlots = () => {
                 <div
                  style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3, cursor:'pointer'}}
                 ><WhichPlot data={book} /></div>
-                {/* <span
-                style={{marginRight: 20, fontWeight:700}}>
-                    <PlotIcon encoding={book.encoding}/>
-                </span> */}
+               
             </div>
         )
     }
@@ -33,14 +30,15 @@ export const BookmarkedPlots = () => {
                 <div key={`book-${i}`}
                 style={{display:'flex', flexDirection:'row'}}
                 onClick={() => {
-                    dispatch({type:"UPDATE_SELECTED_PREDICATE", predSel: b.selectedPredicate})
+                    dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: b.selectedPredicate, x: b.x, y: b.y  })
+                    // dispatch({type:"UPDATE_SELECTED_PREDICATE", predSel: b.selectedPredicate})
                 }}
                 ><ParseBookmark book={b} />
                 <div>
-                <span style={{marginRight: 5, fontWeight:700}}>X Axis:</span>
-                <span style={{marginRight: 10}}>{b.x}</span>
-                <span style={{marginRight: 5, fontWeight:700}}>Y Axis:</span>
-                <span style={{marginRight: 10}}>{b.y}</span>
+                <span style={{marginRight: 5, fontWeight:700}}>{`X Axis: ${b.x}`}</span>
+                <span style={{marginRight: 10}}>{"|"}</span>
+                <span style={{marginRight: 5, fontWeight:700}}>{`Y Axis: ${b.y}`}</span>
+                {/* <span style={{marginRight: 10}}>{b.y}</span> */}
                 {b.explanation.join(' ')}</div>
                 </div>
             ))
