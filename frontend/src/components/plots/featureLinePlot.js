@@ -13,7 +13,12 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         }else if(explanBool){
             return 200;
         }else{
-            return 700;
+            if(d3.select('#pivot-plot').node()){
+                console.log('width',d3.select('#pivot-plot').node().getBoundingClientRect().width)
+                return d3.select('#pivot-plot').node().getBoundingClientRect().width
+            }else{
+                return 700;
+            }
         }
     }
 
@@ -34,12 +39,14 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     useEffect(() => {
         if(explanBool){
             // setSvgWidth(200)
-        }else if(d3.select('#feat-nav-wrap-left') != null){
+        }else if(navBool && d3.select('#feat-nav-wrap-left') != null){
             setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
+        }else{
+            // setSvgWidth(d3.select('#pivot-plot').node().getBoundingClientRect().width)
         }
-    }, [d3.select('#feat-nav-wrap-left'), yCoord, xCoord]);
+    }, [d3.select('#feat-nav-wrap-left'),d3.select('#pivot-plot').node(), yCoord, xCoord]);
 
-    // let plotData = useMemo(() => { return selectedPredicate.attribute_score_data[xCoord[0]]}, [selectedPredicate]);
+  
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
 
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
@@ -91,11 +98,18 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr("stroke-linejoin", "round")
         .attr("d", line);
 
-        pathG.attr('transform', 'translate(20, 0)')
+        // pathG.attr('transform', 'translate(20, 0)')
 
-        if(!navBool && !explanBool){
+        wrap.append('rect')
+        .attr('height', svgHeight - svgMargin.y)
+        .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))
+        .attr('x', xScale(new Date(selectedRange[0])))
+        .attr('fill', selectedPredicate.predicate_info.color)
+        .style('opacity', .5)
+
+        if(!explanBool){
             let circleG = wrap.append('g');
-            circleG.attr('transform', 'translate(20, 0)')
+            // circleG.attr('transform', 'translate(20, 0)')
             
             circleG.selectAll('circle.dot')
             .data(plotData)
@@ -105,14 +119,22 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
             .attr('r', 4)
             .attr('fill', 'gray')
             .attr('fill-opacity', .5)
+
+            wrap.append('text')
+            .text(selectedRange.join('-'))
+            .attr('font-size', 10)
+            .attr('x', xScale(new Date(selectedRange[0])))
+            .attr('y', -2)
+            .attr('text-anchor', 'middle')
+
+            wrap.append('text')
+            .text("Predicate ranges from")
+            .attr('font-size', 10)
+            .attr('x', xScale(new Date(selectedRange[0])))
+            .attr('y', -12)
+            .attr('text-anchor', 'middle')
+            
         }
-        
-        wrap.append('rect')
-        .attr('height', svgHeight - svgMargin.y)
-        .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))
-        .attr('x', xScale(new Date(selectedRange[0])))
-        .attr('fill', selectedPredicate.predicate_info.color)
-        .style('opacity', .5)
 
     
     }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);

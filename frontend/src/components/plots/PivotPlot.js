@@ -71,7 +71,10 @@ export const MarksControlComponent = () => {
                         type={"yCoord"}
                         />
                     </div>
-                    <div><div>{"x:"}</div>{selectedPredicate.feature[0]}</div>
+                    <div>
+                        <div>{"x:"}</div>
+                        {selectedPredicate.feature[0]}
+                    </div>
                 </div>
             </div>
             <div>
