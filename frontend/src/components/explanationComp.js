@@ -12,8 +12,6 @@ export const ExplanationComponent = () => {
 
     let keys = Object.entries(selectedPredicate.attribute_data[selectedPredicate.feature[0]]);
 
-  
-
     useEffect(() => {
         
         if(yCoord === 'Score'){
@@ -54,12 +52,23 @@ const WhichPlot = ({yCoord}) => {
 
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
         // setEncoding('bar')
-        return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]}explanBool={true} />
+        return  <FeatureBarPlot 
+        xCoord={xCoord} 
+        yCoord={yCoord} 
+        categorical={categoricalBool} feature={selectedPredicate.feature[0]}
+        explanBool={true} />
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         // setEncoding('line')
-        return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} explanBool={true}/>
+        return <FeatureLinePlot 
+        xCoord={xCoord} 
+        yCoord={yCoord} 
+        explanBool={true}/>
     }else{
         // setEncoding('dot')
-        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} explanBool={true}/>
+        return <FeatureDotPlot 
+        xCoord={xCoord} 
+        yCoord={yCoord} 
+        categorical={categoricalBool} 
+        explanBool={true}/>
     }
 }

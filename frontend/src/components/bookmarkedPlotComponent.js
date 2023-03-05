@@ -53,12 +53,25 @@ const WhichPlot = ({data}) => {
 
     if(data.encoding === 'bar'){
         // setEncoding('bar')
-        return  <FeatureBarPlot xCoord={data.x} yCoord={data.y} categorical={categoricalBool} feature={data.x} explanBool={true} />
+        return  <FeatureBarPlot 
+        xCoord={data.x} 
+        yCoord={data.y} 
+        categorical={categoricalBool} 
+        feature={data.x} 
+        explanBool={true} />
     }else if(data.encoding === 'line'){
         // setEncoding('line')
-        return <FeatureLinePlot xCoord={data.x} yCoord={data.y} explanBool={true}/>
+        return <FeatureLinePlot 
+        xCoord={data.x} 
+        yCoord={data.y} 
+        explanBool={true}
+        />
     }else{
         // setEncoding('dot')
-        return <FeatureDotPlot xCoord={data.x} yCoord={data.y} categorical={categoricalBool} explanBool={true}/>
+        return <FeatureDotPlot 
+        xCoord={data.x} 
+        yCoord={data.y} 
+        categorical={categoricalBool} 
+        explanBool={true}/>
     }
 }

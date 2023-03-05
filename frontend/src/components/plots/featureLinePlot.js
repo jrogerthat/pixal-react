@@ -93,7 +93,20 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
 
         pathG.attr('transform', 'translate(20, 0)')
 
-
+        if(!navBool && !explanBool){
+            let circleG = wrap.append('g');
+            circleG.attr('transform', 'translate(20, 0)')
+            
+            circleG.selectAll('circle.dot')
+            .data(plotData)
+            .join('circle')
+            .attr('cx', d => xScale(new Date(d[xCoord])))
+            .attr('cy', d => yScale(+d[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))
+            .attr('r', 4)
+            .attr('fill', 'gray')
+            .attr('fill-opacity', .5)
+        }
+        
         wrap.append('rect')
         .attr('height', svgHeight - svgMargin.y)
         .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))

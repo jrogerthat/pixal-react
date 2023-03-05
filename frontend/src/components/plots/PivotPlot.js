@@ -31,7 +31,7 @@ export const  PivotPlot = () => {
         <MarksControlComponent 
             setFilterByArray={setFilterByArray}
         />
-        <div>
+        <div id="pivot-plot">
            <WhichPlot setEncoding={setEncoding} />
            <div className="bookmark-button">
             <Button
@@ -63,36 +63,32 @@ export const MarksControlComponent = () => {
 
             <div>
                 <div className="head-3">encoding</div>
-                <div>
-                    <CoordDrop 
-                    options={yOptions} 
-                    label={"y"} 
-                    // setHandle={setYCoord} 
-                    type={"yCoord"}
-                    />
-                    {/* <CoordDrop options={selectedPredicate.features} label={"y"} /> */}
+                <div style={{display:'flex', flexDirection:'row', color:'gray'}}>
+                    <div>
+                        <CoordDrop 
+                        options={yOptions} 
+                        label={"y"} 
+                        type={"yCoord"}
+                        />
+                    </div>
+                    <div><div>{"x:"}</div>{selectedPredicate.feature[0]}</div>
                 </div>
             </div>
             <div>
-                {/* <CoordDrop options={selectedPredicate.features} label={"Filter by"} /> */}
                 <div><FilterList /></div>
             </div>
         </div>
     )
 }
 
-const tableValues = (arr) => {
-
-}
-
 const FilterList = () => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
     let rows = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values);
-   
+    
     return (
         <TableContainer component={Paper}>
         <Table 
-        sx={{ backgroundColor: '#f4efefe0', fontSize: 9}} 
+        sx={{ backgroundColor: '#f4efefe0', fontSize: 8, width:200 }} 
         aria-label="simple table">
             <TableHead>
             <TableRow>
@@ -140,12 +136,10 @@ const CoordDrop = ({options, label, setHandle, type}) => {
 
     const [{xCoord}, dispatch] = useContext(DataContext);
 
-    const [coord, setCoord] = useState('');
+    const [coord, setCoord] = useState('Score');
 
     const handleChange = (event) => {
         setCoord(event.target.value)
-        // setHandle(event.target.value);
-        // xCoord: action.coords.x, yCoord: action.coords.y
         if(type === "yCoord"){
             dispatch({type: "UPDATE_AXIS", coords: {x: xCoord, y: event.target.value}})
         }
