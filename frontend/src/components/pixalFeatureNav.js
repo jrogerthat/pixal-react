@@ -27,6 +27,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
             className="feature-nav"
             key={`${f[0]}-${i}`}
             onClick={() => handleClick(f)}
+            style={{alignItems:"center"}}
             >
             <div style={{marginBottom:10}}>{`${f[0]}: `}{FeatureValues(categoricalFeatures, f)}</div>
             <PixalFeatureNav feature={f[0]} />
@@ -46,8 +47,6 @@ const FeatureValues = (categoricalFeatures, valArr) => {
         let arr = Object.entries(valArr[1]);
         let chosen = arr[0][1][0].filter(f => f.predicate === 1);
 
-       
-     
         return chosen[0][valArr[0]]
     }else{
         let chosen = selectedPredicate.predicate_info.predicate.attribute_values[valArr[0]];
@@ -68,5 +67,4 @@ export const PixalFeatureNav = ({feature}) => {
     }else{
        return <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
     }
-     
 }
