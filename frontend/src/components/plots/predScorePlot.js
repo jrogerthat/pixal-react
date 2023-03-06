@@ -11,30 +11,14 @@ function epanechnikov(bandwidth) {
     return x => Math.abs(x /= bandwidth) <= 1 ? 0.75 * (1 - x * x) / bandwidth : 0;
 }
 
-
-// Function to compute density
-function kernelDensityEstimator(kernel, X) {
-    return function(V) {
-      return X.map(function(x) {
-        return [x, d3.mean(V, function(v) { return kernel(x - v); })];
-      });
-    };
-  }
-  function kernelEpanechnikov(k) {
-    return function(v) {
-      return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-    };
-  }
-
-
-const PredScorePlot = () => {
+const PredScorePlot = ({navBool}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
 
     return(
         // <KDEPlot />
-        <DensityBarPlot />
+        <DensityBarPlot navBool={navBool} />
 
     )
     
@@ -159,16 +143,18 @@ const KDEPlot = () => {
 
 const DensityBarPlot = ({navBool}) => {
     const [{selectedPredicate},dispatch] = useContext(DataContext);
-
-    let [width, setWidth] = useState(navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700);
+    console.log('NAV',navBool)
+    // let [width, setWidth] = useState(navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700);
+    let [width, setWidth] = useState(navBool === true ? 350 : 700);
     let [height, setHeight] = useState(navBool ? 200 : 300);
     let [margin, setMargin] = useState({x:(width * .2), y:(height * .3)});
+
+
+    console.log('width in predc=score plot',width)
 
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
     
-   
-
     const yScale = useMemo(() => {
         return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
       }, [selectedPredicate.id, selectedPredicate.feature]);
@@ -181,7 +167,6 @@ const DensityBarPlot = ({navBool}) => {
     useEffect(()=> {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
-
 
         let wrap = svg.append('g');
         wrap.attr('transform', `translate(${margin.x/2}, ${margin.y/2})`)
@@ -201,7 +186,7 @@ const DensityBarPlot = ({navBool}) => {
         let bars = groups.selectAll('rect.bar').data(d => d[1])
         .join('rect').attr("x", function(d) { return xScale(+d.score); })
         .attr("y", function(d) { return yScale(+d.density); })
-        .attr("width", 15)
+        .attr("width", navBool === true ? 5 : 15)
         .attr("height", function(d) { return (height - margin.y) - yScale(+d.density); })
         .attr("fill", (d) => {
             return d.predicate === true ? selectedPredicate.predicate_info.color : 'gray'

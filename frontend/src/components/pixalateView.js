@@ -28,7 +28,7 @@ function Pixalate() {
         
           <div className="l-bottom">
           <div className="head-3">Predicate I_Forest Scores</div>
-          <PredScorePlot />
+          <PredScorePlot navBool={true}/>
           </div>
           {/* PIVOT PLOT HAD THE RIGHT TOP */}
           <PivotPlot />
