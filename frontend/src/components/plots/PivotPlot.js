@@ -121,16 +121,14 @@ const WhichPlot = ({setEncoding}) => {
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
-    console.log('SELELLLL',selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]]);
+    // console.log('SELELLLL',selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]]);
 
     let getPivotLabel = () => {
-        if(yCoord === 'Score'){
-            let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];
-            console.log('chosenval',chosenVal);
-            return <div
-            style={{marginTop:20, marginLeft:10, fontWeight:800}}
-            >{`${yCoord}: ${chosenVal.join(', ')}`}</div>
-        }
+        let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];
+        console.log('chosenval',chosenVal);
+        return <div
+        style={{marginTop:20, marginLeft:10, fontWeight:800}}
+        >{`${xCoord}: ${chosenVal.join(', ')}`}</div>
     }
 
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){

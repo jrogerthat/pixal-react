@@ -10,7 +10,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         if(navBool){
             return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 300;
         }else if(explanBool){
-            return 200;
+            return 350;
         }else{
             return 600;
         }
@@ -20,7 +20,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         if(navBool){
             return 200;
         }else if(explanBool){
-            return 100;
+            return 160;
         }else{
             return 300;
         }
@@ -30,9 +30,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
     let [svgHeight, setSvgHeight] = useState(initHeight());
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
 
-
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
-
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
@@ -87,7 +85,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:svgWidth, height:svgHeight}}
+                style={{width:svgWidth, height:(svgHeight + 15)}}
                 ref={svgRef} />
             </div>
         </div>
