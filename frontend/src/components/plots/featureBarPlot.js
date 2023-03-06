@@ -55,11 +55,11 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (svgMargin.y)) + ")")
-
         .call(d3.axisBottom(xScale))
         .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .style('font-size', (navBool || explanBool) ? 8 : 10)
 
         let yAxis = wrap.append('g')
         .attr("transform", "translate(-5, 0)")
@@ -73,9 +73,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .attr("fill", (d) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         }).attr('fill-opacity', .6)
-        // .attr('stroke', 'gray')
-        // .attr('stroke-width', 1)
-
 
     }, [feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
 

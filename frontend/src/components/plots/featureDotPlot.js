@@ -20,7 +20,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         if(navBool){
             return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
         }else if(explanBool){
-            return 200;
+            return 350;
         }else{
             return 600;
         }
@@ -30,7 +30,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         if(navBool){
             return 200;
         }else if(explanBool){
-            return 100;
+            return 160;
         }else{
             return 300;
         }
@@ -39,14 +39,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
     let [svgWidth, setSvgWidth] = useState(initWidth());
     let [svgHeight, setSvgHeight] = useState(initHeight());
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
-
-    // useEffect(() => {
-    //     if(explanBool){
-    //         // setSvgWidth(200)
-    //     }else if(d3.select('#feat-nav-wrap-left') != null){
-    //         setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
-    //     }
-    // }, [d3.select('#feat-nav-wrap-left'), yCoord, xCoord]);
 
     let xScale = useMemo(()=> {
         return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])

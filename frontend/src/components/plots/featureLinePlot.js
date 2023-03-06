@@ -6,19 +6,13 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-
     let initWidth = () => {
         if(navBool){
-            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 300;
+            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
         }else if(explanBool){
-            return 200;
+            return 350;
         }else{
-            if(d3.select('#pivot-plot').node()){
-                console.log('width',d3.select('#pivot-plot').node().getBoundingClientRect().width)
-                return d3.select('#pivot-plot').node().getBoundingClientRect().width
-            }else{
-                return 600;
-            }
+            return 600;
         }
     }
 
@@ -26,7 +20,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         if(navBool){
             return 200;
         }else if(explanBool){
-            return 100;
+            return 160;
         }else{
             return 300;
         }
@@ -35,17 +29,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     let [svgWidth, setSvgWidth] = useState(initWidth());
     let [svgHeight, setSvgHeight] = useState(initHeight());
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
-
-    // useEffect(() => {
-    //     if(explanBool){
-    //         // setSvgWidth(200)
-    //     }else if(navBool && d3.select('#feat-nav-wrap-left') != null){
-    //         setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
-    //     }else{
-    //         // setSvgWidth(d3.select('#pivot-plot').node().getBoundingClientRect().width)
-    //     }
-    // }, [d3.select('#feat-nav-wrap-left'),d3.select('#pivot-plot').node(), yCoord, xCoord]);
-
   
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
 

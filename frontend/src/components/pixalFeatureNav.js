@@ -29,29 +29,13 @@ export const PixalFeatureNavWrap = ({classN}) => {
             onClick={() => handleClick(f)}
             style={{alignItems:"center"}}
             >
-            <div style={{marginBottom:10}}>{`${f[0]}: `}{FeatureValues(categoricalFeatures, f)}</div>
+            <div style={{marginBottom:10}}>{`${f[0]}: `}{selectedPredicate.predicate_info.predicate.attribute_values[f[0]].join(', ')}</div>
             <PixalFeatureNav feature={f[0]} />
             </div>
         ))
         }
         </div>
     </div>)
-}
-
-const FeatureValues = (categoricalFeatures, valArr) => {
-
-    const [{selectedPredicate}] = useContext(DataContext);
-
-    if(categoricalFeatures.indexOf(valArr[0]) > -1){
-
-        let arr = Object.entries(valArr[1]);
-        let chosen = arr[0][1][0].filter(f => f.predicate === 1);
-
-        return chosen[0][valArr[0]]
-    }else{
-        let chosen = selectedPredicate.predicate_info.predicate.attribute_values[valArr[0]];
-        return `${chosen[0]} - ${chosen[1]}`
-    }
 }
 
 export const PixalFeatureNav = ({feature}) => {
