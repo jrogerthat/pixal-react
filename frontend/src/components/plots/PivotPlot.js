@@ -121,16 +121,15 @@ const WhichPlot = ({setEncoding}) => {
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
-    console.log('SELELLLL',selectedPredicate.feature[0], selectedPredicate.feature[1], selectedPredicate);
+    console.log('SELELLLL',selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]]);
 
     let getPivotLabel = () => {
         if(yCoord === 'Score'){
-            let chosen = selectedPredicate.attribute_score_data[selectedPredicate.feature[0]];
-            let selected = chosen[0].filter(f => f.predicate === 1).map(m => m[selectedPredicate.feature[0]])
-         
+            let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];
+            console.log('chosenval',chosenVal);
             return <div
             style={{marginTop:20, marginLeft:10, fontWeight:800}}
-            >{`${yCoord} for ${selected.join(', ')} compared to other ${selectedPredicate.feature[0]}s`}</div>
+            >{`${yCoord}: ${chosenVal.join(', ')}`}</div>
         }
     }
 
@@ -142,11 +141,11 @@ const WhichPlot = ({setEncoding}) => {
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         setEncoding('line')
         return <div>
-        <div>PLOT LABEL</div><FeatureLinePlot xCoord={xCoord} yCoord={yCoord} /></div>
+        <div>{getPivotLabel()}</div><FeatureLinePlot xCoord={xCoord} yCoord={yCoord} /></div>
     }else{
         setEncoding('dot')
         return <div>
-        <div>PLOT LABEL</div><FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/></div>
+        <div>{getPivotLabel()}</div><FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/></div>
     }
 }
 
