@@ -21,24 +21,23 @@ function Pixalate() {
   }else if(selectedPredicate && !!selectedPredicate.feature){
     return(
       <div className="pixalate">
-      
-           <PixalFeatureNavWrap 
-           classN={"l-top"}
-          />
-        
-          <div className="l-bottom">
-          <div className="head-3">Predicate I_Forest Scores</div>
-          <PredScorePlot navBool={true}/>
-          </div>
-          {/* PIVOT PLOT HAD THE RIGHT TOP */}
-          <PivotPlot />
+        <div className="left-wrap">
+        <PixalFeatureNavWrap classN={"l-top"} />
+        <div className="l-bottom">
+        <div className="head-3">Predicate I_Forest Scores</div>
+        <PredScorePlot navBool={true}/>
+        </div>
+        </div>
 
-          <div className="r-bottom">
+        <div className="right-wrap">
+          <PivotPlot />
+          <div className="r-bottom" style={{marginTop:10}}>
             <div>
               <TabComponent />
             </div>
+          </div>
         </div>
-    </div>
+      </div>
     )
   }else if(selectedPredicate){
     return (

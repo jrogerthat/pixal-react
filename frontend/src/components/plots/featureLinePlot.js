@@ -17,7 +17,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
                 console.log('width',d3.select('#pivot-plot').node().getBoundingClientRect().width)
                 return d3.select('#pivot-plot').node().getBoundingClientRect().width
             }else{
-                return 700;
+                return 600;
             }
         }
     }
@@ -36,15 +36,15 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     let [svgHeight, setSvgHeight] = useState(initHeight());
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
 
-    useEffect(() => {
-        if(explanBool){
-            // setSvgWidth(200)
-        }else if(navBool && d3.select('#feat-nav-wrap-left') != null){
-            setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
-        }else{
-            // setSvgWidth(d3.select('#pivot-plot').node().getBoundingClientRect().width)
-        }
-    }, [d3.select('#feat-nav-wrap-left'),d3.select('#pivot-plot').node(), yCoord, xCoord]);
+    // useEffect(() => {
+    //     if(explanBool){
+    //         // setSvgWidth(200)
+    //     }else if(navBool && d3.select('#feat-nav-wrap-left') != null){
+    //         setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
+    //     }else{
+    //         // setSvgWidth(d3.select('#pivot-plot').node().getBoundingClientRect().width)
+    //     }
+    // }, [d3.select('#feat-nav-wrap-left'),d3.select('#pivot-plot').node(), yCoord, xCoord]);
 
   
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};

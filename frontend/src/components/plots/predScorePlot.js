@@ -191,6 +191,22 @@ const DensityBarPlot = ({navBool}) => {
         .attr("fill", (d) => {
             return d.predicate === true ? selectedPredicate.predicate_info.color : 'gray'
         }).attr('fill-opacity', .5)
+
+        // Y axis label:
+        wrap.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -40)
+        .attr("x", -(height/4))
+        .text("Density")
+
+        // Add X axis label:
+        svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("x", width/2)
+        .attr("y", (height))
+        .text("Score");
+
     }, [selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
 
 

@@ -22,7 +22,6 @@ export const  PivotPlot = () => {
 
     const [{selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
     const [encoding, setEncoding] = useState(null);
-    // const [xCoord, setXCoord] = useState(selectedPredicate.feature[0]);
     const [filterByArray, setFilterByArray] = useState([]);
    
   
@@ -60,7 +59,6 @@ export const MarksControlComponent = () => {
 
     return(
         <div className="marksControl">
-
             <div>
                 <div className="head-3">encoding</div>
                 <div style={{display:'flex', flexDirection:'row', color:'gray'}}>
@@ -123,15 +121,32 @@ const WhichPlot = ({setEncoding}) => {
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
+    console.log('SELELLLL',selectedPredicate.feature[0], selectedPredicate.feature[1], selectedPredicate);
+
+    let getPivotLabel = () => {
+        if(yCoord === 'Score'){
+            let chosen = selectedPredicate.attribute_score_data[selectedPredicate.feature[0]];
+            let selected = chosen[0].filter(f => f.predicate === 1).map(m => m[selectedPredicate.feature[0]])
+         
+            return <div
+            style={{marginTop:20, marginLeft:10, fontWeight:800}}
+            >{`${yCoord} for ${selected.join(', ')} compared to other ${selectedPredicate.feature[0]}s`}</div>
+        }
+    }
+
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
         setEncoding('bar')
-        return  <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} />
+        return  <div>
+            {getPivotLabel()}
+            <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} /></div>
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         setEncoding('line')
-        return <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} />
+        return <div>
+        <div>PLOT LABEL</div><FeatureLinePlot xCoord={xCoord} yCoord={yCoord} /></div>
     }else{
         setEncoding('dot')
-        return <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/>
+        return <div>
+        <div>PLOT LABEL</div><FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/></div>
     }
 }
 

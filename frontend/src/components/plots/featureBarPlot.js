@@ -12,7 +12,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         }else if(explanBool){
             return 200;
         }else{
-            return 700;
+            return 600;
         }
     }
 
@@ -30,13 +30,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
     let [svgHeight, setSvgHeight] = useState(initHeight());
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
 
-    useEffect(() => {
-        if(explanBool){
-            // setSvgWidth(200)
-        }else if(d3.select('#feat-nav-wrap-left') != null){
-            setSvgWidth(d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width)
-        }
-    }, [d3.select('#feat-nav-wrap-left'), yCoord, feature]);
 
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
 
@@ -82,7 +75,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .attr("fill", (d) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         }).attr('fill-opacity', .6)
-        .attr('stroke', 'gray')
+        // .attr('stroke', 'gray')
         // .attr('stroke-width', 1)
 
 
