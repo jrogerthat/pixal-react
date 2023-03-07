@@ -26,7 +26,8 @@ const reducer = (state, action) => {
       return {...state, bookmarkedPlots: newBooks}
 
     case "UPDATE_EDIT_MODE":
-      return {...state, editMode: action.editMode}
+
+      return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
     case "SET_PREDICATE_EXPLORE_DATA":
       let arr = formatPredicateArray(action.predData.pred_list);

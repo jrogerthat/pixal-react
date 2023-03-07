@@ -47,6 +47,7 @@ export default function BasicDrop() {
                 <MenuItem 
                 key={`op-${i+1}`}
                 onClick={() => {
+                    
                     dispatch({type: "UPDATE_EDIT_MODE", editMode:op.bool})
                     handleClose();
                 }}
