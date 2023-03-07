@@ -11,8 +11,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
 
     let plotData = plotDataOptions[yCoord][0];
 
-  
-
     const svgRef = useRef(null);
     const divRef = useRef();
 
@@ -74,6 +72,23 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         .attr('fill-opacity', .6)
         .attr('stroke', 'gray')
         .attr('stroke-width', 1)
+
+        // Y axis label:
+        wrap.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -40)
+        .attr("x", -(svgHeight/4))
+        .text(yCoord)
+        .style('font-size', navBool || explanBool ? 9 : 11)
+
+        // Add X axis label:
+        svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (svgWidth/2))
+        .attr("y", (svgHeight - 10))
+        .text(xCoord)
+        .style('font-size', navBool || explanBool ? 9 : 11)
         
 
     }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);

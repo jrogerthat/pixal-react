@@ -24,7 +24,7 @@ function Pixalate() {
         <div className="left-wrap">
         <PixalFeatureNavWrap classN={"l-top"} />
         <div className="l-bottom">
-        <div className="head-3">Predicate I_Forest Scores</div>
+        <div className="head-3">Anomaly Scores</div>
         <PredScorePlot navBool={true}/>
         </div>
         </div>
@@ -50,7 +50,7 @@ function Pixalate() {
           <div className="right"
           ref={rightDivRef}
           >
-            <div className="head-3">Predicate I_Forest Scores</div>
+            <div className="head-3">Anomaly Scores</div>
           <PredScorePlot />
           </div>
 

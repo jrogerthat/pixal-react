@@ -31,9 +31,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
   
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
-
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
-
     let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
     
     let xScale = useMemo(()=> {
@@ -66,7 +64,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
 
         xAxis.selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .style("text-anchor", "end")
+        .style('font-size', navBool || explanBool ? 9 : 11)
     
         let yAxis = wrap.append('g')
         .attr("transform", "translate(0, 0)")
@@ -119,6 +118,23 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
             
         }
 
+        // Y axis label:
+        wrap.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -40)
+        .attr("x", -(svgHeight/4))
+        .text(yCoord)
+        .style('font-size', navBool || explanBool ? 9 : 11)
+
+        // Add X axis label:
+        svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (svgWidth/2))
+        .attr("y", (svgHeight + 7))
+        .text(xCoord)
+        .style('font-size', navBool || explanBool ? 9 : 11)
+
     
     }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
 
@@ -128,7 +144,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:(svgWidth), height:(svgHeight)}}
+                style={{width:(svgWidth), height:(svgHeight + 10)}}
                 ref={svgRef} />
             </div>
         </div>

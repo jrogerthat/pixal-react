@@ -12,16 +12,11 @@ function epanechnikov(bandwidth) {
 }
 
 const PredScorePlot = ({navBool}) => {
-   
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
-
-
     return(
         // <KDEPlot />
         <DensityBarPlot navBool={navBool} />
-
     )
-    
 }
 
 export {PredScorePlot}
@@ -142,15 +137,11 @@ const KDEPlot = () => {
 }
 
 const DensityBarPlot = ({navBool}) => {
-    const [{selectedPredicate},dispatch] = useContext(DataContext);
-    console.log('NAV',navBool)
-    // let [width, setWidth] = useState(navBool ? d3.select('#feat-nav-wrap-left').select('.feature-nav').node().getBoundingClientRect().width : 700);
+    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+   
     let [width, setWidth] = useState(navBool === true ? 350 : 700);
     let [height, setHeight] = useState(navBool ? 200 : 300);
     let [margin, setMargin] = useState({x:(width * .2), y:(height * .3)});
-
-
-    console.log('width in predc=score plot',width)
 
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
@@ -205,7 +196,8 @@ const DensityBarPlot = ({navBool}) => {
         .attr("text-anchor", "end")
         .attr("x", width/2)
         .attr("y", (height))
-        .text("Score");
+        .text("Score")
+        .style('font-size', navBool ? 11 : 16)
 
     }, [selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
 

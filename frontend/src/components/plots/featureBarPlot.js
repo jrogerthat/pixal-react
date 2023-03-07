@@ -74,6 +74,23 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
             return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
         }).attr('fill-opacity', .6)
 
+        // Y axis label:
+        wrap.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -40)
+        .attr("x", -(svgHeight/4))
+        .text(yCoord)
+        .style('font-size', navBool || explanBool ? 9 : 12)
+
+        // Add X axis label:
+        svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("x", svgWidth/2)
+        .attr("y", (svgHeight + 10))
+        .text(feature)
+        .style('font-size', navBool || explanBool ? 9 : 12)
+
     }, [feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
 
     return(
