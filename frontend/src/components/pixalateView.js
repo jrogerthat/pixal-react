@@ -8,7 +8,7 @@ import TabComponent from './tabComponent';
 
 function Pixalate() {
 
-  const [{selectedPredicate}, dispatch] = useContext(DataContext);
+  const [{selectedPredicate}] = useContext(DataContext);
 
   if(selectedPredicate && !selectedPredicate.attribute_data){
     return(

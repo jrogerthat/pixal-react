@@ -24,7 +24,6 @@ export const  PivotPlot = () => {
     const [encoding, setEncoding] = useState(null);
     const [filterByArray, setFilterByArray] = useState([]);
    
-  
     return (
         <div className="r-top">
         <MarksControlComponent 
@@ -120,8 +119,6 @@ const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
-
-    // console.log('SELELLLL',selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]]);
 
     let getPivotLabel = () => {
         let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];

@@ -36,19 +36,41 @@ const PredExplorePlot = ({width, height}) => {
     useEffect(() => {
         const svgElement = d3.select(axesRef.current);
         svgElement.selectAll("*").remove();
+
+        const wrap = svgElement.append('g').attr('id', 'wrap-explore');
+
         const xAxisGenerator = d3.axisBottom(xScale);
-        svgElement
+        wrap
         .append("g")
         .attr("transform", "translate(0," + (height-50) + ")")
         .call(xAxisGenerator);
 
         const yAxisGenerator = d3.axisLeft(yScale);
-        svgElement.append("g").call(yAxisGenerator);
+        wrap.append("g").call(yAxisGenerator);
+
+        // Y axis label:
+        wrap.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -40)
+        .attr("x", -(height/4))
+        // .attr("y", -40)
+        // .attr("x", -(height/4))
+        .text("Density")
+
+        // Add X axis label:
+        wrap.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (width/2) - 20)
+        .attr("y", (height - 20))
+        .text("Score")
+        .style('font-size', 13)
+
     }, [xScale, yScale, height]);
     
    
     return(
-        <svg width={width} height={height} >
+        <svg width={width + 20} height={height + 20} >
             {
                 filteredDist.length > 0 && filteredDist.map((p, i) => (
                     <PredicateGroup 
@@ -65,7 +87,7 @@ const PredExplorePlot = ({width, height}) => {
             width={width}
             height={20}
             ref={axesRef}
-            transform={`translate(${[30, 30].join(",")})`}
+            transform={`translate(${[60, 30].join(",")})`}
             />
         </svg>
     )
@@ -73,11 +95,13 @@ const PredExplorePlot = ({width, height}) => {
 
 const PredicateGroup = ({predData, yScale, xScale, height, color}) => {
 
-    const [{highlightedPred}, dispatch] = useContext(DataContext);
+    const [{highlightedPred}] = useContext(DataContext);
 
     let calcColor = highlightedPred != null && highlightedPred != color.id ? 'rgba(211,211,211, .2)' : color.color
         return(
-        <g>
+        <g
+        transform={`translate(${[60, 0].join(",")})`}
+        >
         {
             predData.map((p, i) => (
                 <rect key={`b-${i}`}
