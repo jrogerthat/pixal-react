@@ -149,12 +149,17 @@ const WhichPlot = ({setEncoding}) => {
 
 const CoordDrop = ({options, label, setHandle, type}) => {
 
-    const [{xCoord}, dispatch] = useContext(DataContext);
+    const [{xCoord, yCoord}, dispatch] = useContext(DataContext);
 
     const [coord, setCoord] = useState('Score');
 
+    useEffect(() => {
+       
+        setCoord(yCoord)
+    }, [yCoord])
+
     const handleChange = (event) => {
-        setCoord(event.target.value)
+        // setCoord(event.target.value)
         if(type === "yCoord"){
             dispatch({type: "UPDATE_AXIS", coords: {x: xCoord, y: event.target.value}})
         }

@@ -26,7 +26,6 @@ body {
   align-items: stretch;
   height: calc(100% - 50px);
   background-color: #f4efefe0;
-
 }
 
 .App-link {
