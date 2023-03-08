@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context";
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';

@@ -11,11 +11,11 @@ function epanechnikov(bandwidth) {
     return x => Math.abs(x /= bandwidth) <= 1 ? 0.75 * (1 - x * x) / bandwidth : 0;
 }
 
-const PredScorePlot = ({navBool}) => {
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+const PredScorePlot = () => {
+  
     return(
         // <KDEPlot />
-        <DensityBarPlot navBool={navBool} />
+        <DensityBarPlot />
     )
 }
 
@@ -136,12 +136,12 @@ const KDEPlot = () => {
 
 }
 
-const DensityBarPlot = ({navBool}) => {
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+const DensityBarPlot = () => {
+    const [{selectedPredicate}] = useContext(DataContext);
    
-    let [width, setWidth] = useState(navBool === true ? 350 : 700);
-    let [height, setHeight] = useState(navBool ? 200 : 300);
-    let [margin, setMargin] = useState({x:(width * .2), y:(height * .3)});
+    const width = 300;
+    const height = 200;
+    const margin = {x:(width * .2), y:(height * .3)};
 
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
@@ -177,7 +177,7 @@ const DensityBarPlot = ({navBool}) => {
         let bars = groups.selectAll('rect.bar').data(d => d[1])
         .join('rect').attr("x", function(d) { return xScale(+d.score); })
         .attr("y", function(d) { return yScale(+d.density); })
-        .attr("width", navBool === true ? 5 : 15)
+        .attr("width", 5)
         .attr("height", function(d) { return (height - margin.y) - yScale(+d.density); })
         .attr("fill", (d) => {
             return d.predicate === true ? selectedPredicate.predicate_info.color : 'gray'
@@ -197,7 +197,7 @@ const DensityBarPlot = ({navBool}) => {
         .attr("x", width/2)
         .attr("y", (height))
         .text("Score")
-        .style('font-size', navBool ? 11 : 16)
+        .style('font-size', 11)
 
     }, [selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
 

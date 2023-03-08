@@ -5,14 +5,10 @@ import { DataContext } from '../context';
 import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
 import { PivotPlot } from './plots/PivotPlot';
 import TabComponent from './tabComponent';
-import Typography from '@mui/material/Typography';
 
 function Pixalate() {
 
   const [{selectedPredicate}, dispatch] = useContext(DataContext);
-  // const [yCoord, setYCoord] = useState('Score');
-
-  const rightDivRef = useRef();
 
   if(selectedPredicate && !selectedPredicate.attribute_data){
     return(
@@ -25,7 +21,7 @@ function Pixalate() {
         <PixalFeatureNavWrap classN={"l-top"} />
         <div className="l-bottom">
         <div className="head-3">Anomaly Scores</div>
-        <PredScorePlot navBool={true}/>
+        <PredScorePlot />
         </div>
         </div>
 
@@ -42,30 +38,11 @@ function Pixalate() {
             </React.Fragment>
         )
       }
-          
-      
         </div>
       </div>
     )
   }
-  // else if(selectedPredicate){
-  //   return (
-  //     <div className="pixalate-two" id="pixalate-two-group">
-      
-  //         <PixalFeatureNavWrap 
-  //         classN={"left"} 
-  //         />
 
-  //         <div className="right"
-  //         ref={rightDivRef}
-  //         >
-  //           <div className="head-3">Anomaly Scores</div>
-  //         <PredScorePlot />
-  //         </div>
-
-  //   </div>
-  //   )
-  // }
   return (
     <div className="splash-select">Choose a predicate to get started.</div>
   )
