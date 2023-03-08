@@ -1,4 +1,4 @@
-import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import '../App.css';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
@@ -18,7 +18,7 @@ function Pixalate() {
     return(
       <div className="splash-select">Unable to process, please choose another predicate.</div>
     )
-  }else if(selectedPredicate && !!selectedPredicate.feature){
+  }else if(selectedPredicate){
     return(
       <div className="pixalate">
         <div className="left-wrap">
@@ -30,33 +30,42 @@ function Pixalate() {
         </div>
 
         <div className="right-wrap">
+      {
+        selectedPredicate.feature && (
+          <React.Fragment>
           <PivotPlot />
           <div className="r-bottom" style={{marginTop:10}}>
             <div>
               <TabComponent />
             </div>
-          </div>
+            </div>
+            </React.Fragment>
+        )
+      }
+          
+      
         </div>
       </div>
     )
-  }else if(selectedPredicate){
-    return (
-      <div className="pixalate-two" id="pixalate-two-group">
-      
-          <PixalFeatureNavWrap 
-          classN={"left"} 
-          />
-
-          <div className="right"
-          ref={rightDivRef}
-          >
-            <div className="head-3">Anomaly Scores</div>
-          <PredScorePlot />
-          </div>
-
-    </div>
-    )
   }
+  // else if(selectedPredicate){
+  //   return (
+  //     <div className="pixalate-two" id="pixalate-two-group">
+      
+  //         <PixalFeatureNavWrap 
+  //         classN={"left"} 
+  //         />
+
+  //         <div className="right"
+  //         ref={rightDivRef}
+  //         >
+  //           <div className="head-3">Anomaly Scores</div>
+  //         <PredScorePlot />
+  //         </div>
+
+  //   </div>
+  //   )
+  // }
   return (
     <div className="splash-select">Choose a predicate to get started.</div>
   )
