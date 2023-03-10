@@ -180,7 +180,7 @@ def get_predicates_dict(predicates, target):
     predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     for k,v in predicates_dict.items():
         score = p.score(predicates[k])
-        predicates_dict[k]['score'] = score
+        predicates_dict[k]['score'] = max(-99999, score)
     return predicates_dict
 
 @api.route('/add_predicate', methods=['GET', 'POST'])
