@@ -171,14 +171,18 @@ def save_predicates(path, predicates, predicates_path):
 
 @api.route('/add_predicate', methods=['GET', 'POST'])
 def add_predicate():
-    attribute_values = request.args.to_dict()
+    attribute_values_str = list(request.args.to_dict().keys())[0].replace(' ', '')
+    attribute_value_strs = [(a+']') for a in attribute_values_str.split(']')[:-1]]
+    attribute_values_dict = dict([a.split(':') for a in attribute_value_strs])
+    attribute_values = {k: parse_value_string(v, dtypes[k]) for k,v in attribute_values_dict.items()}
 
+    # print(attribute_values)
     # attribute_values = json.loads(pred).to_dict()
     # json.loads(pred)
    
     # print('pred', json.loads(pred))
-    predicate = Predicate(data, dtypes, **{k: parse_value_string(v, dtypes[k]) for k,v in attribute_values.items()})
-    print(predicate)
+    predicate = Predicate(data, dtypes, attribute_values=attribute_values)
+    # print(predicate)
     predicates.append(predicate)
     
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
@@ -219,6 +223,12 @@ def copy_predicate(predicate_id):
 
 @api.route('/get_predicate_data', methods=['GET', 'POST'])
 def get_predicate_data():
+    target_ = pd.Series(np.random.normal(size=data.shape[0]))
+    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    return predicates_dict
+
+@api.route('/get_predicate_score', methods=['GET', 'POST'])
+def get_predicate_score():
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
     predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
     return predicates_dict
