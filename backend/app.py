@@ -11,7 +11,7 @@ import edit_predicates
 import all_fun
 # from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 import random
-from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_string
+from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_string, JZS
 
 from flask import Flask
 
@@ -42,6 +42,13 @@ numeric = [attr for attr in dtypes['numeric'] if attr != 'iforest_score']
 
 predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for predicate_dict in predicate_dicts.values()]
 
+target = pd.Series(np.random.normal(size=data.shape[0]))
+bf = JZS(side='right')
+p = PredicateInduction(
+    data, dtypes,
+    target=target,
+    score_func=bf,
+)
 # session['data'] = {'data': data, 'dtypes': dtypes}
 # session['predicates'] = {'predicates': predicates}
 
@@ -169,6 +176,13 @@ def save_predicates(path, predicates, predicates_path):
         json.dump(predicates, f)
     return predicates
 
+def get_predicates_dict(predicates, target):
+    predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    for k,v in predicates_dict.items():
+        score = p.score(predicates[k])
+        predicates_dict[k]['score'] = score
+    return predicates_dict
+
 @api.route('/add_predicate', methods=['GET', 'POST'])
 def add_predicate():
     attribute_values_str = list(request.args.to_dict().keys())[0].replace(' ', '')
@@ -186,7 +200,7 @@ def add_predicate():
     predicates.append(predicate)
     
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    predicates_dict = get_predicates_dict(predicates, target_)
     return predicates_dict
     # with open(f"{path}/{new_predicates_path}", 'wb') as f:
     #     json.dump(predicates_dict, f)
@@ -202,7 +216,7 @@ def edit_predicate(predicate_id, negate=0):
     predicate.is_negated = bool(int(negate))
     predicates[predicate_id] = predicate
     target_ = pd.Series(np.random.normal(size=len(predicate.mask)))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    predicates_dict = get_predicates_dict(predicates, target_)
     return predicates_dict
 
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
@@ -210,7 +224,7 @@ def delete_predicate(predicate_id):
     predicate_id = int(predicate_id)
     del predicates[predicate_id]
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    predicates_dict = get_predicates_dict(predicates, target_)
     return predicates_dict
 
 @api.route('/copy_predicate/<predicate_id>', methods=['GET', 'POST'])
@@ -218,19 +232,19 @@ def copy_predicate(predicate_id):
     predicate_id = int(predicate_id)
     predicates.append(predicates[predicate_id])
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    predicates_dict = get_predicates_dict(predicates, target_)
     return predicates_dict
 
 @api.route('/get_predicate_data', methods=['GET', 'POST'])
 def get_predicate_data():
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    predicates_dict = get_predicates_dict(predicates, target_)
     return predicates_dict
 
 @api.route('/get_predicate_score', methods=['GET', 'POST'])
 def get_predicate_score():
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = {i: predicates[i].to_dict_dist(target_, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+    predicates_dict = get_predicates_dict(predicates, target_)
     return predicates_dict
 
 if __name__ == "__main__":
