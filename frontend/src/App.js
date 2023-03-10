@@ -8,6 +8,7 @@ import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
 import { useAxiosGet, useGetAxiosAsync } from './axiosUtil';
 import { DataContext } from './context';
+import axios from 'axios';
 
 
 
@@ -24,7 +25,7 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-     
+      console.log('data??', data);
       let pred_dist = Object.entries(data).map(m => {
         return [m[0], m[1].dist]
       });
@@ -35,20 +36,7 @@ function App() {
     
   }, [loaded])
 
-  // let {data, error, loaded} = useAxiosGet('/load_predicates_dist_list');
-
-  // useEffect(() => {
-  //   if(loaded){ 
-
- 
-  //     let pred_dist = Object.entries(data.pred_dist)
-
-
-  //     let predData = {'pred_list': data.pred_list, 'pred_dist': pred_dist}
-  //     dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
-  //   }
-    
-  // }, [loaded])
+  
 
 
   return (

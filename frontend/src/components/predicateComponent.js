@@ -13,6 +13,8 @@ export default function PredicateComp({predicateData}) {
     const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
     const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
 
+    console.log('pd',predicateData.predicate.score)
+
     const featureValues = (data) => {
 
         let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
@@ -67,6 +69,8 @@ export default function PredicateComp({predicateData}) {
             onMouseLeave={() => editMode ? handleHover(null) : null}
             onClick={handleClick}
         >
+            <div>
+            <div style={{marginBottom:10, paddingBottom:5, borderBottom:"1px solid #d3d3d3"}}><span>Bayes Factor Score:</span><span>{predicateData.predicate.score}</span></div>
             {
                 features.map((f, i)=> (
                     <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>
@@ -74,6 +78,8 @@ export default function PredicateComp({predicateData}) {
                     </div>
                 ))
             }
+            
+            </div>
             {
                 editMode && (
                     <div className="pred-edit-bar">
