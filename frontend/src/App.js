@@ -25,7 +25,7 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-      console.log('data??', data);
+      
       let pred_dist = Object.entries(data).map(m => {
         return [m[0], m[1].dist]
       });

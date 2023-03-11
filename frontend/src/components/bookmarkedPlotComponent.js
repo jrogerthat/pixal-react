@@ -13,7 +13,7 @@ export const BookmarkedPlots = () => {
     const [{bookmarkedPlots}, dispatch] = useContext(DataContext);
 
     const ParseBookmark = ({book}) => {
-        console.log(book)
+        
         return (
             <div>
                 <div

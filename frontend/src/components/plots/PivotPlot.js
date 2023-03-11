@@ -122,7 +122,7 @@ const WhichPlot = ({setEncoding}) => {
 
     let getPivotLabel = () => {
         let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];
-        console.log('chosenval',chosenVal);
+      
         return <div
         style={{marginTop:20, marginLeft:10, fontWeight:800}}
         >{`${xCoord}: ${chosenVal.join(', ')}`}</div>

@@ -10,6 +10,8 @@ function PredicateNav({setHighlightPred}) {
   const [addPredMode, setAddPredMode] = useState(false);
   const [{editMode, predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
+  const filteredPredicates = predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score);
+
   return (
     <div className="pred-exp-nav">
       {
@@ -24,13 +26,13 @@ function PredicateNav({setHighlightPred}) {
       }
       <div>
         {
-          editMode ? predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).map(p => (
+          editMode ? filteredPredicates.map(p => (
            <PredicateComp
            key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
            />
-          )) : predicateArray.filter(f => hiddenPredicates.indexOf(f.id) === -1 && deletedPredicates.indexOf(f.id) === -1).map(p => (
+          )) : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1).map(p => (
             <PredicateComp
             key={`pred-edir-${p.id}`} 
             predicateData={p} 
