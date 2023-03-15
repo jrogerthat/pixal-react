@@ -29,8 +29,6 @@ function AddPredBox({setAddPredMode}){
         useGetAxiosAsync(`add_predicate?${newPred}`).then(data => {
             dispatch({type:"UPDATE_PREDICATE_ARRAY", predicateArray:data.data})
         })
-       
-        
     }
 
     return (

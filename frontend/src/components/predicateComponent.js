@@ -60,9 +60,9 @@ export default function PredicateComp({predicateData}) {
         <div className="pred-wrap"
             style={{
                 opacity: isHidden(),
-                border: `3px solid ${isSelected()}`
+                border: `3px solid ${isSelected()}`,
+                cursor: 'pointer'//(editMode === true) ? 'pointer' : null
             }}
-           
             onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}
             onMouseLeave={() => editMode ? handleHover(null) : null}
             onClick={handleClick}
