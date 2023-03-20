@@ -15,16 +15,26 @@ from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_
 
 from flask import Flask
 
-data_path = 'static/data/cars.csv'
-predicates_path = 'static/data/cars.json'
+# data_path = 'static/data/cars.csv'
+# predicates_path = 'static/data/cars.json'
+# target_path = 'static/data/cars_iforest.csv'
+
+data_path = 'static/data/augmented_superstore_data.csv'
+predicates_path = 'static/data/augmented_superstore_predicates.json'
 target_path = 'static/data/cars_iforest.csv'
 
 api = Flask(__name__)
 path = os.path.dirname(os.path.realpath(__file__))
 data = pd.read_csv(f'{path}/{data_path}')
-dtypes = infer_dtypes(data, horsepower='numeric', weight='numeric', origin='nominal')
-target = pd.read_csv(f'{path}/{target_path}')
-target = target[target.columns[0]]
+target = data.iforest_score
+data = data.drop('iforest_score', axis=1)
+data['Order-Date'] = pd.to_datetime(data['Order-Date'])
+dtypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'ordinial', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
+
+# dtypes = infer_dtypes(data)
+# target = pd.read_csv(f'{path}/{target_path}')
+# target = target[target.columns[0]]
 
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f)
