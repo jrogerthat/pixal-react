@@ -25,9 +25,9 @@ export default function PredicateComp({predicateData}) {
         }
 
         return (
-            valArr.map((m, i)=> (
-                <div className="feature-value" key={`fv-${i+1}`}>{` ${m},`}</div>
-            ))
+           // valArr.map((m, i)=> (
+                <div className="feature-value" >{valArr.join(', ')}</div>
+          //  ))
         )
     }
 
