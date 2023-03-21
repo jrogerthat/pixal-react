@@ -123,13 +123,14 @@ body {
   display:flex;
   flex-direction: column;
   width:35%;
-  padding-bottom: 20px;
+  padding-bottom: 15px;
 }
 
 .right-wrap{
   display:flex;
   flex-direction: column;
   width:65%;
+  padding-bottom: 15px;
 }
 
 .pixalate-two {
@@ -212,13 +213,11 @@ body {
 .r-top {
   /* background-color: #e8e4e4e0; */
   background-color: white;
-  grid-column: 3/7;
-  grid-row: 1;
   display:flex;
   flex-direction: row;
   border-radius: 15px;
   box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
-  height:fit-content;
+  height:370px;
 }
 
 .marksControl {
@@ -246,10 +245,8 @@ body {
 .r-bottom {
   /* background-color: #e8e4e4e0; */
   background-color: white;
-  grid-column: 3/7;
-  grid-row: 2;
   display:flex;
-  /* justify-content: center; */
+  flex-grow : 1;
   align-items: center;
   flex-direction: column;
   border-radius: 15px;
