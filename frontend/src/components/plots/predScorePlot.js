@@ -196,7 +196,7 @@ const DensityBarPlot = () => {
         .attr("text-anchor", "end")
         .attr("x", width/2)
         .attr("y", (height))
-        .text("Score")
+        .text("Anomaly Score")
         .style('font-size', 11)
 
     }, [selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);

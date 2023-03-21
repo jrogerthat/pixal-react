@@ -63,7 +63,7 @@ const PredExplorePlot = ({width, height}) => {
         .attr("text-anchor", "middle")
         .attr("x", (width/2) - 20)
         .attr("y", (height - 20))
-        .text("Score")
+        .text("Anomaly Score")
         .style('font-size', 13)
 
     }, [xScale, yScale, height]);
@@ -107,7 +107,7 @@ const PredicateGroup = ({predData, yScale, xScale, height, color}) => {
                 <rect key={`b-${i}`}
                     fill={calcColor}
                     x={xScale(p.score)} 
-                    width="7px" 
+                    width="5px" 
                     height={(height - 50)-yScale(p.density)}
                     transform={`translate(0,${yScale(p.density) + 30})`}
                     style={{fillOpacity: .6, stroke: calcColor}}

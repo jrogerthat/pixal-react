@@ -68,7 +68,7 @@ export default function PredicateComp({predicateData}) {
             onClick={handleClick}
         >
             <div>
-            <div style={{marginBottom:10, paddingBottom:5, borderBottom:"1px solid #d3d3d3"}}><span>Bayes Factor Score:</span><span>{predicateData.predicate.score}</span></div>
+            <div style={{marginBottom:10, paddingBottom:5, borderBottom:"1px solid #d3d3d3"}}><span>Bayes Factor Score:</span><span>{predicateData.predicate.score.toFixed(2)}</span></div>
             {
                 features.map((f, i)=> (
                     <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>

@@ -3,6 +3,13 @@ import formatPredicateArray from "./dataFormating";
 
 export const DataContext = createContext();
 
+const getRightCategoricalFeatures = (datasetName) => {
+  const features = {
+    'aug_superstore': ["Sub-Category", "Segment", "State"],
+    'cars' : ['origin', ]
+  }
+} 
+
 const initialState = {
   predicateArray: [],
   predicateDistributionArray: [],
