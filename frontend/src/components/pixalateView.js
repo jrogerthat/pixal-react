@@ -30,12 +30,14 @@ function Pixalate() {
         selectedPredicate.feature && (
           <React.Fragment>
           <PivotPlot />
-          <div className="r-bottom" style={{marginTop:10}}>
+          <div 
+          className="r-bottom" 
+          style={{marginTop:10}}>
             <div>
               <TabComponent />
             </div>
-            </div>
-            </React.Fragment>
+          </div>
+          </React.Fragment>
         )
       }
         </div>

@@ -52,9 +52,11 @@ const getExplanation = (xC, yC, selectedPredicate) => {
 
 export const MarksControlComponent = () => {
 
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate},] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
+
+    console.log('SELECTED PRED', selectedPredicate);
 
     return(
         <div className="marksControl">
@@ -82,36 +84,68 @@ export const MarksControlComponent = () => {
 }
 
 const FilterList = () => {
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, xCoord},] = useContext(DataContext);
     let rows = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values);
     
     return (
-        <TableContainer component={Paper}>
-        <Table 
-        sx={{ backgroundColor: '#f4efefe0', fontSize: 8, width:200 }} 
-        aria-label="simple table">
-            <TableHead>
-            <TableRow>
-                <TableCell>Filtered By:</TableCell>
-            </TableRow>
-            </TableHead>
-            <TableBody>
-            {rows.map((row, i) => (
-                <TableRow
-                key={`fil-${i}`}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
+        <div style={{marginTop:10, borderRadius:10, }}>
+            <div
+            style={{marginBottom:2, padding:5}}
+            >Filtered by:</div>
+            <div style={{display:'flex', flexDirection:'column'}}>
+                {rows.map((row, i) => {
+                return (
+                    <div key={`fil-${i}`} 
+                    style={{
+                        // backgroundColor: row[0] === xCoord ? selectedPredicate.predicate_info.color : 'gray .2',
+                        marginTop:10,
+                        display:'flex', 
+                        flexDirection:'row',
+                        justifyContent:'space-between',
+                        fontSize:11,
+                        borderTop: ".5px solid gray"
+                        }}>
+                        <div
+                        style={{
+                            fontWeight:800, color: row[0] === xCoord ? selectedPredicate.predicate_info.color : 'gray'}}
+                        >{row[0]}</div>
+                        <div
+                        style={{textAlign:'right'}}
+                        >{row[1].join(", ")}</div>
+                    </div>
+                )})}
+            </div>
+
+        </div>
+        // <TableContainer component={Paper}>
+        // <Table 
+        // sx={{ backgroundColor: '#f4efefe0', fontSize: 8, width:200 }} 
+        // aria-label="simple table">
+        //     <TableHead>
+        //     <TableRow>
+        //         <TableCell>Filtered By:</TableCell>
+        //     </TableRow>
+        //     </TableHead>
+        //     <TableBody>
+        //     {rows.map((row, i) => {
+        //         return (
+        //         <TableRow
+        //         key={`fil-${i}`}
+        //         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        //         >
                     
-                <TableCell component="th" scope="row">
-                <span>{`${row[0]}: `}</span> 
-                </TableCell>
-                <TableCell align="right">{row[1].join(", ")}</TableCell>
+        //         <TableCell component="th" scope="row">
+        //         <span
+        //         style={{color: xCoord === row[0] ? selectedPredicate.predicate_info.color : 'gray', fontWeight:700}}
+        //         >{`${row[0]}: `}</span> 
+        //         </TableCell>
+        //         <TableCell align="right">{row[1].join(", ")}</TableCell>
                 
-                </TableRow>
-            ))}
-            </TableBody>
-        </Table>
-        </TableContainer>
+        //         </TableRow>
+        //     )})}
+        //     </TableBody>
+        // </Table>
+        // </TableContainer>
     );
 }
 
