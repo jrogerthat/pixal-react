@@ -5,33 +5,33 @@ import { DataContext } from "../../context";
 const PredExplorePlot = ({width, height}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, predicateDistributionArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
+    const [{predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
-    let filteredDist = [...predicateDistributionArray].filter(f => {
+    let filteredDist = [...predicateArray].filter(f => {
         if(hiddenPredicates.length === 0){
             return f
         }else{
-            return hiddenPredicates.indexOf(f[0]) === -1 && deletedPredicates.indexOf(f[0]) === -1
+            return hiddenPredicates.indexOf(f.id) === -1 && deletedPredicates.indexOf(f.id) === -1
         }
     });
 
     const yScale = useMemo(() => {
-        if(predicateDistributionArray.length > 0){
-            let maxArr =  predicateDistributionArray.flatMap(m => m[1]).map(m => +m.density);
+        if(predicateArray.length > 0){
+            let maxArr =  predicateArray.flatMap(m => m.predicate.dist).map(m => +m.density);
             return d3.scaleLinear().range([(height-50), 0]).domain([0, d3.max(maxArr)]);
         }else{
              return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [predicateDistributionArray, height]);
+        }}, [predicateArray, height]);
 
     const xScale = useMemo(() => {
-        if(predicateDistributionArray.length > 0){
-            let maxArr = predicateDistributionArray.flatMap(m => m[1]).map(m => m.score)
+        if(predicateArray.length > 0){
+            let maxArr = predicateArray.flatMap(m => m.predicate.dist).map(m => m.score)
             return d3.scaleLinear().range([0, width]).domain(d3.extent(maxArr));
         }else{
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
-        }}, [predicateDistributionArray, width]);
-   
-    console.log('in explore plot',predicateArray, predicateDistributionArray)
+        }}, [predicateArray, width]);
+    
+
 
       // Render the X axis using d3.js, not react
     useEffect(() => {
@@ -65,7 +65,7 @@ const PredExplorePlot = ({width, height}) => {
         .text("Anomaly Score")
         .style('font-size', 13)
 
-    }, [predicateDistributionArray, xScale, yScale, height]);
+    }, [predicateArray, xScale, yScale, height]);
     
    
     return(
@@ -74,11 +74,11 @@ const PredExplorePlot = ({width, height}) => {
                 filteredDist.length > 0 && filteredDist.map((p, i) => (
                     <PredicateGroup 
                     key={`pred-${i+1}`} 
-                    predData={p[1]} 
+                    predData={p} 
                     xScale={xScale} 
                     yScale={yScale} 
                     height={height} 
-                    color={predicateArray.filter(f=> +p[0] === +f.id)[0]}
+                    // color={predicateArray.filter(f=> +p[0] === +f.id)[0]}
                     />
                 ))
             }
@@ -92,17 +92,25 @@ const PredExplorePlot = ({width, height}) => {
     )
 }
 
-const PredicateGroup = ({predData, yScale, xScale, height, color}) => {
+const PredicateGroup = ({predData, yScale, xScale, height}) => {
 
     const [{highlightedPred}] = useContext(DataContext);
 
-    let calcColor = highlightedPred != null && highlightedPred != color.id ? 'rgba(211,211,211, .2)' : color.color
+    let calcColor = highlightedPred != null && highlightedPred != predData.id ? 'rgba(211,211,211, .2)' : predData.color;
+
+    let predDistData = [...predData.predicate.dist].filter(f => {
+        if(predData.predicate.negated === true){
+            return f.predicate === false;
+        }
+        return f.predicate === true;
+    });
+
         return(
         <g
         transform={`translate(${[60, 0].join(",")})`}
         >
         {
-            predData.map((p, i) => (
+            predDistData.map((p, i) => (
                 <rect key={`b-${i}`}
                     fill={calcColor}
                     x={xScale(p.score)} 

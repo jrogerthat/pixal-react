@@ -6,7 +6,6 @@ export const DataContext = createContext();
 
 const initialState = {
   predicateArray: [],
-  predicateDistributionArray: [],
   selectedPredicate:null,
   highlightedPred:null,
   editMode: true,
@@ -30,13 +29,8 @@ const reducer = (state, action) => {
       return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
     case "SET_PREDICATE_EXPLORE_DATA":
-      let arr = formatPredicateArray(action.predData.pred_list);
-      return {...state, predicateArray: arr, predicateDistributionArray: action.predData.pred_dist}
-
-    case "UPDATE_PREDICATE_ARRAY":
-        let pArr = formatPredicateArray(action.predData.pred_list);
-        console.log(pArr, action.predData.pred_dist)
-        return {...state, predicateArray: pArr, predicateDistributionArray: action.predData.pred_dist}
+      let arr = formatPredicateArray(action.predData);
+      return {...state, predicateArray: arr}
 
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};

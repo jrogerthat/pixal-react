@@ -25,12 +25,7 @@ function App() {
   useEffect(() => {
     if(loaded){ 
       
-      let pred_dist = Object.entries(data).map(m => {
-        return [m[0], m[1].dist]
-      });
-
-      let predData = {'pred_list': data, 'pred_dist': pred_dist}
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData})
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data})
     }
     
   }, [loaded])
