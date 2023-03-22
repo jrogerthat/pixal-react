@@ -4,9 +4,65 @@ import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
 import Slider from '@mui/material/Slider';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+// import {
+//     DateRangePicker,
+//     DateRangeDelimiter,
+//     LocalizationProvider
+//   } from "@material-ui/pickers";
+//   import DateFnsUtils from "@material-ui/pickers/adapter/date-fns"; // choose your lib
 
-function valuetext(value) {
-  return `${value}°C`;
+
+const DropCheckComponent = ({cat, selected, options, predData}) => {
+  
+    let [selectedNames, setSelectedNames] = useState(selected);
+
+    const handleChange = (event) => {
+        const {
+        target: { value },
+        } = event;
+        console.log('ON CLICK', value);
+
+        let newSelected = selectedNames.indexOf(value) > -1 ? [...selectedNames].filter(f => f != value) : [...selectedNames, value];
+        setSelectedNames(newSelected);
+        
+  };
+    return (
+        <div>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="demo-multiple-checkbox-label" style={{fontSize:22, fontWeight:800}}>{cat}</InputLabel>
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={selectedNames}
+            // onChange={handleChange}
+            input={<OutlinedInput label={cat} />}
+            renderValue={(selectedNames) => selectedNames.map((x) => x).join(', ')}
+            // MenuProps={MenuProps}
+          >
+            {options.map((variant, i) => (
+              <MenuItem key={`${i}-v`} value={variant}>
+                <Checkbox
+                  checked={
+                    selectedNames.indexOf(variant) > -1
+                  }
+                  value={variant}
+                  onChange={handleChange}
+                />
+                <ListItemText primary={variant} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+    )
 }
 
 const RangeSlider = ({range, data}) => {
@@ -20,11 +76,11 @@ const RangeSlider = ({range, data}) => {
   return (
     <div style={{ width: 300 }}>
       <Slider
-        getAriaLabel={() => 'Temperature range'}
+        getAriaLabel={() => data[0]}
         value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
-        getAriaValueText={valuetext}
+        getAriaValueText={""}
         min={range[0]}
         max={range[1]}
       />
@@ -32,27 +88,53 @@ const RangeSlider = ({range, data}) => {
   );
 }
 
+// const BasicDateRangePicker = () => {
+//     const [selectedDate, handleDateChange] = useState([null, null]);
+  
+//     return (
+//       <LocalizationProvider dateAdapter={DateFnsUtils}>
+//         <DateRangePicker
+//           startText="Check-in"
+//           endText="Check-out"
+//           value={selectedDate}
+//           onChange={date => handleDateChange(date)}
+//           renderInput={(startProps, endProps) => (
+//             <>
+//               <TextField {...startProps} />
+//               <DateRangeDelimiter> to </DateRangeDelimiter>
+//               <TextField {...endProps} />
+//             </>
+//           )}
+//         />
+//       </LocalizationProvider>
+//     );
+//   }
+
 const StaticClauseComponent = ({data}) => {
     return <div><span>{`${data[0]}: `}</span>
     {staticFeatureValues(data[1])}
     </div>
 }
 
-const EditableFeatureComponent = ({data}) => {
+const EditableFeatureComponent = ({data, predData}) => {
 
-   
-    const [{predicateArray}] = useContext(DataContext);
+    const [{predicateArray, categoricalFeatures, categoryDict}] = useContext(DataContext);
     const numericalClauses = ['precipitation', 'temperature'];
-
     const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
 
     if(numericalClauses.indexOf(data[0]) > -1){
         return <div><span>{`${data[0]}: `}</span>
         <RangeSlider range={numericalRanges[data[0]]} data={data}/>
         </div>
+    }else if(categoricalFeatures.indexOf(data[0]) > -1){
+        
+        return <div>
+        <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
+        </div>
     }
 
     return <div><span>{`${data[0]}: `}</span>
+    {/* <DateRangePicker /> */}
     </div>
 }
 
@@ -125,7 +207,7 @@ export default function PredicateComp({predicateData}) {
                 </div>
                 {
                     features.map((f, i)=> (
-                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f}/> : <StaticClauseComponent key={`f-${i+1}`} data={f}/>
+                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : <StaticClauseComponent key={`f-${i+1}`} data={f}/>
                     ))
                 }
             </div>

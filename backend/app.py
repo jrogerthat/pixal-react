@@ -72,6 +72,12 @@ def get_pred_dis():
     all_fun.save_predicate_id(0, predicate_id_path)
     return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
+@api.route('/get_feature_cat')
+def get_feature_cat():
+    test = pd.read_csv('static/data/augmented_superstore_data.csv')
+    #Segment,State,Sub-Category
+    return test['State']
+
 
 @api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
 def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
