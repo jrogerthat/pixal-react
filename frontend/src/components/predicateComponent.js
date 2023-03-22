@@ -1,33 +1,86 @@
 import axios from 'axios';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
+import Slider from '@mui/material/Slider';
 
+function valuetext(value) {
+  return `${value}°C`;
+}
+
+const RangeSlider = ({range, data}) => {
+
+  const [value, setValue] = useState(data[1]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div style={{ width: 300 }}>
+      <Slider
+        getAriaLabel={() => 'Temperature range'}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        getAriaValueText={valuetext}
+        min={range[0]}
+        max={range[1]}
+      />
+    </div>
+  );
+}
+
+const StaticClauseComponent = ({data}) => {
+    return <div><span>{`${data[0]}: `}</span>
+    {staticFeatureValues(data[1])}
+    </div>
+}
+
+const EditableFeatureComponent = ({data}) => {
+
+   
+    const [{predicateArray}] = useContext(DataContext);
+    const numericalClauses = ['precipitation', 'temperature'];
+
+    const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
+
+    if(numericalClauses.indexOf(data[0]) > -1){
+        return <div><span>{`${data[0]}: `}</span>
+        <RangeSlider range={numericalRanges[data[0]]} data={data}/>
+        </div>
+    }
+
+    return <div><span>{`${data[0]}: `}</span>
+    </div>
+}
+
+const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+
+const staticFeatureValues = (data) => {
+
+    let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
+
+    if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
+        return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
+        </span></div>
+    }else if(valArr.length === 1){
+        return  <div className="feature-value">{` ${valArr[0]}`}</div>
+    }
+
+    return (
+        <div className="feature-value" >{valArr.join(', ')}</div>
+    )
+}
 /*
 TODO: hook this up to actually create a predicate
 */
 export default function PredicateComp({predicateData}) {
  
     const features = Object.entries(predicateData.predicate.attribute_values)
-    const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+    
     const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
-
-    const featureValues = (data) => {
-
-        let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
-
-        if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
-            return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
-            </span></div>
-        }else if(valArr.length === 1){
-            return  <div className="feature-value">{` ${valArr[0]}`}</div>
-        }
-
-        return (
-            <div className="feature-value" >{valArr.join(', ')}</div>
-        )
-    }
 
     let isHidden = () => {
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
@@ -72,9 +125,7 @@ export default function PredicateComp({predicateData}) {
                 </div>
                 {
                     features.map((f, i)=> (
-                        <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>
-                            {featureValues(f[1])}
-                        </div>
+                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f}/> : <StaticClauseComponent key={`f-${i+1}`} data={f}/>
                     ))
                 }
             </div>
