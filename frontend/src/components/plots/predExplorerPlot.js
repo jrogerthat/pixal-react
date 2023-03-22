@@ -54,9 +54,7 @@ const PredExplorePlot = ({width, height}) => {
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
         .attr("x", -(height/4))
-        // .attr("y", -40)
-        // .attr("x", -(height/4))
-        .text("Density")
+        .text("Percentage of Data Points")
 
         // Add X axis label:
         wrap.append("text")

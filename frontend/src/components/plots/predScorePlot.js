@@ -138,13 +138,24 @@ const KDEPlot = () => {
 
 const DensityBarPlot = () => {
     const [{selectedPredicate}] = useContext(DataContext);
-   
-    const width = 300;
-    const height = 200;
-    const margin = {x:(width * .2), y:(height * .3)};
+
+    console.log(d3.select('.l-bottom').empty())
+    const [width, setWidth] = useState(300);
+    useEffect(() => {
+        console.log('DIV CHANGED', d3.select('.l-bottom').empty())
+        if(!d3.select('.l-bottom').empty()){
+            console.log('NOT EMPTY', d3.select('.l-bottom').style('width'))
+            setWidth(d3.select('.l-bottom').style('width').split('px')[0]);
+        }
+        // d3.select('.l-bottom').empty() ? 300 : d3.select('.l-bottom').style('width').split('px')[0]
+    }, [d3.select('.l-bottom'), d3.select('.l-bottom').empty()]);
+
+    const height = 220;
+    const margin = {x:(90), y:(height * .3)};
 
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
+
     
     const yScale = useMemo(() => {
         return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
@@ -152,7 +163,7 @@ const DensityBarPlot = () => {
 
     const xScale = useMemo(() => {
         return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.score))]);
-        }, [selectedPredicate.id, selectedPredicate.feature]);
+        }, [width, selectedPredicate.id, selectedPredicate.feature]);
   
 
     useEffect(()=> {
@@ -160,7 +171,7 @@ const DensityBarPlot = () => {
         svg.selectAll("*").remove();
 
         let wrap = svg.append('g');
-        wrap.attr('transform', `translate(${margin.x/2}, ${margin.y/2})`)
+        wrap.attr('transform', `translate(${(margin.x/2)+20}, ${margin.y/2})`)
 
         const xAxisGenerator = d3.axisBottom(xScale);
 
@@ -185,21 +196,22 @@ const DensityBarPlot = () => {
 
         // Y axis label:
         wrap.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", -(height/4))
-        .text("Density")
+        .attr("x", -((height/2) - 30))
+        .text("Percentage of Data Points")
+        .style('font-size', 11)
 
         // Add X axis label:
         svg.append("text")
-        .attr("text-anchor", "end")
-        .attr("x", width/2)
+        .attr("text-anchor", "middle")
+        .attr("x", (width)/2)
         .attr("y", (height))
         .text("Anomaly Score")
         .style('font-size', 11)
 
-    }, [selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
+    }, [width, selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
 
 
     return(
