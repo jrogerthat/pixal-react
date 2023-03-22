@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import '../App.css';
 import Button from '@mui/material/Button';
 import AddPredBox from './addPredicateBox';
@@ -19,6 +19,11 @@ function PredicateNav({setHighlightPred}) {
         variant="outlined"
         onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
       >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span className='head-3'>Predicates</span>
+      }
+      {
+        editMode && <Button variant="outlined" onClick={()=> {
+          dispatch({type: "UPDATE_HIDDEN_PREDS", hidden: predicateArray.map(m => m.id)})
+        }}>Hide All Predicates</Button>
       }
       
       {

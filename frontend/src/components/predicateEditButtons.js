@@ -66,8 +66,6 @@ const DeleteButton = ({predicateData}) => {
 
 }
 
-
-
 const CopyButton = ({predicateData}) => {
     
     const HandleCopy = () => {
@@ -95,23 +93,27 @@ const CopyButton = ({predicateData}) => {
 }
 
 const InvertButton = ({predicateData}) => {
-    const [{}, dispatch] = useContext(DataContext);
+    const [{negatedArray}, dispatch] = useContext(DataContext);
 
-    const [negated, setNegated] = useState(0);
-
+    let negatedBool = negatedArray.indexOf(predicateData.id) > -1;
+   
     const HandleClick = () => {
+
+        let newNegated = negatedBool ? negatedArray.filter(n => n !== predicateData.id) : [...negatedArray, predicateData.id];
+
+        dispatch({ type: "UPDATE_NEGATED", negated: newNegated})
        
-        negated === 0 ? setNegated(1) : setNegated(0);
+        // negated === 0 ? setNegated(1) : setNegated(0);
 
-        useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
+        // useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
 
-              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
-        })
+        //       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+        // })
     }
     return(
         <Button 
-        variant={negated === 0 ? "outlined" : "contained"} 
-        color={negated === 0 ? "primary" : "error"} 
+        variant={!negatedBool ? "outlined" : "contained"} 
+        color={!negatedBool ? "primary" : "error"} 
         size="small"
         style={{
             borderRadius: 40,

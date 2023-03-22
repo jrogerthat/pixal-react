@@ -5,7 +5,7 @@ import { DataContext } from "../../context";
 const PredExplorePlot = ({width, height}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
+    const [{predicateArray, hiddenPredicates, deletedPredicates, negatedArray},] = useContext(DataContext);
 
     let filteredDist = [...predicateArray].filter(f => {
         if(hiddenPredicates.length === 0){
@@ -94,7 +94,9 @@ const PredExplorePlot = ({width, height}) => {
 
 const PredicateGroup = ({predData, yScale, xScale, height}) => {
 
-    const [{highlightedPred}] = useContext(DataContext);
+    const [{highlightedPred, negatedArray}] = useContext(DataContext);
+
+    console.log('NEGATED IN GROUP',negatedArray)
 
     let calcColor = highlightedPred != null && highlightedPred != predData.id ? 'rgba(211,211,211, .2)' : predData.color;
 

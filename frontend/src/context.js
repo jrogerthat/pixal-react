@@ -14,7 +14,8 @@ const initialState = {
   deletedPredicates: [],
   bookmarkedPlots: [],
   xCoord: null,
-  yCoord: "score"
+  yCoord: "score",
+  negatedArray : []
 };
 
 const reducer = (state, action) => {
@@ -24,6 +25,9 @@ const reducer = (state, action) => {
     case "ADD_BOOKMARK_PLOT":
       let newBooks = [...state.bookmarkedPlots, action.bookmarked]
       return {...state, bookmarkedPlots: newBooks}
+
+    case "UPDATE_NEGATED":
+        return {...state, negatedArray: action.negated}
 
     case "UPDATE_EDIT_MODE":
       return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
