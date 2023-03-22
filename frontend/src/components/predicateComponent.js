@@ -66,23 +66,32 @@ export default function PredicateComp({predicateData}) {
             onClick={handleClick}
         >
             <div>
-            <div style={{marginBottom:10, paddingBottom:5, borderBottom:"1px solid #d3d3d3"}}><span>Bayes Factor Score:</span><span>{predicateData.predicate.score.toFixed(2)}</span></div>
-            {
-                features.map((f, i)=> (
-                    <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>
-                        {featureValues(f[1])}
-                    </div>
-                ))
-            }
-            
+                <div style={{marginBottom:10, paddingBottom:5, borderBottom:"1px solid #d3d3d3"}}>
+                    <span>Bayes Factor Score:</span>
+                    <span>{predicateData.predicate.score.toFixed(2)}</span>
+                </div>
+                {
+                    features.map((f, i)=> (
+                        <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>
+                            {featureValues(f[1])}
+                        </div>
+                    ))
+                }
             </div>
             {
                 editMode && (
-                    <div className="pred-edit-bar">
+                    <div className="pred-edit-bar" 
+                    style={{display:'flex', flexDirection:'row', height:30, justifyContent:'space-between'}}
+                    >
+                    <div style={{width:'fit-content'}}>
                     <InvertButton predicateData={predicateData} />
                     <DeleteButton predicateData={predicateData} />
                     <HideButton predicateData={predicateData} />
                     <CopyButton predicateData={predicateData} />
+                    </div>
+                    <div
+                    style={{width:30}}
+                    ><svg><rect width={20} height={20} fill={predicateData.color}/></svg></div>
                     </div>
                 )
             }
