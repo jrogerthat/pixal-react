@@ -92,6 +92,54 @@ const DensityBarPlot = () => {
         .text("Anomaly Score")
         .style('font-size', 11)
 
+        //Initialize legend
+        var legendItemSize = 12;
+        var legendSpacing = 4;
+        var xOffset = 150;
+        var yOffset = 100;
+
+        var legend = svg.append('g')
+        legend.classed('.legend-group');
+
+        let onG = legend.append('g');
+        onG.append('rect').attr('width', 12).attr('height', 12).attr('fill', selectedPredicate.predicate_info.color);
+        let labelOn = onG.append('text').text('Selected Predicate Anomaly Scores').style('font-size', 9);
+        labelOn.attr('x', 15).attr('y', 9)
+
+        onG.attr('transform', `translate(220,10)`)
+
+        let offG = legend.append('g');
+        offG.append('rect').attr('width', 12).attr('height', 12).attr('fill', 'gray');
+        let labelOff = offG.append('text').text('All Other Anomaly Scores').style('font-size', 9);
+        labelOff.attr('x', 15).attr('y', 9)
+
+        offG.attr('transform', `translate(80,10)`)
+
+          
+
+        // //Create legend items
+        // legend
+        // .enter()
+        // .append('rect')
+        // .attr('class', 'legendItem')
+        // .attr('width', legendItemSize)
+        // .attr('height', legendItemSize)
+        // .style('fill', d => d.color)
+        // .attr('transform',
+        //         (d, i) => {
+        //             var x = xOffset;
+        //             var y = yOffset + (legendItemSize + legendSpacing) * i;
+        //             return `translate(${x}, ${y})`;
+        //         });
+
+        // //Create legend labels
+        // legend
+        // .enter()
+        // .append('text')
+        // .attr('x', xOffset + legendItemSize + 5)
+        // .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 12)
+        // .text(d => d.name);  
+
     }, [width, selectedPredicate.predicate_info.id, selectedPredicate.feature, selectedPredicate]);
 
 

@@ -103,12 +103,12 @@ const InvertButton = ({predicateData}) => {
 
         dispatch({ type: "UPDATE_NEGATED", negated: newNegated})
        
-        // negated === 0 ? setNegated(1) : setNegated(0);
+        let negated = negatedBool ? 1 : 0;
 
-        // useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
+        useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
 
-        //       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
-        // })
+              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+        })
     }
     return(
         <Button 

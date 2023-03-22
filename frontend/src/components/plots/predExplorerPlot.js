@@ -5,7 +5,9 @@ import { DataContext } from "../../context";
 const PredExplorePlot = ({width, height}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, hiddenPredicates, deletedPredicates, negatedArray},] = useContext(DataContext);
+    const [{predicateArray, hiddenPredicates, deletedPredicates},] = useContext(DataContext);
+
+    console.log('predicate Array', predicateArray);
 
     let filteredDist = [...predicateArray].filter(f => {
         if(hiddenPredicates.length === 0){
@@ -96,23 +98,27 @@ const PredicateGroup = ({predData, yScale, xScale, height}) => {
 
     const [{highlightedPred, negatedArray}] = useContext(DataContext);
 
-    console.log('NEGATED IN GROUP',negatedArray)
-
     let calcColor = highlightedPred != null && highlightedPred != predData.id ? 'rgba(211,211,211, .2)' : predData.color;
 
     let predDistData = [...predData.predicate.dist].filter(f => {
-        if(predData.predicate.negated === true){
+        if(negatedArray.indexOf(predData.id) > -1){
             return f.predicate === false;
+        }else{
+            return f.predicate === true;
         }
-        return f.predicate === true;
+        
     });
+
+    console.log('PRED DIST DATA', negatedArray.indexOf(predData.id), predDistData);
 
         return(
         <g
         transform={`translate(${[60, 0].join(",")})`}
         >
         {
-            predDistData.map((p, i) => (
+            predDistData.map((p, i) => {
+                console.log('PPP', p)
+                return (
                 <rect key={`b-${i}`}
                     fill={calcColor}
                     x={xScale(p.score)} 
@@ -121,7 +127,7 @@ const PredicateGroup = ({predData, yScale, xScale, height}) => {
                     transform={`translate(0,${yScale(p.density) + 30})`}
                     style={{fillOpacity: .6, stroke: calcColor}}
                 />
-            ))
+            )})
         }
         </g>
     )
