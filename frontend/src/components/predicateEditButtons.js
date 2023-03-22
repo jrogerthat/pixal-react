@@ -72,7 +72,13 @@ const CopyButton = ({predicateData}) => {
     
     const HandleCopy = () => {
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
-            dispatch({type: "UPDATE_PREDICATE_ARRAY", predicateArray: data.data})
+            console.log('COPIED', data.data);
+            let pred_dist = Object.entries(data.data).map(m => {
+                return [m[0], m[1].dist]
+              });
+        
+              let predData = {'pred_list': data.data, 'pred_dist': pred_dist}
+            dispatch({type: "UPDATE_PREDICATE_ARRAY", predData: predData})
         })
     }
     

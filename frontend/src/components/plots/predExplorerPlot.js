@@ -31,6 +31,7 @@ const PredExplorePlot = ({width, height}) => {
             return d3.scaleLinear().range([height, 0]).domain([0, 1]);
         }}, [predicateDistributionArray, width]);
    
+    console.log('in explore plot',predicateArray, predicateDistributionArray)
 
       // Render the X axis using d3.js, not react
     useEffect(() => {
@@ -64,7 +65,7 @@ const PredExplorePlot = ({width, height}) => {
         .text("Anomaly Score")
         .style('font-size', 13)
 
-    }, [xScale, yScale, height]);
+    }, [predicateDistributionArray, xScale, yScale, height]);
     
    
     return(

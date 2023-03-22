@@ -7,6 +7,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     const [width, setWidth] = useState(300);
+    
     useEffect(() => {
         if(navBool){
             if(!d3.select('.l-top').empty()){

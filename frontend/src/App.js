@@ -6,9 +6,8 @@ import Typography from '@mui/material/Typography';
 import Pixalate from './components/pixalateView';
 import PredicateExplore from './components/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
-import { useAxiosGet, useGetAxiosAsync } from './axiosUtil';
+import { useAxiosGet } from './axiosUtil';
 import { DataContext } from './context';
-import axios from 'axios';
 
 
 

@@ -29,12 +29,17 @@ export const  PivotPlot = () => {
         <MarksControlComponent 
             setFilterByArray={setFilterByArray}
         />
-        <div id="pivot-plot">
+        <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
            <WhichPlot setEncoding={setEncoding} />
            <div className="bookmark-button">
             <Button
             onClick={() => {
-                dispatch({type: "ADD_BOOKMARK_PLOT", bookmarked: {'x': xCoord, 'y': yCoord, 'encoding': encoding, 'selectedPredicate': {...selectedPredicate}, 'feature': selectedPredicate.feature, 'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
+                dispatch({type: "ADD_BOOKMARK_PLOT", 
+                bookmarked: {'x': xCoord, 'y': yCoord, 
+                'encoding': encoding, 
+                'selectedPredicate': {...selectedPredicate}, 
+                'feature': selectedPredicate.feature, 
+                'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
             ><BookmarkAddIcon/>Bookmark Plot</Button>
             </div>
         </div>
@@ -55,8 +60,6 @@ export const MarksControlComponent = () => {
     const [{selectedPredicate},] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
-
-    console.log('SELECTED PRED', selectedPredicate);
 
     return(
         <div className="marksControl">
@@ -108,7 +111,7 @@ const FilterList = () => {
                         <div
                         style={{
                             fontWeight:800, color: row[0] === xCoord ? selectedPredicate.predicate_info.color : 'gray'}}
-                        >{row[0]}</div>
+                        >{`${row[0]}: `}</div>
                         <div
                         style={{textAlign:'right'}}
                         >{row[1].join(", ")}</div>
@@ -150,34 +153,25 @@ const FilterList = () => {
 }
 
 const WhichPlot = ({setEncoding}) => {
-    const [{categoricalFeatures, selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
+    const [{categoricalFeatures, selectedPredicate, xCoord, yCoord},] = useContext(DataContext);
 
     let categoricalBool = useMemo(() => {
         return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
     }, [selectedPredicate, selectedPredicate.feature])
     
 
-    let getPivotLabel = () => {
-        let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];
-      
-        return <div
-        style={{marginTop:20, marginLeft:10, fontWeight:800}}
-        >{`${xCoord}: ${chosenVal.join(', ')}`}</div>
-    }
-
-    if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
+    if(categoricalBool){
         setEncoding('bar')
-        return  <div>
-            {getPivotLabel()}
+        return  <div style={{marginTop:20}}>
             <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} /></div>
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         setEncoding('line')
-        return <div>
-        <div>{getPivotLabel()}</div><FeatureLinePlot xCoord={xCoord} yCoord={yCoord} /></div>
+        return <div style={{marginTop:20}}>
+       <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} /></div>
     }else{
         setEncoding('dot')
-        return <div>
-        <div>{getPivotLabel()}</div><FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/></div>
+        return <div style={{marginTop:20}}>
+       <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/></div>
     }
 }
 

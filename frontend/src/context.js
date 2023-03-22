@@ -3,12 +3,6 @@ import formatPredicateArray from "./dataFormating";
 
 export const DataContext = createContext();
 
-const getRightCategoricalFeatures = (datasetName) => {
-  const features = {
-    'aug_superstore': ["Sub-Category", "Segment", "State"],
-    'cars' : ['origin', ]
-  }
-} 
 
 const initialState = {
   predicateArray: [],
@@ -33,19 +27,16 @@ const reducer = (state, action) => {
       return {...state, bookmarkedPlots: newBooks}
 
     case "UPDATE_EDIT_MODE":
-
       return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
     case "SET_PREDICATE_EXPLORE_DATA":
       let arr = formatPredicateArray(action.predData.pred_list);
       return {...state, predicateArray: arr, predicateDistributionArray: action.predData.pred_dist}
 
-        // let arr = formatPredicateArray(action.predData);
-        // return {...state, predicateArray: arr}
-
     case "UPDATE_PREDICATE_ARRAY":
-        let pArr = formatPredicateArray(action.predicateArray);
-        return {...state, predicateArray: pArr}
+        let pArr = formatPredicateArray(action.predData.pred_list);
+        console.log(pArr, action.predData.pred_dist)
+        return {...state, predicateArray: pArr, predicateDistributionArray: action.predData.pred_dist}
 
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};

@@ -15,7 +15,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
 
    
     let svgHeight = 200;
-  
     let margin = {x:(90), y:(svgHeight * .3)};
 
     let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
@@ -25,9 +24,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (width - margin.x)]).padding(0.2);
     }, [width, feature])
 
-    // const xScale = useMemo(() => {
-    //     return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.score))]);
-    // }, [width, feature])
     
     let yScale = useMemo(()=> {
         return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (margin.y)), 0])

@@ -9,8 +9,6 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const PixalFeatureNavWrap = ({classN}) => {
     const [{selectedPredicate, categoricalFeatures, yCoord}, dispatch] = useContext(DataContext);
 
-    console.log('yCOORD',yCoord)
-
     let predicateFeatureArray = useMemo(()=> {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
       }, [selectedPredicate]);
