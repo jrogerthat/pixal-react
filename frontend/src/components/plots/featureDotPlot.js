@@ -14,37 +14,24 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
     const svgRef = useRef(null);
     const divRef = useRef();
 
-    let initWidth = () => {
-        if(navBool){
-            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
-        }else if(explanBool){
-            return 350;
-        }else{
-            return 600;
+    const [width, setWidth] = useState(300);
+    useEffect(() => {
+        if(!d3.select('.l-top').empty()){
+            setWidth(d3.select('.l-top').style('width').split('px')[0]);
         }
-    }
+    }, [d3.select('.l-top'), d3.select('.l-top').empty()]);
 
-    let initHeight = () => {
-        if(navBool){
-            return 200;
-        }else if(explanBool){
-            return 160;
-        }else{
-            return 300;
-        }
-    }
-
-    let [svgWidth, setSvgWidth] = useState(initWidth());
-    let [svgHeight, setSvgHeight] = useState(initHeight());
-    let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
+   
+    let svgHeight = 200;
+    let margin = {x:(90), y:(svgHeight * .3)};
 
     let xScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (svgWidth - svgMargin.x)])
-     }, [plotData, svgWidth, svgMargin.x]);
+        return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (width - margin.x)])
+     }, [plotData, width, margin.x]);
  
      let yScale = useMemo(()=> {
-         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (svgMargin.y)), 0])
-     }, [plotData, svgWidth]);
+         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (margin.y)), 0])
+     }, [plotData, width]);
 
     useEffect(()=> {
 
@@ -53,11 +40,10 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
 
         let wrap = svg.append('g');
 
-        wrap.attr("transform", `translate(${svgMargin.x/2}, ${((svgMargin.y/2) - 15)})`)
-        // wrap.attr('transform', `translate(${(svgMargin.x/2)}, ${(svgMargin.y/2)})`)
-
+        wrap.attr("transform", `translate(${(margin.x/2)+20}, ${((margin.y/2) - 15)})`)
+       
         let xAxis = wrap.append("g")
-        .attr("transform", "translate(0," + (svgHeight - svgMargin.y) + ")")
+        .attr("transform", "translate(0," + (svgHeight - margin.y) + ")")
         .call(d3.axisBottom(xScale))
        
         let yAxis = wrap.append('g')
@@ -75,23 +61,24 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
 
         // Y axis label:
         wrap.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", -(svgHeight/4))
-        .text(yCoord)
-        .style('font-size', navBool || explanBool ? 9 : 11)
+        .attr("x", -((svgHeight/4) + 10))
+        .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
+        .style('font-size', navBool || explanBool ? 9 : 12)
+
 
         // Add X axis label:
         svg.append("text")
         .attr("text-anchor", "middle")
-        .attr("x", (svgWidth/2))
+        .attr("x", (width/2))
         .attr("y", (svgHeight - 10))
         .text(xCoord)
         .style('font-size', navBool || explanBool ? 9 : 11)
         
 
-    }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
+    }, [width, xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
 
     return(
         <div 
@@ -99,7 +86,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:svgWidth, height:svgHeight}}
+                style={{width:width, height:svgHeight}}
                 ref={svgRef} />
             </div>
         </div>

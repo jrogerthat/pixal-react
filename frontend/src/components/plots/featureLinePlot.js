@@ -6,40 +6,38 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    let initWidth = () => {
+    const [width, setWidth] = useState(300);
+    useEffect(() => {
         if(navBool){
-            return !d3.select('#feat-nav-wrap-left').empty() ? d3.select('#feat-nav-wrap-left').node().getBoundingClientRect().width : 250;
+            if(!d3.select('.l-top').empty()){
+                setWidth(d3.select('.l-top').style('width').split('px')[0]);
+            }
         }else if(explanBool){
-            return 350;
-        }else{
-            return 600;
+            if(!d3.select('.l-top').empty()){
+                setWidth(d3.select('.l-top').style('width').split('px')[0]);
+            }
+        }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
+           
+            setWidth(d3.select('#pivot-plot').style('width').split('px')[0]);
+            
         }
-    }
+        
+    }, [d3.select('.l-top'), d3.select('.l-top').empty(), d3.select('#pivot-plot'), d3.select('#pivot-plot').empty()]);
 
-    let initHeight = () => {
-        if(navBool){
-            return 200;
-        }else if(explanBool){
-            return 160;
-        }else{
-            return 300;
-        }
-    }
-
-    let [svgWidth, setSvgWidth] = useState(initWidth());
-    let [svgHeight, setSvgHeight] = useState(initHeight());
-    let [svgMargin, setSvgMargin] = useState({x:(svgWidth * .2), y:(svgHeight * .3)});
+   
+    let svgHeight = 200;
+    let margin = {x:(90), y:(svgHeight * .3)};
   
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
     let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
     
     let xScale = useMemo(()=> {
-        return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (svgWidth - svgMargin.x)])
-    }, [svgWidth, xCoord]);
+        return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (width - margin.x)])
+    }, [width, xCoord]);
 
     let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (svgMargin.y)), 0])
+        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (margin.y)), 0])
     }, [svgHeight, yCoord]);
     
     const svgRef = useRef(null);
@@ -56,10 +54,10 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
 
         let wrap = svg.append('g');
 
-        wrap.attr('transform', `translate(${(svgMargin.x/2)}, ${(svgMargin.y / 2)})`)
+        wrap.attr('transform', `translate(${(margin.x/2)+20}, ${(margin.y / 2)})`)
 
         let xAxis = wrap.append("g")
-        .attr("transform", "translate(0," + (svgHeight - (svgMargin.y)) + ")")
+        .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")
         .call(d3.axisBottom(xScale))
 
         xAxis.selectAll("text")
@@ -83,7 +81,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         // pathG.attr('transform', 'translate(20, 0)')
 
         wrap.append('rect')
-        .attr('height', svgHeight - svgMargin.y)
+        .attr('height', svgHeight - margin.y)
         .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))
         .attr('x', xScale(new Date(selectedRange[0])))
         .attr('fill', selectedPredicate.predicate_info.color)
@@ -124,19 +122,19 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
         .attr("x", -(svgHeight/4))
-        .text(yCoord)
+        .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
         .style('font-size', navBool || explanBool ? 9 : 11)
 
         // Add X axis label:
         svg.append("text")
         .attr("text-anchor", "middle")
-        .attr("x", (svgWidth/2))
+        .attr("x", (width/2))
         .attr("y", (svgHeight + 7))
         .text(xCoord)
         .style('font-size', navBool || explanBool ? 9 : 11)
 
     
-    }, [xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
+    }, [width, xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
 
     return(
         <div 
@@ -144,7 +142,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:(svgWidth), height:(svgHeight + 10)}}
+                style={{width:(width), height:(svgHeight + 10)}}
                 ref={svgRef} />
             </div>
         </div>

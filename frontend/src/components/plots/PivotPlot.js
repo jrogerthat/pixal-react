@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { DataContext } from "../../context";
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
@@ -152,7 +152,10 @@ const FilterList = () => {
 const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
 
-    let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
+    let categoricalBool = useMemo(() => {
+        return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
+    }, [selectedPredicate, selectedPredicate.feature])
+    
 
     let getPivotLabel = () => {
         let chosenVal = selectedPredicate.predicate_info.predicate.attribute_values[selectedPredicate.feature[0]];
