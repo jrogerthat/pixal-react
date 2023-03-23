@@ -162,8 +162,10 @@ def edit_predicate(predicate_id, negate=0):
 
 @api.route('/edit_predicate_clause', methods=['GET', 'POST'])
 def edit_predicate_clause():
-    predicate_id = 0
-    attribute_values_str = list(request.args.to_dict().keys())[0].replace(' ', '')
+    attribute_values_str, predicate_id = list(request.args.to_dict().keys())[0].replace(' ', '').split(',"id":')
+    predicate_id = int(predicate_id[:-1].replace('"', '').replace("'", ''))
+    attribute_values_str = attribute_values_str.split('"features":')[-1]
+
     attribute_value_strs = [(a+']').replace('"', '') for a in attribute_values_str.split(']')[:-1]]
     attribute_values_dict = dict([a.split(':') for a in attribute_value_strs])
 
