@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ExplanationComponent } from './explanationComp';
 import { BookmarkedPlots } from './bookmarkedPlotComponent';
-import { DataContext } from '../context';
 
 function TabPanel({ children, value, index, ...other }) {
 
@@ -45,8 +44,6 @@ function a11yProps(index) {
 export default function TabComponent() {
 
   const [value, setValue] = React.useState(0);
-  
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

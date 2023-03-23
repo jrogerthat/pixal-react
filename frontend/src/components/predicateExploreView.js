@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
 import '../App.css';
-import { useAxiosGet, useGetDistributions } from '../axiosUtil';
 import { PredExplorePlot } from './plots/predExplorerPlot';
 
 
