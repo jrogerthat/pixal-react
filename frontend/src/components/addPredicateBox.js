@@ -15,9 +15,6 @@ function AddPredBox({setAddPredMode}){
 
     const useHandleSubmit = () => {
 
-        let formatted = {'pred': newPred}
-
-        // let data = useAddPredicate(formatted)
         
         let testArray = {"0": {"Sub-Category": ["Tables"]}, "1": {"Sub-Category": ["Machines"]}}
         

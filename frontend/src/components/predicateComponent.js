@@ -69,6 +69,7 @@ const RangeSlider = ({range, data, predData}) => {
 
     const [{predicateArray, categoricalFeatures, categoryDict}, dispatch] = useContext(DataContext);
     const [value, setValue] = useState(data[1]);
+    const [pred, setPred] = useState(predData.predicate.attribute_values);
 
     const marks = [
         {
@@ -83,16 +84,19 @@ const RangeSlider = ({range, data, predData}) => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    let test = {...predData.predicate.attribute_values}
+    test[data[0]] = newValue;
+    setPred(test);
   };
 
   const useMouseUp = () => {
-    console.log('predicate data',predData)
-    useGetAxiosAsync(`/edit_predicate_clause/${predData}`).then((data) => {
-
-        console.log(data)
-
-        // dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
-    })
+    console.log('predicate data', pred)
+    // axios.post('/edit_predicate_clause/', JSON.stringify(pred), {headers:{"Content-Type" : "application/json"}}).then((data)=> {
+        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pred)}`).then(data => {
+            console.log(data)
+            // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+        })
+   
   }
 
 
