@@ -41,29 +41,86 @@ export const PixalFeatureNavWrap = ({classN}) => {
     </div>)
 }
 
+const OtherLegend = ({data}) => {
+    console.log('data in other',data)
+    return <div><svg width={12} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
+    <span style={{fontSize:11}}>{`Data points with `}</span>
+    {
+        data.map((o, i)=>(
+            <div 
+            key={o[0]}
+            style={{
+                display: i === 0 ? 'inline' : 'block',
+                fontSize:11, 
+                marginLeft: i > 0 ? 17 : 0}}
+            >
+                {`${o[0]}: ${o[1].join(', ')}`}
+            </div>
+        ))
+    }
+    </div>
+}
+
 export const PixalFeatureNav = ({feature}) => {
    
     const [{categoricalFeatures, selectedPredicate}] = useContext(DataContext);
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;
+    let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== feature);
+    
+    console.log('OTHERS', others);
 
     if(categoricalBool){
-        console.log('feature', selectedPredicate.predicate_info.predicate.attribute_values[feature]);
-        // console.log(selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', '))
-        return <div style={{display:'flex', flexDirection:'column'}}>
-          <div>
-            <div><svg width={12} height={12} style={{backgroundColor: `${selectedPredicate.predicate_info.color}`}}/>
+    
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
+        <div style={{display:'flex', flexDirection:'column'}}>
+            <div>
+                <svg 
+                width={12} 
+                height={12} 
+                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
             <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
             </div>
-            <div><svg width={12} height={12} style={{backgroundColor: 'gray'}}/>
-            <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
-            </div>
-          </div>
            
+        </div>
+           {
+            others.length > 0 && (
+                <OtherLegend data={others} />
+            )
+           }
         <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
         </div>
     }else if(feature === "Order-Date"){
-        return <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
+        <div style={{display:'flex', flexDirection:'column'}}>
+           {/* <div> */}
+               <svg 
+               width={12} 
+               height={12} 
+               style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+           <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+           {/* </div> */}
+
+           {
+            others.length > 0 && (
+                <OtherLegend data={others} />
+            )
+           }
+         </div><FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} /></div>
     }else{
-       return <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
+       return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
+        <div style={{display:'flex', flexDirection:'column'}}>
+          
+               <svg 
+               width={12} 
+               height={12} 
+               style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+           <span style={{fontSize:11}}>{`Data points with ${feature} :`}</span> <span>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+          
+           {
+            others.length > 0 && (
+                <OtherLegend data={others} />
+            )
+           }
+           </div><FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} /></div>
     }
 }
