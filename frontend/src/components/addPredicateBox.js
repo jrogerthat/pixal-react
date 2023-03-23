@@ -1,8 +1,7 @@
 import { Button, TextField } from '@mui/material';
-import { useContext, useEffect, useState } from 'react'
-import { useAddPredicate, useGetAxiosAsync } from '../axiosUtil';
+import { useContext, useState } from 'react'
+import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
-import formatPredicateArray from '../dataFormating';
 
 /*
 TODO: hook this up to actually create a predicate
@@ -14,11 +13,6 @@ function AddPredBox({setAddPredMode}){
     const [, dispatch] = useContext(DataContext);
 
     const useHandleSubmit = () => {
-
-        
-        let testArray = {"0": {"Sub-Category": ["Tables"]}, "1": {"Sub-Category": ["Machines"]}}
-        
-        let newPredicate = formatPredicateArray(testArray)
 
         setNewPred(null);
         setAddPredMode(null);

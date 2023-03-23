@@ -1,9 +1,5 @@
-import { Button } from "@mui/material";
-import { Fragment, useContext } from "react"
+import { useContext } from "react"
 import { DataContext } from "../context";
-import ScatterPlotTwoToneIcon from '@mui/icons-material/ScatterPlotTwoTone';
-import ShowChartTwoToneIcon from '@mui/icons-material/ShowChartTwoTone';
-import PollTwoToneIcon from '@mui/icons-material/PollTwoTone';
 import { FeatureBarPlot } from "./plots/featureBarPlot";
 import { FeatureDotPlot } from "./plots/featureDotPlot";
 import { FeatureLinePlot } from "./plots/featureLinePlot";

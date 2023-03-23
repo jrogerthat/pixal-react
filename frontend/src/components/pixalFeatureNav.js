@@ -1,13 +1,12 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useMemo } from "react";
 import { DataContext } from "../context";
-import * as d3 from "d3";
 import { FeatureBarPlot } from "./plots/featureBarPlot";
 import { FeatureDotPlot } from "./plots/featureDotPlot";
 import { FeatureLinePlot } from "./plots/featureLinePlot";
 
 
 export const PixalFeatureNavWrap = ({classN}) => {
-    const [{selectedPredicate, categoricalFeatures, yCoord}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     let predicateFeatureArray = useMemo(()=> {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
