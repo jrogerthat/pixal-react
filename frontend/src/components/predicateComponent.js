@@ -1,33 +1,180 @@
 import axios from 'axios';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
+import Slider from '@mui/material/Slider';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import DateRangePickerComp from './DatePickerComponent';
+import { Typography } from '@mui/material';
 
+
+
+
+const DropCheckComponent = ({cat, selected, options, predData}) => {
+  
+    let [selectedNames, setSelectedNames] = useState(selected);
+
+    const handleChange = (event) => {
+        const {
+        target: { value },
+        } = event;
+        console.log('ON CLICK', value);
+
+        let newSelected = selectedNames.indexOf(value) > -1 ? [...selectedNames].filter(f => f != value) : [...selectedNames, value];
+        setSelectedNames(newSelected);
+        
+  };
+    return (
+        <div>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="demo-multiple-checkbox-label" style={{fontSize:22, fontWeight:800}}>{cat}</InputLabel>
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={selectedNames}
+            // onChange={handleChange}
+            input={<OutlinedInput label={cat} />}
+            renderValue={(selectedNames) => selectedNames.map((x) => x).join(', ')}
+            // MenuProps={MenuProps}
+          >
+            {options.map((variant, i) => (
+              <MenuItem key={`${i}-v`} value={variant}>
+                <Checkbox
+                  checked={
+                    selectedNames.indexOf(variant) > -1
+                  }
+                  value={variant}
+                  onChange={handleChange}
+                />
+                <ListItemText primary={variant} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+    )
+}
+
+
+
+const RangeSlider = ({range, data, predData}) => {
+
+    const [{predicateArray, categoricalFeatures, categoryDict}, dispatch] = useContext(DataContext);
+    const [value, setValue] = useState(data[1]);
+    const [pred, setPred] = useState(predData.predicate.attribute_values);
+
+    const marks = [
+        {
+        value: range[0],
+        label: range[0],
+        },
+        {
+        value: range[1],
+        label: range[1],
+        }
+    ];
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    let test = {...predData.predicate.attribute_values}
+    test[data[0]] = newValue;
+    setPred(test);
+  };
+
+  const useMouseUp = () => {
+    console.log('predicate data', pred)
+    // axios.post('/edit_predicate_clause/', JSON.stringify(pred), {headers:{"Content-Type" : "application/json"}}).then((data)=> {
+        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pred)}`).then(data => {
+            console.log(data)
+            // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+        })
+   
+  }
+
+
+  return (
+    <div style={{ width: 300, display:'inline' }}>
+      <Slider
+        getAriaLabel={() => data[0]}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        getAriaValueText={""}
+        min={range[0]}
+        max={range[1]}
+        marks={marks}
+        onMouseUp={useMouseUp}
+      />
+    </div>
+  );
+}
+
+
+
+const StaticClauseComponent = ({data}) => {
+    return <div><span>{`${data[0]}: `}</span>
+    {staticFeatureValues(data[1])}
+    </div>
+}
+
+const EditableFeatureComponent = ({data, predData}) => {
+
+    const [{predicateArray, categoricalFeatures, categoryDict}] = useContext(DataContext);
+    const numericalClauses = ['precipitation', 'temperature'];
+    const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
+
+    if(numericalClauses.indexOf(data[0]) > -1){
+        return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
+        <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
+        {`${data[0]}: `}
+        </Typography>
+        <RangeSlider range={numericalRanges[data[0]]} data={data} predData={predData}/>
+        </div>
+    }else if(categoricalFeatures.indexOf(data[0]) > -1){
+        
+        return <div>
+        <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
+        </div>
+    }
+
+    return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
+    <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
+    </div>
+}
+
+const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+
+const staticFeatureValues = (data) => {
+
+    let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
+
+    if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
+        return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
+        </span></div>
+    }else if(valArr.length === 1){
+        return  <div className="feature-value">{` ${valArr[0]}`}</div>
+    }
+
+    return (
+        <div className="feature-value" >{valArr.join(', ')}</div>
+    )
+}
 /*
 TODO: hook this up to actually create a predicate
 */
 export default function PredicateComp({predicateData}) {
  
     const features = Object.entries(predicateData.predicate.attribute_values)
-    const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+    
     const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
-
-    const featureValues = (data) => {
-
-        let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
-
-        if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
-            return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
-            </span></div>
-        }else if(valArr.length === 1){
-            return  <div className="feature-value">{` ${valArr[0]}`}</div>
-        }
-
-        return (
-            <div className="feature-value" >{valArr.join(', ')}</div>
-        )
-    }
 
     let isHidden = () => {
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
@@ -72,16 +219,24 @@ export default function PredicateComp({predicateData}) {
                 </div>
                 {
                     features.map((f, i)=> (
-                        <div key={`f-${i+1}`}><span>{`${f[0]}: `}</span>
-                            {featureValues(f[1])}
-                        </div>
+                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : <StaticClauseComponent key={`f-${i+1}`} data={f}/>
                     ))
                 }
             </div>
             {
                 editMode && (
                     <div className="pred-edit-bar" 
-                    style={{display:'flex', flexDirection:'row', height:30, justifyContent:'space-between'}}
+                    style={{display:'flex', 
+                    flexDirection:'row', 
+                    height:30, 
+                    justifyContent:'space-between',
+                    borderTop:".5px solid gray",
+                    borderRadius: 5,
+                    // backgroundColor:'#eeeeee',
+                    marginTop:20,
+                    paddingTop:10,
+                    marginLeft:5
+                }}
                     >
                     <div style={{width:'fit-content'}}>
                     <InvertButton predicateData={predicateData} />

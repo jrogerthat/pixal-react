@@ -7,8 +7,6 @@ const PredExplorePlot = ({width, height}) => {
     const axesRef = useRef(null);
     const [{predicateArray, hiddenPredicates, deletedPredicates},] = useContext(DataContext);
 
-    console.log('predicate Array', predicateArray);
-
     let filteredDist = [...predicateArray].filter(f => {
         if(hiddenPredicates.length === 0){
             return f
@@ -109,15 +107,12 @@ const PredicateGroup = ({predData, yScale, xScale, height}) => {
         
     });
 
-    console.log('PRED DIST DATA', negatedArray.indexOf(predData.id), predDistData);
-
         return(
         <g
         transform={`translate(${[60, 0].join(",")})`}
         >
         {
             predDistData.map((p, i) => {
-                console.log('PPP', p)
                 return (
                 <rect key={`b-${i}`}
                     fill={calcColor}

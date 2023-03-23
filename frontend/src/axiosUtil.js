@@ -26,7 +26,7 @@ async function useGetDistributions(){
 }
 
 async function useGetAxiosAsync(url){
-
+  console.log(url)
   let data = await axios.get(url)
  
 

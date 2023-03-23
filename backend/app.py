@@ -72,6 +72,12 @@ def get_pred_dis():
     all_fun.save_predicate_id(0, predicate_id_path)
     return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
 
+@api.route('/get_feature_cat')
+def get_feature_cat():
+    test = pd.read_csv('static/data/augmented_superstore_data.csv')
+    #Segment,State,Sub-Category
+    return test['State']
+
 
 @api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
 def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
@@ -153,6 +159,12 @@ def edit_predicate(predicate_id, negate=0):
     # pd.Series(np.random.normal(size=len(predicate.mask)))
     predicates_dict = get_predicates_dict(predicates, target)
     return predicates_dict
+
+@api.route('/edit_predicate_clause/', methods=['GET', 'POST'])
+def edit_predicate_clause():
+    attribute_values_str = list(request.args.to_dict().keys())[0].replace(' ', '')
+    print(attribute_values_str)
+    return 'test'
 
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
 def delete_predicate(predicate_id):
