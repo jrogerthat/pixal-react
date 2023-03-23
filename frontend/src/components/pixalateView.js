@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext } from 'react'
 import '../App.css';
 import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
-import { PixalFeatureNav, PixalFeatureNavWrap } from './pixalFeatureNav';
+import { PixalFeatureNavWrap } from './pixalFeatureNav';
 import { PivotPlot } from './plots/PivotPlot';
 import TabComponent from './tabComponent';
 
