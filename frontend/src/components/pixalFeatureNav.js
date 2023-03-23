@@ -26,9 +26,13 @@ export const PixalFeatureNavWrap = ({classN}) => {
             className="feature-nav"
             key={`${f[0]}-${i}`}
             onClick={() => handleClick(f)}
-            style={{alignItems:"center"}}
+            style={{
+                // alignItems:"center", 
+                display:'flex', 
+                flexDirection:'column'
+            }}
             >
-            <div style={{marginBottom:10}}>{`${f[0]}: `}{selectedPredicate.predicate_info.predicate.attribute_values[f[0]].join(', ')}</div>
+            {/* <div style={{marginBottom:10}}>{`${f[0]}: `}{selectedPredicate.predicate_info.predicate.attribute_values[f[0]].join(', ')}</div> */}
             <PixalFeatureNav feature={f[0]} />
             </div>
         ))
@@ -39,12 +43,21 @@ export const PixalFeatureNavWrap = ({classN}) => {
 
 export const PixalFeatureNav = ({feature}) => {
    
-    const [{categoricalFeatures}, dispatch] = useContext(DataContext);
-
+    const [{categoricalFeatures, selectedPredicate}] = useContext(DataContext);
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;
 
     if(categoricalBool){
-        return <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
+        console.log('feature', selectedPredicate.predicate_info.predicate.attribute_values);
+        // console.log(selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', '))
+        return <div style={{display:'flex', flexDirection:'column'}}>
+          <div>
+            <div><svg width={12} height={12} style={{backgroundColor: `${selectedPredicate.predicate_info.color}`}}/>
+            <span style={{fontSize:11}}>{`data points with ${feature} : ${feature}`}</span>
+            </div>
+          </div>
+           
+        <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
+        </div>
     }else if(feature === "Order-Date"){
         return <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
     }else{

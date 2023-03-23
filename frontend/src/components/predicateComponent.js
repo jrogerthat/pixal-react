@@ -30,9 +30,9 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
         let newPred = {...pred};
         newPred[cat]  = newSelected;
 
-        console.log(newPred)
+        let pass = {features: newPred, id: predData.id}
 
-        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(newPred)}`).then(data => {
+        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
             console.log(data)
             // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
@@ -97,8 +97,8 @@ const RangeSlider = ({range, data, predData}) => {
   };
 
   const useMouseUp = () => {
-    
-        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pred)}`).then(data => {
+        let pass = {features: pred, id: predData.id}
+        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
             console.log(data)
             // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
