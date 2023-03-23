@@ -160,11 +160,18 @@ def edit_predicate(predicate_id, negate=0):
     predicates_dict = get_predicates_dict(predicates, target)
     return predicates_dict
 
-@api.route('/edit_predicate_clause/', methods=['GET', 'POST'])
+@api.route('/edit_predicate_clause', methods=['GET', 'POST'])
 def edit_predicate_clause():
+    predicate_id = 0
     attribute_values_str = list(request.args.to_dict().keys())[0].replace(' ', '')
-    print(attribute_values_str)
-    return 'test'
+    attribute_value_strs = [(a+']').replace('"', '') for a in attribute_values_str.split(']')[:-1]]
+    attribute_values_dict = dict([a.split(':') for a in attribute_value_strs])
+
+    attribute_values = {k.replace('{', '').replace(',', ''): parse_value_string(str(v), dtypes[k.replace('{', '').replace(',', '')]) for k,v in attribute_values_dict.items()}
+    predicate = Predicate(data, dtypes, **attribute_values)
+    predicates[predicate_id] = predicate
+    predicates_dict = get_predicates_dict(predicates, target)
+    return predicates_dict
 
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
 def delete_predicate(predicate_id):
