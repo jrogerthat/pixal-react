@@ -47,12 +47,15 @@ export const PixalFeatureNav = ({feature}) => {
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;
 
     if(categoricalBool){
-        console.log('feature', selectedPredicate.predicate_info.predicate.attribute_values);
+        console.log('feature', selectedPredicate.predicate_info.predicate.attribute_values[feature]);
         // console.log(selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', '))
         return <div style={{display:'flex', flexDirection:'column'}}>
           <div>
             <div><svg width={12} height={12} style={{backgroundColor: `${selectedPredicate.predicate_info.color}`}}/>
-            <span style={{fontSize:11}}>{`data points with ${feature} : ${feature}`}</span>
+            <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+            </div>
+            <div><svg width={12} height={12} style={{backgroundColor: 'gray'}}/>
+            <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
             </div>
           </div>
            
