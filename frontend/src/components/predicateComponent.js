@@ -14,21 +14,30 @@ import Checkbox from '@mui/material/Checkbox';
 import DateRangePickerComp from './DatePickerComponent';
 import { Typography } from '@mui/material';
 
-
-
-
 const DropCheckComponent = ({cat, selected, options, predData}) => {
   
     let [selectedNames, setSelectedNames] = useState(selected);
+    let [pred, setPred] = useState(predData.predicate.attribute_values);
 
-    const handleChange = (event) => {
+    const useHandleChange = (event) => {
         const {
         target: { value },
         } = event;
-        console.log('ON CLICK', value);
-
+        
         let newSelected = selectedNames.indexOf(value) > -1 ? [...selectedNames].filter(f => f != value) : [...selectedNames, value];
         setSelectedNames(newSelected);
+
+        let newPred = {...pred};
+        newPred[cat]  = newSelected;
+
+        console.log(newPred)
+
+        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(newPred)}`).then(data => {
+            console.log(data)
+            // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+        })
+
+
         
   };
     return (
@@ -40,7 +49,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
             id="demo-multiple-checkbox"
             multiple
             value={selectedNames}
-            // onChange={handleChange}
+            // onChange={useHandleChange}
             input={<OutlinedInput label={cat} />}
             renderValue={(selectedNames) => selectedNames.map((x) => x).join(', ')}
             // MenuProps={MenuProps}
@@ -52,7 +61,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
                     selectedNames.indexOf(variant) > -1
                   }
                   value={variant}
-                  onChange={handleChange}
+                  onChange={useHandleChange}
                 />
                 <ListItemText primary={variant} />
               </MenuItem>
@@ -62,8 +71,6 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
       </div>
     )
 }
-
-
 
 const RangeSlider = ({range, data, predData}) => {
 
@@ -90,8 +97,7 @@ const RangeSlider = ({range, data, predData}) => {
   };
 
   const useMouseUp = () => {
-    console.log('predicate data', pred)
-    // axios.post('/edit_predicate_clause/', JSON.stringify(pred), {headers:{"Content-Type" : "application/json"}}).then((data)=> {
+    
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pred)}`).then(data => {
             console.log(data)
             // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
@@ -107,7 +113,7 @@ const RangeSlider = ({range, data, predData}) => {
         value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
-        getAriaValueText={""}
+        // getAriaValueText={data[0]}
         min={range[0]}
         max={range[1]}
         marks={marks}
@@ -139,7 +145,6 @@ const EditableFeatureComponent = ({data, predData}) => {
         <RangeSlider range={numericalRanges[data[0]]} data={data} predData={predData}/>
         </div>
     }else if(categoricalFeatures.indexOf(data[0]) > -1){
-        
         return <div>
         <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
         </div>
