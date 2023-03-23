@@ -11,12 +11,10 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-// import {
-//     DateRangePicker,
-//     DateRangeDelimiter,
-//     LocalizationProvider
-//   } from "@material-ui/pickers";
-//   import DateFnsUtils from "@material-ui/pickers/adapter/date-fns"; // choose your lib
+import DateRangePickerComp from './DatePickerComponent';
+import { Typography } from '@mui/material';
+
+
 
 
 const DropCheckComponent = ({cat, selected, options, predData}) => {
@@ -69,12 +67,23 @@ const RangeSlider = ({range, data}) => {
 
   const [value, setValue] = useState(data[1]);
 
+  const marks = [
+    {
+      value: range[0],
+      label: range[0],
+    },
+    {
+      value: range[1],
+      label: range[1],
+    }
+  ];
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <div style={{ width: 300 }}>
+    <div style={{ width: 300, display:'inline' }}>
       <Slider
         getAriaLabel={() => data[0]}
         value={value}
@@ -83,32 +92,13 @@ const RangeSlider = ({range, data}) => {
         getAriaValueText={""}
         min={range[0]}
         max={range[1]}
+        marks={marks}
       />
     </div>
   );
 }
 
-// const BasicDateRangePicker = () => {
-//     const [selectedDate, handleDateChange] = useState([null, null]);
-  
-//     return (
-//       <LocalizationProvider dateAdapter={DateFnsUtils}>
-//         <DateRangePicker
-//           startText="Check-in"
-//           endText="Check-out"
-//           value={selectedDate}
-//           onChange={date => handleDateChange(date)}
-//           renderInput={(startProps, endProps) => (
-//             <>
-//               <TextField {...startProps} />
-//               <DateRangeDelimiter> to </DateRangeDelimiter>
-//               <TextField {...endProps} />
-//             </>
-//           )}
-//         />
-//       </LocalizationProvider>
-//     );
-//   }
+
 
 const StaticClauseComponent = ({data}) => {
     return <div><span>{`${data[0]}: `}</span>
@@ -123,7 +113,10 @@ const EditableFeatureComponent = ({data, predData}) => {
     const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
 
     if(numericalClauses.indexOf(data[0]) > -1){
-        return <div><span>{`${data[0]}: `}</span>
+        return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
+        <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
+        {`${data[0]}: `}
+        </Typography>
         <RangeSlider range={numericalRanges[data[0]]} data={data}/>
         </div>
     }else if(categoricalFeatures.indexOf(data[0]) > -1){
@@ -133,8 +126,8 @@ const EditableFeatureComponent = ({data, predData}) => {
         </div>
     }
 
-    return <div><span>{`${data[0]}: `}</span>
-    {/* <DateRangePicker /> */}
+    return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
+    <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
     </div>
 }
 
