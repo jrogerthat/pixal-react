@@ -63,24 +63,38 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
     )
 }
 
-const RangeSlider = ({range, data}) => {
 
-  const [value, setValue] = useState(data[1]);
 
-  const marks = [
-    {
-      value: range[0],
-      label: range[0],
-    },
-    {
-      value: range[1],
-      label: range[1],
-    }
-  ];
+const RangeSlider = ({range, data, predData}) => {
+
+    const [{predicateArray, categoricalFeatures, categoryDict}, dispatch] = useContext(DataContext);
+    const [value, setValue] = useState(data[1]);
+
+    const marks = [
+        {
+        value: range[0],
+        label: range[0],
+        },
+        {
+        value: range[1],
+        label: range[1],
+        }
+    ];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const useMouseUp = () => {
+    console.log('predicate data',predData)
+    useGetAxiosAsync(`/edit_predicate_clause/${predData}`).then((data) => {
+
+        console.log(data)
+
+        // dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+    })
+  }
+
 
   return (
     <div style={{ width: 300, display:'inline' }}>
@@ -93,6 +107,7 @@ const RangeSlider = ({range, data}) => {
         min={range[0]}
         max={range[1]}
         marks={marks}
+        onMouseUp={useMouseUp}
       />
     </div>
   );
@@ -117,7 +132,7 @@ const EditableFeatureComponent = ({data, predData}) => {
         <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
         {`${data[0]}: `}
         </Typography>
-        <RangeSlider range={numericalRanges[data[0]]} data={data}/>
+        <RangeSlider range={numericalRanges[data[0]]} data={data} predData={predData}/>
         </div>
     }else if(categoricalFeatures.indexOf(data[0]) > -1){
         
@@ -207,7 +222,17 @@ export default function PredicateComp({predicateData}) {
             {
                 editMode && (
                     <div className="pred-edit-bar" 
-                    style={{display:'flex', flexDirection:'row', height:30, justifyContent:'space-between'}}
+                    style={{display:'flex', 
+                    flexDirection:'row', 
+                    height:30, 
+                    justifyContent:'space-between',
+                    borderTop:".5px solid gray",
+                    borderRadius: 5,
+                    // backgroundColor:'#eeeeee',
+                    marginTop:20,
+                    paddingTop:10,
+                    marginLeft:5
+                }}
                     >
                     <div style={{width:'fit-content'}}>
                     <InvertButton predicateData={predicateData} />

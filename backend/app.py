@@ -160,6 +160,11 @@ def edit_predicate(predicate_id, negate=0):
     predicates_dict = get_predicates_dict(predicates, target)
     return predicates_dict
 
+@api.route('/edit_predicate_clause/<predicate_data>', methods=['GET', 'POST'])
+def edit_predicate_clause(predicate_data):
+    print(predicate_data)
+    return predicate_data;
+
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
 def delete_predicate(predicate_id):
     predicate_id = int(predicate_id)
