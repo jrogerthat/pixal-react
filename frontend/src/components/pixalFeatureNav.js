@@ -71,7 +71,7 @@ export const PixalFeatureNav = ({feature}) => {
 
     if(categoricalBool){
     
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
         <div style={{display:'flex', flexDirection:'column'}}>
             <div>
                 <svg 
@@ -90,7 +90,7 @@ export const PixalFeatureNav = ({feature}) => {
         <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
         </div>
     }else if(feature === "Order-Date"){
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
         <div style={{display:'flex', flexDirection:'column'}}>
            {/* <div> */}
                <svg 
@@ -107,9 +107,8 @@ export const PixalFeatureNav = ({feature}) => {
            }
          </div><FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} /></div>
     }else{
-       return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
+       return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
         <div style={{display:'flex', flexDirection:'column'}}>
-          
                <svg 
                width={12} 
                height={12} 

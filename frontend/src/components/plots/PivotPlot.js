@@ -57,9 +57,12 @@ const getExplanation = (xC, yC, selectedPredicate) => {
 
 export const MarksControlComponent = () => {
 
-    const [{selectedPredicate},] = useContext(DataContext);
+    const [{selectedPredicate, xCoord},] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
+
+    console.log('selectedddd', selectedPredicate);
+    let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
 
     return(
         <div className="marksControl">
@@ -80,7 +83,31 @@ export const MarksControlComponent = () => {
                 </div>
             </div>
             <div>
-                <div><FilterList /></div>
+                {/* <div><FilterList /></div> */}
+                <div>
+                <svg 
+                width={12} 
+                height={12} 
+                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+                <span style={{fontSize:11}}>{`Data points with ${xCoord} : ${selectedPredicate.predicate_info.predicate.attribute_values[xCoord].join(', ')}`}</span>
+                </div>
+
+                <div><svg width={12} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
+                <span style={{fontSize:11}}>{`Data points with `}</span>
+                {
+                    others.map((o, i)=>(
+                        <div 
+                        key={o[0]}
+                        style={{
+                            display: i === 0 ? 'inline' : 'block',
+                            fontSize:11, 
+                            marginLeft: i > 0 ? 17 : 0}}
+                        >
+                            {`${o[0]}: ${o[1].join(', ')}`}
+                        </div>
+                    ))
+                }
+                </div>
             </div>
         </div>
     )
