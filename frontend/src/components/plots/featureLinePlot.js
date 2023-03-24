@@ -6,7 +6,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    const [width, setWidth] = useState(300);
+    const [width, setWidth] = useState(500);
     
     useEffect(() => {
         if(navBool){
@@ -18,12 +18,12 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
             }
         }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
-           
-            setWidth(d3.select('#pivot-plot').style('width').split('px')[0]);
+            console.log('width',d3.select('#pivot-plot').style('width'));
+            // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
             
         }
         
-    }, [d3.select('.l-top'), d3.select('.l-top').empty(), d3.select('#pivot-plot'), d3.select('#pivot-plot').empty()]);
+    }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
    
     let svgHeight = 200;

@@ -103,9 +103,7 @@ const RangeSlider = ({range, data, predData}) => {
             console.log(data)
             dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
-   
   }
-
 
   return (
     <div style={{ width: 300, display:'inline' }}>

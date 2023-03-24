@@ -15,8 +15,6 @@ function PredicateNav({setHighlightPred}) {
     return predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse();
   }, [predicateArray]);
 
-  // const [filteredPredicates, setFilteredPredicates] = useState(predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse(););
-
   return (
     <div className="pred-exp-nav">
       {

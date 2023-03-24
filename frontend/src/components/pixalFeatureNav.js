@@ -90,16 +90,15 @@ export const PixalFeatureNav = ({feature}) => {
         <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
         </div>
     }else if(feature === "Order-Date"){
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
         <div style={{display:'flex', flexDirection:'column'}}>
-           {/* <div> */}
+            <div>
                <svg 
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-           <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
-           {/* </div> */}
-
+           <span style={{fontSize:11}}>{`Data points with ${feature}: ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+           </div>
            {
             others.length > 0 && (
                 <OtherLegend data={others} />

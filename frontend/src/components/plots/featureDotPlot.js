@@ -14,12 +14,14 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
     const svgRef = useRef(null);
     const divRef = useRef();
 
-    const [width, setWidth] = useState(300);
+    const [width, setWidth] = useState(600);
     useEffect(() => {
-        if(!d3.select('.l-top').empty()){
+        if(navBool && !d3.select('.l-top').empty()){
             setWidth(d3.select('.l-top').style('width').split('px')[0]);
+        }else if(!navBool && !explanBool){
+            setWidth(600);
         }
-    }, [d3.select('.l-top'), d3.select('.l-top').empty()]);
+    }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
    
     let svgHeight = 200;
@@ -55,7 +57,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         .attr('cy', (d)=> yScale(+d[yCoord.toLowerCase()]))
         .attr('r', 6)
         .attr('fill', (d)=> d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray')
-        .attr('fill-opacity', .6)
+        .attr('fill-opacity', .7)
         .attr('stroke', 'gray')
         .attr('stroke-width', 1)
 
