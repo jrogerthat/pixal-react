@@ -91,7 +91,7 @@ export const MarksControlComponent = () => {
                 style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
                 <span style={{fontSize:11}}>{`Data points with ${xCoord} : ${selectedPredicate.predicate_info.predicate.attribute_values[xCoord].join(', ')}`}</span>
                 </div>
-
+        
                 <div><svg width={12} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
                 <span style={{fontSize:11}}>{`Data points with `}</span>
                 {

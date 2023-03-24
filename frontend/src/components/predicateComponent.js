@@ -18,6 +18,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
   
     let [selectedNames, setSelectedNames] = useState(selected);
     let [pred, setPred] = useState(predData.predicate.attribute_values);
+    const [{}, dispatch] = useContext(DataContext);
 
     const useHandleChange = (event) => {
         const {
@@ -34,7 +35,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
 
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
             console.log(data)
-            // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
 
 
@@ -100,7 +101,7 @@ const RangeSlider = ({range, data, predData}) => {
         let pass = {features: pred, id: predData.id}
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
             console.log(data)
-            // dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
    
   }

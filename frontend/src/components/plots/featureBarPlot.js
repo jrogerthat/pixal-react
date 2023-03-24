@@ -6,12 +6,14 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    const [width, setWidth] = useState(300);
+    const [width, setWidth] = useState(400);
     useEffect(() => {
-        if(!d3.select('.l-top').empty()){
+        if(navBool && !d3.select('.l-top').empty()){
             setWidth(d3.select('.l-top').style('width').split('px')[0]);
+        }else if(!navBool || !explanBool){
+            setWidth(600);
         }
-    }, [d3.select('.l-top'), d3.select('.l-top').empty()]);
+    }, [d3.select('.l-top'), d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
    
     let svgHeight = 200;

@@ -42,7 +42,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
 }
 
 const OtherLegend = ({data}) => {
-    console.log('data in other',data)
+    
     return <div><svg width={12} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
     <span style={{fontSize:11}}>{`Data points with `}</span>
     {

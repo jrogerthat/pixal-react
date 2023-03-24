@@ -119,6 +119,10 @@ body {
   /* style={{display: "flex", flexDirection:"row"}} */
 }
 
+.pivot-plot{
+  width:100%;
+}
+
 .left-wrap{
   display:flex;
   flex-direction: column;

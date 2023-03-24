@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import '../App.css';
 import Button from '@mui/material/Button';
 import AddPredBox from './addPredicateBox';
@@ -10,7 +10,12 @@ function PredicateNav({setHighlightPred}) {
   const [addPredMode, setAddPredMode] = useState(false);
   const [{editMode, predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
-  const filteredPredicates = predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse();
+  const filteredPredicates = useMemo(() => {
+    console.log('filteredPredicates', predicateArray);
+    return predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse();
+  }, [predicateArray]);
+
+  // const [filteredPredicates, setFilteredPredicates] = useState(predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse(););
 
   return (
     <div className="pred-exp-nav">
