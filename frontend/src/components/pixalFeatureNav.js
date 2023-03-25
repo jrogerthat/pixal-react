@@ -69,14 +69,19 @@ export const PixalFeatureNav = ({feature}) => {
 
     if(categoricalBool){
     
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
-        <div style={{display:'flex', flexDirection:'column'}}>
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
+    
+        <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
+
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center'}}>
             <div>
                 <svg 
                 width={12} 
                 height={12} 
-                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-            <span style={{fontSize:11}}>{`Data points with ${feature} : ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+                style={{
+                    backgroundColor: `${selectedPredicate.predicate_info.color}`, 
+                    marginRight:5}} />
+            <span style={{fontSize:11}}>{`Data points with ${feature}: ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
             </div>
            
         </div>
@@ -85,11 +90,12 @@ export const PixalFeatureNav = ({feature}) => {
                 <OtherLegend data={others} />
             )
            }
-        <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
         </div>
     }else if(feature === "Order-Date"){
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center"}}>
-        <div style={{display:'flex', flexDirection:'column'}}>
+        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
+         
+         <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
+         <div style={{display:'flex', flexDirection:'column'}}>
             <div>
                <svg 
                width={12} 
@@ -102,22 +108,26 @@ export const PixalFeatureNav = ({feature}) => {
                 <OtherLegend data={others} />
             )
            }
-         </div><FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} /></div>
+         </div>
+         </div>
     }else{
-       return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
-        <div style={{display:'flex', flexDirection:'column'}}>
+       return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
+       <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
+       
+       <div style={{display:'flex', flexDirection:'column'}}>
             <div>
                <svg 
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-           <span style={{fontSize:11}}>{`Data points with ${feature} :`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+           <span style={{fontSize:11}}>{`Data points with ${feature}:`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
            </div>
            {
             others.length > 0 && (
                 <OtherLegend data={others} />
             )
            }
-           </div><FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} /></div>
+        </div>
+       </div>
     }
 }

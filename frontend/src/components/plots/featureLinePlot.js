@@ -128,7 +128,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr("y", -40)
         .attr("x", -(svgHeight/4))
         .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
-        .style('font-size', navBool || explanBool ? 9 : 11)
+        .style('font-size', navBool || explanBool ? 10 : 11)
+        .style('font-weight', 800)
 
         // Add X axis label:
         svg.append("text")
@@ -136,7 +137,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr("x", (width/2))
         .attr("y", (svgHeight + 15))
         .text(xCoord)
-        .style('font-size', navBool || explanBool ? 9 : 11)
+        .style('font-size', navBool || explanBool ? 10 : 11)
+        .style('font-weight', 800)
 
     
     }, [width, xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);

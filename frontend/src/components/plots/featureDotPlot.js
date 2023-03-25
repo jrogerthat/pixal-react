@@ -58,7 +58,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
             wrap.attr("transform", `translate(${(margin.x/2) + 10}, ${((margin.y/2) - 15)})`)
         }
        
-       
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - margin.y) + ")")
         .call(d3.axisBottom(xScale))
@@ -85,7 +84,8 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         .attr("y", -40)
         .attr("x", -((svgHeight/4) + 10))
         .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
-        .style('font-size', navBool || explanBool ? 9 : 12)
+        .style('font-size', navBool || explanBool ? 10 : 12)
+        .style('font-weight', 800)
 
 
         // Add X axis label:
@@ -94,8 +94,8 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         .attr("x", (width/2))
         .attr("y", (svgHeight - 10))
         .text(xCoord)
-        .style('font-size', navBool || explanBool ? 9 : 11)
-        
+        .style('font-size', navBool || explanBool ? 10 : 11)
+        .style('font-weight', 800)
 
     }, [width, xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
 

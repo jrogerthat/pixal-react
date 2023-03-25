@@ -82,7 +82,8 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .attr("y", -40)
         .attr("x", -((svgHeight/4) + 10))
         .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
-        .style('font-size', navBool || explanBool ? 9 : 12)
+        .style('font-size', navBool || explanBool ? 10 : 12)
+        .style('font-weight', 800)
 
         // Add X axis label:
         svg.append("text")
@@ -90,7 +91,9 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .attr("x", width/2)
         .attr("y", (svgHeight + 10))
         .text(feature)
-        .style('font-size', navBool || explanBool ? 9 : 12)
+        .style('font-size', navBool || explanBool ? 10 : 12)
+        .style('font-weight', 800)
+       
 
     }, [width, feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
 
