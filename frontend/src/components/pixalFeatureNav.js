@@ -85,11 +85,21 @@ export const PixalFeatureNav = ({feature}) => {
             </div>
            
         </div>
-           {
+           {/* {
             others.length > 0 && (
                 <OtherLegend data={others} />
             )
-           }
+           } */}
+                {
+                    others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
+                         <svg 
+                        width={12} 
+                        height={12} 
+                        style={{
+                        backgroundColor: `gray`, 
+                        marginRight:5}} /><span style={{fontSize:11}}>All other data points.</span>
+                    </div>
+                }
         </div>
     }else if(feature === "Order-Date"){
         return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
