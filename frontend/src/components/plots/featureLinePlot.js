@@ -88,7 +88,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr('fill', selectedPredicate.predicate_info.color)
         .style('opacity', .5)
 
-        if(!explanBool){
+        // if(!explanBool){
             let circleG = wrap.append('g');
             // circleG.attr('transform', 'translate(20, 0)')
             
@@ -115,7 +115,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
             .attr('y', -12)
             .attr('text-anchor', 'middle')
             
-        }
+        // }
 
         // Y axis label:
         wrap.append("text")
@@ -130,7 +130,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         svg.append("text")
         .attr("text-anchor", "middle")
         .attr("x", (width/2))
-        .attr("y", (svgHeight + 7))
+        .attr("y", (svgHeight + 11))
         .text(xCoord)
         .style('font-size', navBool || explanBool ? 9 : 11)
 
