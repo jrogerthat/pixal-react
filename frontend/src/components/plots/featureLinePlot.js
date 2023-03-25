@@ -7,15 +7,19 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
     const [width, setWidth] = useState(500);
+    const [svgHeight, setSvgHeight] = useState(300)
+    // let svgHeight = 200;
     
     useEffect(() => {
         if(navBool){
             if(!d3.select('.l-top').empty()){
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
+                setSvgHeight(180)
             }
         }else if(explanBool){
             if(!d3.select('.l-top').empty()){
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
+                setSvgHeight(200)
             }
         }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
             console.log('width',d3.select('#pivot-plot').style('width'));
@@ -25,8 +29,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
-   
-    let svgHeight = 200;
+    
     let margin = {x:(90), y:(svgHeight * .3)};
   
     let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
@@ -86,7 +89,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))
         .attr('x', xScale(new Date(selectedRange[0])))
         .attr('fill', selectedPredicate.predicate_info.color)
-        .style('opacity', .5)
+        .style('opacity', .4)
 
         // if(!explanBool){
             let circleG = wrap.append('g');
@@ -99,11 +102,12 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
             .attr('cy', d => yScale(+d[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))
             .attr('r', 4)
             .attr('fill', 'gray')
-            .attr('fill-opacity', .5)
+            .attr('fill-opacity', .6)
 
             wrap.append('text')
             .text(selectedRange.join('-'))
             .attr('font-size', 10)
+            // .attr('font-weight', 700)
             .attr('x', xScale(new Date(selectedRange[0])))
             .attr('y', -2)
             .attr('text-anchor', 'middle')
@@ -111,6 +115,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
             wrap.append('text')
             .text("Predicate ranges from")
             .attr('font-size', 10)
+            // .attr('font-weight', 700)
             .attr('x', xScale(new Date(selectedRange[0])))
             .attr('y', -12)
             .attr('text-anchor', 'middle')
@@ -130,7 +135,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         svg.append("text")
         .attr("text-anchor", "middle")
         .attr("x", (width/2))
-        .attr("y", (svgHeight + 11))
+        .attr("y", (svgHeight + 15))
         .text(xCoord)
         .style('font-size', navBool || explanBool ? 9 : 11)
 
@@ -143,7 +148,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         >
             <div ref={divRef}>
                 <svg 
-                style={{width:(width), height:(svgHeight + 10)}}
+                style={{width:(width), height:(svgHeight + 20)}}
                 ref={svgRef} />
             </div>
         </div>

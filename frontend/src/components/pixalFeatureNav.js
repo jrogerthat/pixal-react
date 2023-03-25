@@ -108,12 +108,13 @@ export const PixalFeatureNav = ({feature}) => {
     }else{
        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%'}}>
         <div style={{display:'flex', flexDirection:'column'}}>
+            <div>
                <svg 
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-           <span style={{fontSize:11}}>{`Data points with ${feature} :`}</span> <span>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
-          
+           <span style={{fontSize:11}}>{`Data points with ${feature} :`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+           </div>
            {
             others.length > 0 && (
                 <OtherLegend data={others} />

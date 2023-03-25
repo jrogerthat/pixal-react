@@ -14,17 +14,26 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
     const svgRef = useRef(null);
     const divRef = useRef();
 
-    const [width, setWidth] = useState(600);
+    const [width, setWidth] = useState(500);
+    const [svgHeight, setSvgHeight] = useState(300)
+    
     useEffect(() => {
-        if(navBool && !d3.select('.l-top').empty()){
-            setWidth(d3.select('.l-top').style('width').split('px')[0]);
-        }else if(!navBool && !explanBool){
-            setWidth(600);
+        if(navBool){
+            if(!d3.select('.l-top').empty()){
+                setWidth(d3.select('.l-top').style('width').split('px')[0]);
+                setSvgHeight(180)
+            }
+        }else if(explanBool){
+            if(!d3.select('.l-top').empty()){
+                setWidth(d3.select('.l-top').style('width').split('px')[0]);
+                setSvgHeight(200)
+            }
+        }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
+            console.log('width',d3.select('#pivot-plot').style('width'));
+            // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
         }
+        
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
-
-   
-    let svgHeight = 200;
     let margin = {x:(90), y:(svgHeight * .3)};
 
     let xScale = useMemo(()=> {
