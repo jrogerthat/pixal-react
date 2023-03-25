@@ -24,7 +24,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
             console.log('width',d3.select('#pivot-plot').style('width'));
             // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
-            
         }
         
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
@@ -58,7 +57,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
 
         let wrap = svg.append('g');
 
-        wrap.attr('transform', `translate(${(margin.x/2)+20}, ${(margin.y / 2)})`)
+        wrap.attr("transform", `translate(${(margin.x/2) + 30}, ${((margin.y/2) - 15)})`)
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")

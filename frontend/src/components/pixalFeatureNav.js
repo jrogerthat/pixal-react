@@ -66,8 +66,6 @@ export const PixalFeatureNav = ({feature}) => {
     const [{categoricalFeatures, selectedPredicate}] = useContext(DataContext);
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== feature);
-    
-    console.log('OTHERS', others);
 
     if(categoricalBool){
     

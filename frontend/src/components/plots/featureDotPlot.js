@@ -34,6 +34,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         }
         
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
+
     let margin = {x:(90), y:(svgHeight * .3)};
 
     let xScale = useMemo(()=> {
@@ -51,7 +52,12 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
 
         let wrap = svg.append('g');
 
-        wrap.attr("transform", `translate(${(margin.x/2)+20}, ${((margin.y/2) - 15)})`)
+        if(navBool){
+            wrap.attr("transform", `translate(${(margin.x/2) + 30}, ${((margin.y/2) - 15)})`)
+        }else{
+            wrap.attr("transform", `translate(${(margin.x/2) + 10}, ${((margin.y/2) - 15)})`)
+        }
+       
        
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - margin.y) + ")")
@@ -61,10 +67,12 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         .attr("transform", "translate(0, 0)")
         .call(d3.axisLeft(yScale));
 
+        if(navBool || explanBool) yAxis.style('font-size', 10)
+
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => xScale(+d[xCoord]))
         .attr('cy', (d)=> yScale(+d[yCoord.toLowerCase()]))
-        .attr('r', 6)
+        .attr('r', navBool || explanBool ? 4 : 6)
         .attr('fill', (d)=> d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray')
         .attr('fill-opacity', .7)
         .attr('stroke', 'gray')
