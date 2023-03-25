@@ -11,7 +11,6 @@ function PredicateNav({setHighlightPred}) {
   const [{editMode, predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
 
   const filteredPredicates = useMemo(() => {
-    console.log('filteredPredicates', predicateArray);
     return predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse();
   }, [predicateArray]);
 

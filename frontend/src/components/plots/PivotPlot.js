@@ -10,25 +10,17 @@ import { FeatureDotPlot } from "./featureDotPlot";
 import { Button } from "@mui/material";
 import { FeatureLinePlot } from "./featureLinePlot";
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 export const  PivotPlot = () => {
 
     const [{selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
     const [encoding, setEncoding] = useState(null);
-    const [filterByArray, setFilterByArray] = useState([]);
+
+    console.log('selected pred', selectedPredicate);
    
     return (
         <div className="r-top">
-        <MarksControlComponent 
-            setFilterByArray={setFilterByArray}
-        />
+        <MarksControlComponent />
         <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
            <WhichPlot setEncoding={setEncoding} />
            <div className="bookmark-button" style={{marginTop:30}}>
@@ -98,26 +90,48 @@ export const MarksControlComponent = () => {
                 </div>
         
                 <div style={{marginTop:10}}><svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
-                <div style={{fontSize:13, display:'inline'}}>{`Data points with `}</div>
                 {
-                    others.map((o, i)=>(
-                        <div 
-                        key={o[0]}
-                        style={{
-                            // display: i === 0 ? 'inline' : 'block',
-                            fontSize:13, 
-                            // marginLeft: i > 0 ? 17 : 0
-                        }}
-                        >
-                            <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
-                        </div>
-                    ))
+                    others.length > 0 ? <div>
+                        {
+                            others.map((o, i) => (
+                                <div 
+                                key={o[0]}
+                                style={{
+                                    fontSize:13, 
+                                }}
+                                >
+                                    <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
+                                </div>
+                            ))
+                        }
+                    </div> : <div style={{display:'inline'}}>
+                        <span style={{fontSize:13}}>All other data points.</span>
+                    </div>
                 }
+                   
                 </div>
             </div>
         </div>
     )
 }
+
+// {
+                    
+//     <div style={{fontSize:13, display:'inline'}}>{`Data points with `}</div>
+//     {
+//     others.map((o, i)=>(
+//         <div 
+//         key={o[0]}
+//         style={{
+//             // display: i === 0 ? 'inline' : 'block',
+//             fontSize:13, 
+//             // marginLeft: i > 0 ? 17 : 0
+//         }}
+//         >
+//             <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
+//         </div>
+//     ))
+// }
 
 const FilterList = () => {
     const [{selectedPredicate, xCoord},] = useContext(DataContext);

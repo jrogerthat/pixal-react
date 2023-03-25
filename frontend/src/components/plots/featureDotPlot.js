@@ -29,7 +29,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
                 setSvgHeight(200)
             }
         }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
-            console.log('width',d3.select('#pivot-plot').style('width'));
+            // console.log('width',d3.select('#pivot-plot').style('width'));
             // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
         }
         
