@@ -31,7 +31,7 @@ export const  PivotPlot = () => {
         />
         <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
            <WhichPlot setEncoding={setEncoding} />
-           <div className="bookmark-button">
+           <div className="bookmark-button" style={{marginTop:30}}>
             <Button
             onClick={() => {
                 dispatch({type: "ADD_BOOKMARK_PLOT", 
@@ -60,8 +60,6 @@ export const MarksControlComponent = () => {
     const [{selectedPredicate, xCoord},] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
-
-    console.log('selectedddd', selectedPredicate);
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
 
     return(
@@ -82,28 +80,36 @@ export const MarksControlComponent = () => {
                     </div>
                 </div>
             </div>
-            <div>
-                {/* <div><FilterList /></div> */}
+            <div style={{marginTop:40}}>
+                
                 <div>
                 <svg 
                 width={12} 
                 height={12} 
                 style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-                <span style={{fontSize:11}}>{`Data points with ${xCoord} : ${selectedPredicate.predicate_info.predicate.attribute_values[xCoord].join(', ')}`}</span>
+                <div 
+                style={{fontSize:13,
+                        display:'inline'
+                }}>
+                    {`Data points with`} <span style={{fontWeight:800}}>{`${xCoord}:`}</span></div>
+                <div style={{fontSize:13}}>
+                    {`${selectedPredicate.predicate_info.predicate.attribute_values[xCoord].join(', ')}`}
+                    </div>
                 </div>
         
-                <div><svg width={12} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
-                <span style={{fontSize:11}}>{`Data points with `}</span>
+                <div style={{marginTop:10}}><svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
+                <div style={{fontSize:13, display:'inline'}}>{`Data points with `}</div>
                 {
                     others.map((o, i)=>(
                         <div 
                         key={o[0]}
                         style={{
-                            display: i === 0 ? 'inline' : 'block',
-                            fontSize:11, 
-                            marginLeft: i > 0 ? 17 : 0}}
+                            // display: i === 0 ? 'inline' : 'block',
+                            fontSize:13, 
+                            // marginLeft: i > 0 ? 17 : 0
+                        }}
                         >
-                            {`${o[0]}: ${o[1].join(', ')}`}
+                            <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
                         </div>
                     ))
                 }

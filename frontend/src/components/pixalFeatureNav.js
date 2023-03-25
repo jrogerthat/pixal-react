@@ -73,7 +73,7 @@ export const PixalFeatureNav = ({feature}) => {
     
         <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
 
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center'}}>
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
             <div>
                 <svg 
                 width={12} 
@@ -95,7 +95,8 @@ export const PixalFeatureNav = ({feature}) => {
         return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
          
          <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
-         <div style={{display:'flex', flexDirection:'column'}}>
+
+         <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
             <div>
                <svg 
                width={12} 
@@ -114,7 +115,7 @@ export const PixalFeatureNav = ({feature}) => {
        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
        <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
        
-       <div style={{display:'flex', flexDirection:'column'}}>
+       <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
             <div>
                <svg 
                width={12} 
