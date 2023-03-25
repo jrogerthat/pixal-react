@@ -13,6 +13,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
       }, [selectedPredicate]);
 
     const handleClick = (d) => {
+        console.log('DDD on feature', d);
         dispatch({type:'FEATURE_SELECTED', feature: d})
     }
 
@@ -85,11 +86,6 @@ export const PixalFeatureNav = ({feature}) => {
             </div>
            
         </div>
-           {/* {
-            others.length > 0 && (
-                <OtherLegend data={others} />
-            )
-           } */}
                 {
                     others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
                          <svg 
@@ -103,9 +99,7 @@ export const PixalFeatureNav = ({feature}) => {
         </div>
     }else if(feature === "Order-Date"){
         return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
-         
          <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
-
          <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
             <div>
                <svg 
@@ -131,7 +125,10 @@ export const PixalFeatureNav = ({feature}) => {
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-           <span style={{fontSize:11}}>{`Data points with ${feature}:`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+            <span 
+            style={{fontSize:11}}>
+                {`Data points with ${feature}:`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
+            </span>
            </div>
            {
             others.length > 0 && (

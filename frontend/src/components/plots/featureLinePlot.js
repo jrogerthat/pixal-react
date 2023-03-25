@@ -21,10 +21,11 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
                 setSvgHeight(200)
             }
-        }else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
-            // console.log('width',d3.select('#pivot-plot').style('width'));
-            // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
         }
+        // else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
+      
+        //     // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
+        // }
         
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
