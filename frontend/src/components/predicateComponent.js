@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useContext, useState } from 'react';
 import { DataContext } from '../context';
-import { CopyButton, DeleteButton, HideButton, InvertButton } from './predicateEditButtons';
-import EditableFeatureComponent from './EditableFeatureComponent';
+import { CopyButton, DeleteButton, HideButton, InvertButton } from '../predicateExploreComponents/predicateEditButtons';
+import EditableFeatureComponent from '../predicateExploreComponents/EditableFeatureComponent';
 
 const StaticClauseComponent = ({data}) => {
     return <div
@@ -11,7 +11,6 @@ const StaticClauseComponent = ({data}) => {
     {staticFeatureValues(data[1])}
     </div>
 }
-
 
 const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 

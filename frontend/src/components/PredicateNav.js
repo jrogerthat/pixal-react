@@ -1,11 +1,11 @@
 import React, { useContext, useMemo, useState } from 'react'
 import '../App.css';
 import Button from '@mui/material/Button';
-import AddPredBox from './addPredicateBox';
+import AddPredBox from '../predicateExploreComponents/addPredicateBox';
 import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
 
-function PredicateNav({setHighlightPred}) {
+export default function PredicateNav({setHighlightPred}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
   const [{editMode, predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
@@ -50,5 +50,3 @@ function PredicateNav({setHighlightPred}) {
     </div>
   );
 }
-
-export default PredicateNav;

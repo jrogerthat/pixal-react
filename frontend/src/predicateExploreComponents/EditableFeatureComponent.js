@@ -139,8 +139,8 @@ export default function EditableFeatureComponent({data, predData}){
         </div>
     }
 
-    return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
-    <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
-    </div>
-    // return <DateTimePickerValue />
+    // return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
+    // <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
+    // </div>
+    return <DateTimePickerValue />
 }

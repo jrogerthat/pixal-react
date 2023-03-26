@@ -1,7 +1,5 @@
 import '../App.css';
-import { PredExplorePlot } from './plots/predExplorerPlot';
-
-
+import { PredExplorePlot } from '../components/plots/predExplorerPlot';
 
 function PredicateExplore() {
 
