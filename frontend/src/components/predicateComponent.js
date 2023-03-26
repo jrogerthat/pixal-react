@@ -5,7 +5,9 @@ import { CopyButton, DeleteButton, HideButton, InvertButton } from './predicateE
 import EditableFeatureComponent from './EditableFeatureComponent';
 
 const StaticClauseComponent = ({data}) => {
-    return <div><span>{`${data[0]}: `}</span>
+    return <div
+    style={{paddingLeft:10}}
+    ><span>{`${data[0]}: `}</span>
     {staticFeatureValues(data[1])}
     </div>
 }
@@ -74,9 +76,20 @@ export default function PredicateComp({predicateData}) {
             onClick={handleClick}
         >
             <div>
-                <div style={{marginBottom:10, paddingBottom:5, borderBottom:"1px solid #d3d3d3"}}>
+                <div style={{
+                    marginBottom:10, 
+                    paddingBottom:10, 
+                    borderBottom:"1px solid #d3d3d3",
+                    display:'flex',
+                    flexDirection:'row',
+                    alignItems:'end',
+                    paddingLeft:12,
+                    paddingTop:5
+                    }}>
+                    <div style={{float:'right'}}>
                     <span>Bayes Factor Score:</span>
                     <span>{predicateData.predicate.score.toFixed(2)}</span>
+                    </div>
                 </div>
                 {
                     features.map((f, i)=> (

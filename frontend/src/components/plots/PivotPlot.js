@@ -21,7 +21,7 @@ export const  PivotPlot = () => {
         <MarksControlComponent />
         <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
            <WhichPlot setEncoding={setEncoding} />
-           <div className="bookmark-button" style={{marginTop:30}}>
+           <div className="bookmark-button" style={{marginTop:7}}>
             <Button
             onClick={() => {
                 dispatch({type: "ADD_BOOKMARK_PLOT", 
@@ -187,7 +187,6 @@ const CoordDrop = ({options, label, type}) => {
 const CoordDropX = ({options, label, type}) => {
 
     const [{xCoord, selectedPredicate}, dispatch] = useContext(DataContext);
-
     const [coord, setCoord] = useState(xCoord);
 
     useEffect(() => {
