@@ -39,6 +39,9 @@ dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f)
 predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for predicate_dict in predicate_dicts.values()]
+
+predicates = predicates[:1]
+
 bf = JZS(side='right')
 p = PredicateInduction(
     data, dtypes,
@@ -70,14 +73,13 @@ predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 def get_pred_dis():
     pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
     all_fun.save_predicate_id(0, predicate_id_path)
-    return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
+    return all_fun.get_pred_distribution_data(all_fun.feat_val, pred, 100)
 
 @api.route('/get_feature_cat')
 def get_feature_cat():
     test = pd.read_csv('static/data/augmented_superstore_data.csv')
     #Segment,State,Sub-Category
     return test['State']
-
 
 @api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
 def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
@@ -87,10 +89,7 @@ def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
     predicate_data = {
         'features': predicate.predicate_attributes,
         'predicate_id': predicate_id,
-        'predicate_scores': predicate.get_distribution(target, num_bins=25, include_compliment=True).fillna(0).to_dict('records'),
-        # 'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records') if predicate is not None else None,
-        # 'attribute_score_data': {attr: pivot.get_plot_data_text(target, min_bins=10, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
-        # 'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, min_bins=10, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
+        'predicate_scores': predicate.get_distribution(target, num_bins=int(num_score_bins), include_compliment=True).fillna(0).to_dict('records'),
         'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
         'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
     }
@@ -117,8 +116,8 @@ def save_predicates(path, predicates, predicates_path):
         json.dump(predicates, f)
     return predicates
 
-def get_predicates_dict(predicates, target):
-    predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+def get_predicates_dict(predicates, target, num_bins=100):
+    predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=num_bins, include_compliment=True) for i in range(len(predicates))}
     for k,v in predicates_dict.items():
         score = p.score(predicates[k])
         predicates_dict[k]['score'] = max(-99999, score)
