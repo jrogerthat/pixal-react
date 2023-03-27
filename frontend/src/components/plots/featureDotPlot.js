@@ -5,7 +5,7 @@ import * as d3 from "d3";
 
 export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
-    const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate},] = useContext(DataContext);
 
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
@@ -19,7 +19,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
     const divRef = useRef();
 
     const [width, setWidth] = useState(500);
-    const [svgHeight, setSvgHeight] = useState(300)
+    const [svgHeight, setSvgHeight] = useState(300);
     
     useEffect(() => {
         if(navBool){

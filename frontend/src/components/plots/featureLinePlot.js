@@ -17,7 +17,9 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         if(navBool){
             if(!d3.select('.l-top').empty()){
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
-                setSvgHeight(180)
+                setSvgHeight(180);
+
+                console.log('this is running', d3.select('.l-top').style('width').split('px')[0]);
             }
         }else if(explanBool){
             if(!d3.select('.l-top').empty()){
@@ -95,10 +97,10 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         .style('opacity', .4)
 
         // if(!explanBool){
-            let circleG = wrap.append('g');
+        let circleG = wrap.append('g');
             // circleG.attr('transform', 'translate(20, 0)')
             
-            circleG.selectAll('circle.dot')
+        circleG.selectAll('circle.dot')
             .data(plotData)
             .join('circle')
             .attr('cx', d => xScale(new Date(d[xCoord])))
@@ -107,7 +109,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
             .attr('fill', 'gray')
             .attr('fill-opacity', .6)
 
-            wrap.append('text')
+        wrap.append('text')
             .text(selectedRange.join('-'))
             .attr('font-size', 10)
             // .attr('font-weight', 700)
@@ -115,7 +117,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
             .attr('y', -2)
             .attr('text-anchor', 'middle')
 
-            wrap.append('text')
+        wrap.append('text')
             .text("Predicate ranges from")
             .attr('font-size', 10)
             // .attr('font-weight', 700)
