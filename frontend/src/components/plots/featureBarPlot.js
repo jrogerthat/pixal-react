@@ -2,13 +2,18 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
+export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkData}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
-    const [width, setWidth] = useState(500);
+    console.log('bookmarkdata',bookmarkData)
+
+    const [width, setWidth] = useState(550);
     const [svgHeight, setSvgHeight] = useState(300)
-    // let svgHeight = 200;
+
+    const usedPredData = useMemo(()=> {
+        return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
+    }, [selectedPredicate, bookmarkData]);
     
     useEffect(() => {
         if(navBool){
@@ -18,7 +23,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
             }
         }else if(explanBool){
             if(!d3.select('.l-top').empty()){
-                setWidth(d3.select('.l-top').style('width').split('px')[0]);
+                setWidth(d3.select('.l-top').style('width').split('px')[0] - 80);
                 setSvgHeight(200)
             }
         }
@@ -28,9 +33,9 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
-    let margin = {x:(90), y:(svgHeight * .3)};
+    let margin = {x:(navBool ? 90 : 70), y:(svgHeight * .3)};
 
-    let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
+    let plotDataOptions = {...usedPredData.attribute_data[feature], 'Score': usedPredData.attribute_score_data[feature]};
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
@@ -52,7 +57,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
 
         let wrap = svg.append('g').classed('wrap', true);
 
-        wrap.attr("transform", `translate(${(margin.x/2) + 30}, ${((margin.y/2) - 15)})`)
+        wrap.attr("transform", `translate(${(explanBool ? 25 : (margin.x/2)) + 30}, ${((margin.y/2) - 15)})`)
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")
@@ -72,7 +77,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .attr("width", xScale.bandwidth())
         .attr("height", function(d) { return (svgHeight - margin.y) - yScale(d[yCoord === 'Score' ? 'score' : yCoord]); })
         .attr("fill", (d) => {
-            return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
+            return d.predicate === 1 ? usedPredData.predicate_info.color : 'gray'
         }).attr('fill-opacity', .6)
 
         // Y axis label:
@@ -95,7 +100,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .style('font-weight', 800)
        
 
-    }, [width, feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
+    }, [width, feature, yCoord, yScale, usedPredData.predicate_info.id]);
 
     return(
         <div 

@@ -30,18 +30,18 @@ const useCalendarClose = () => {
   
   return (
     <div>
-       <div style={{fontWeight:800, color:'gray'}}>{label}</div>
+    <div style={{fontWeight:800, color:'gray', marginLeft:22, marginBottom:5}}>{label}</div>
     <div style={{display:'flex', flexDirection:'row', marginLeft:10, marginBottom:10}}>
-      <span>From</span><DatePicker  
+      <div style={{marginLeft:12, marginRight:5}}>From</div>
+      <DatePicker  
         selected={startDate}
         onChange={(date)=> setStartDate(date)}
         onCalendarClose={useCalendarClose}/>
-      <span>to</span>
+      <div style={{marginRight:5}}>To</div>
       <DatePicker 
       selected={endDate}
         onChange={(date)=> setEndDate(date)}
         onCalendarClose={useCalendarClose}
-        
       />
     </div>
     </div>
