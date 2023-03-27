@@ -4,7 +4,7 @@ import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Pixalate from './components/pixalateView';
-import PredicateExplore from './components/predicateExploreView';
+import PredicateExplore from './predicateExploreComponents/predicateExploreView';
 import BasicDrop from './components/headerDropdown';
 import { useAxiosGet } from './axiosUtil';
 import { DataContext } from './context';

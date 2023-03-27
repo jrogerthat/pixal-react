@@ -10,7 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { Typography } from '@mui/material';
-import DateTimePickerValue from './DatePickerComponent';
+import DateTimePickerValue, { BasicDatePickerComp } from './DatePickerComponent';
+import BasicDatePicker from './DatePickerComponent';
 
 const DropCheckComponent = ({cat, selected, options, predData}) => {
   
@@ -139,8 +140,9 @@ export default function EditableFeatureComponent({data, predData}){
         </div>
     }
 
-    return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
-    <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
-    </div>
+    // return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
+    // <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
+    // </div>
     // return <DateTimePickerValue />
+    return <BasicDatePickerComp predData={predData} label={data[0]} dateRange={data[1]}/>
 }

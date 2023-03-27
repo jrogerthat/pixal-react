@@ -8,7 +8,6 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
 
     const [width, setWidth] = useState(500);
     const [svgHeight, setSvgHeight] = useState(300)
-    // let svgHeight = 200;
     
     useEffect(() => {
         if(navBool){
