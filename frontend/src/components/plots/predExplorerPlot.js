@@ -7,6 +7,8 @@ const PredExplorePlot = ({width, height}) => {
     const axesRef = useRef(null);
     const [{predicateArray, hiddenPredicates, deletedPredicates},] = useContext(DataContext);
 
+    
+
     let filteredDist = [...predicateArray].filter(f => {
         if(hiddenPredicates.length === 0){
             return f
@@ -14,6 +16,8 @@ const PredExplorePlot = ({width, height}) => {
             return hiddenPredicates.indexOf(f.id) === -1 && deletedPredicates.indexOf(f.id) === -1
         }
     });
+
+    console.log('filtlll',filteredDist);
 
     const yScale = useMemo(() => {
         if(predicateArray.length > 0){

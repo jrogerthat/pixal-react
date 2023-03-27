@@ -27,7 +27,7 @@ export const ExplanationComponent = () => {
                 keys.map(k => (
                     <div 
                     key={k[0]}
-                    style={{display:'flex', flexDirection:'row', marginBottom: 10}}
+                    style={{display:'flex', flexDirection:'row', marginBottom: 10, cursor:'pointer'}}
                     onClick={()=> dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: selectedPredicate, x: xCoord,  y: k[0]  })}
                     >
                         <div

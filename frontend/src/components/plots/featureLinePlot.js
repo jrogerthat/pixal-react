@@ -2,9 +2,13 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
+export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
+
+    const usedPredData = useMemo(()=> {
+        return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
+    }, [selectedPredicate, bookmarkData]);
 
     const [width, setWidth] = useState(500);
     const [svgHeight, setSvgHeight] = useState(300)
@@ -31,9 +35,9 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
     
     let margin = {x:(90), y:(svgHeight * .3)};
   
-    let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
+    let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
-    let selectedRange = selectedPredicate.predicate_info.predicate.attribute_values[xCoord]
+    let selectedRange = usedPredData.predicate_info.predicate.attribute_values[xCoord]
     
     let xScale = useMemo(()=> {
         return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (width - margin.x)])
@@ -87,7 +91,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .attr('height', svgHeight - margin.y)
         .attr('width', xScale(new Date(selectedRange[1])) - xScale(new Date(selectedRange[0])))
         .attr('x', xScale(new Date(selectedRange[0])))
-        .attr('fill', selectedPredicate.predicate_info.color)
+        .attr('fill', usedPredData.predicate_info.color)
         .style('opacity', .4)
 
         // if(!explanBool){
@@ -141,7 +145,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool}) => {
         .style('font-weight', 800)
 
     
-    }, [width, xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
+    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id]);
 
     return(
         <div 
