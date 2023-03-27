@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { useContext } from "react"
 import { DataContext } from "../context";
 import { FeatureBarPlot } from "./plots/featureBarPlot";
@@ -24,18 +25,21 @@ export const BookmarkedPlots = () => {
         <div>{
             bookmarkedPlots.map((b, i)=> (
                 <div key={`book-${i}`}
-                style={{display:'flex', flexDirection:'row'}}
+                style={{display:'flex', flexDirection:'row', marginBottom: 10}}
                 onClick={() => {
                     dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: b.selectedPredicate, x: b.x, y: b.y  })
                     // dispatch({type:"UPDATE_SELECTED_PREDICATE", predSel: b.selectedPredicate})
                 }}
                 ><ParseBookmark book={b} />
-                <div>
+                <div style={{padding:10, marginTop:10}}>
                 <span style={{marginRight: 5, fontWeight:700}}>{`X Axis: ${b.x}`}</span>
                 <span style={{marginRight: 10}}>{"|"}</span>
                 <span style={{marginRight: 5, fontWeight:700}}>{`Y Axis: ${b.y}`}</span>
                 {/* <span style={{marginRight: 10}}>{b.y}</span> */}
-                {b.explanation.join(' ')}</div>
+                {b.explanation.join(' ')}
+                <div><Button>Export Plot</Button></div>
+                </div>
+               
                 </div>
             ))
         }</div>

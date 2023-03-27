@@ -30,8 +30,8 @@ const useCalendarClose = () => {
   
   return (
     <div>
-      <div style={{marginLeft:25, marginBottom:10, fontWeight:800, color:'gray'}}>{label}</div>
-      <div style={{display:'flex', flexDirection:'row', marginLeft:25, marginBottom:10}}>
+      <div style={{marginLeft:22, marginBottom:10, fontWeight:800, color:'gray'}}>{label}</div>
+      <div style={{display:'flex', flexDirection:'row', marginLeft:22, marginBottom:10}}>
       <div style={{marginRight: 10}}>From</div>
       <DatePicker  
         style={{border:"1px solid gray"}}

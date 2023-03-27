@@ -56,7 +56,7 @@ export const MarksControlComponent = () => {
     return(
         <div className="marksControl">
             <div>
-                <div className="head-3">encoding</div>
+                <div style={{marginLeft:10}} className="head-3">Encoding</div>
                 <div style={{display:'flex', flexDirection:'row', color:'gray'}}>
                     <div>
                         <CoordDropX 
@@ -66,8 +66,6 @@ export const MarksControlComponent = () => {
                         />
                     </div>
                     <div>
-                        {/* <div>{"x:"}</div>
-                        {selectedPredicate.feature[0]} */}
                         <CoordDrop 
                         options={yOptions} 
                         label={"y"} 
@@ -76,7 +74,7 @@ export const MarksControlComponent = () => {
                     </div>
                 </div>
             </div>
-            <div style={{marginTop:40}}>
+            <div style={{marginTop:40, marginLeft:10}}>
                 
                 <div>
                 <svg 
@@ -93,15 +91,17 @@ export const MarksControlComponent = () => {
                     </div>
                 </div>
         
-                <div style={{marginTop:10}}><svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5}}/>
+                <div style={{marginTop:10}}>
+                    <svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5, display:'inline'}}/>
                 {
-                    others.length > 0 ? <div>
+                    others.length > 0 ? <div style={{display:'inline'}}>
                         {
                             others.map((o, i) => (
                                 <div 
                                 key={o[0]}
                                 style={{
                                     fontSize:13, 
+                                    display:'inline'
                                 }}
                                 >
                                     <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
@@ -194,7 +194,6 @@ const CoordDropX = ({options, label, type}) => {
     }, [xCoord])
 
     const handleChange = (event) => {
-        console.log(selectedPredicate.attribute_data[event.target.value])
         let feat = [event.target.value, selectedPredicate.attribute_data[event.target.value]]
         dispatch({type:'FEATURE_SELECTED', feature: feat})
     };
