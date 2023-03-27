@@ -10,8 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { Typography } from '@mui/material';
-import DateTimePickerValue, { BasicDatePickerComp } from './DatePickerComponent';
-import BasicDatePicker from './DatePickerComponent';
+import { BasicDatePickerComp } from './DatePickerComponent';
+
 
 const DropCheckComponent = ({cat, selected, options, predData}) => {
   
@@ -42,7 +42,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
   };
     return (
         <div>
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl sx={{ m: 1, width: "96%", marginBottom:.5 }} size="small">
           <InputLabel id="demo-multiple-checkbox-label" style={{fontSize:22, fontWeight:800}}>{cat}</InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"
@@ -51,6 +51,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
             value={selectedNames}
             // onChange={useHandleChange}
             input={<OutlinedInput label={cat} />}
+
             renderValue={(selectedNames) => selectedNames.map((x) => x).join(', ')}
             // MenuProps={MenuProps}
           >
@@ -74,7 +75,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
 
 const RangeSlider = ({range, data, predData}) => {
 
-    const [{predicateArray, categoricalFeatures, categoryDict}, dispatch] = useContext(DataContext);
+    const [, dispatch] = useContext(DataContext);
     const [value, setValue] = useState(data[1]);
     const [pred, setPred] = useState(predData.predicate.attribute_values);
 
