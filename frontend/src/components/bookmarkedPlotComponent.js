@@ -9,6 +9,8 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const BookmarkedPlots = () => {
     const [{bookmarkedPlots}, dispatch] = useContext(DataContext);
 
+    console.log('BOOKMARKED PLOTS', bookmarkedPlots)
+
     const ParseBookmark = ({book}) => {
         
         return (
@@ -16,7 +18,6 @@ export const BookmarkedPlots = () => {
                 <div
                  style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3, cursor:'pointer'}}
                 ><WhichPlot data={book} /></div>
-               
             </div>
         )
     }
@@ -58,13 +59,16 @@ const WhichPlot = ({data}) => {
         yCoord={data.y} 
         categorical={categoricalBool} 
         feature={data.x} 
-        explanBool={true} />
+        explanBool={true} 
+        bookmarkData={data}
+        />
     }else if(data.encoding === 'line'){
         // setEncoding('line')
         return <FeatureLinePlot 
         xCoord={data.x} 
         yCoord={data.y} 
         explanBool={true}
+        bookmarkData={data}
         />
     }else{
         // setEncoding('dot')
@@ -72,6 +76,8 @@ const WhichPlot = ({data}) => {
         xCoord={data.x} 
         yCoord={data.y} 
         categorical={categoricalBool} 
-        explanBool={true}/>
+        explanBool={true}
+        bookmarkData={data}
+        />
     }
 }

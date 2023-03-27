@@ -3,11 +3,15 @@ import { DataContext } from "../../context";
 import * as d3 from "d3";
 
 
-export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool}) => {
+export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
     const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
+
+    const usedPredData = useMemo(()=> {
+        return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
+    }, [selectedPredicate, bookmarkData]);
    
-    let plotDataOptions = {...selectedPredicate.attribute_data[xCoord], 'Score': selectedPredicate.attribute_score_data[xCoord]};
+    let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
 
     let plotData = plotDataOptions[yCoord][0];
 
@@ -72,7 +76,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         points.attr('cx', (d) => xScale(+d[xCoord]))
         .attr('cy', (d)=> yScale(+d[yCoord.toLowerCase()]))
         .attr('r', navBool || explanBool ? 4 : 6)
-        .attr('fill', (d)=> d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray')
+        .attr('fill', (d)=> d.predicate === 1 ? usedPredData.predicate_info.color : 'gray')
         .attr('fill-opacity', .7)
         .attr('stroke', 'gray')
         .attr('stroke-width', 1)
@@ -97,7 +101,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, categorical, navBool, explanBool
         .style('font-size', navBool || explanBool ? 10 : 11)
         .style('font-weight', 800)
 
-    }, [width, xCoord, yCoord, yScale, xScale, selectedPredicate.predicate_info.id]);
+    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id]);
 
     return(
         <div 

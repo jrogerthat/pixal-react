@@ -28,7 +28,8 @@ export const  PivotPlot = () => {
                 bookmarked: {'x': xCoord, 'y': yCoord, 
                 'encoding': encoding, 
                 'selectedPredicate': {...selectedPredicate}, 
-                'feature': selectedPredicate.feature, 
+                'color': selectedPredicate.predicate_info.color,
+                'feature': {...selectedPredicate.feature}, 
                 'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
             ><BookmarkAddIcon/>Bookmark Plot</Button>
             </div>
@@ -119,7 +120,6 @@ export const MarksControlComponent = () => {
     )
 }
 
-
 const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord},] = useContext(DataContext);
 
@@ -182,7 +182,6 @@ const CoordDrop = ({options, label, type}) => {
     );
   
 }
-
 
 const CoordDropX = ({options, label, type}) => {
 

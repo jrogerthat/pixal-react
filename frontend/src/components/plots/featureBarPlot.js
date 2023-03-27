@@ -2,13 +2,18 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
+export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkData}) => {
    
     const [{selectedPredicate}, dispatch] = useContext(DataContext);
 
+    console.log('bookmarkdata',bookmarkData)
+
     const [width, setWidth] = useState(550);
     const [svgHeight, setSvgHeight] = useState(300)
-    // let svgHeight = 200;
+
+    const usedPredData = useMemo(()=> {
+        return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
+    }, [selectedPredicate, bookmarkData]);
     
     useEffect(() => {
         if(navBool){
@@ -30,7 +35,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
 
     let margin = {x:(navBool ? 90 : 70), y:(svgHeight * .3)};
 
-    let plotDataOptions = {...selectedPredicate.attribute_data[feature], 'Score': selectedPredicate.attribute_score_data[feature]};
+    let plotDataOptions = {...usedPredData.attribute_data[feature], 'Score': usedPredData.attribute_score_data[feature]};
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
@@ -72,7 +77,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .attr("width", xScale.bandwidth())
         .attr("height", function(d) { return (svgHeight - margin.y) - yScale(d[yCoord === 'Score' ? 'score' : yCoord]); })
         .attr("fill", (d) => {
-            return d.predicate === 1 ? selectedPredicate.predicate_info.color : 'gray'
+            return d.predicate === 1 ? usedPredData.predicate_info.color : 'gray'
         }).attr('fill-opacity', .6)
 
         // Y axis label:
@@ -95,7 +100,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool}) => {
         .style('font-weight', 800)
        
 
-    }, [width, feature, yCoord, yScale, selectedPredicate.predicate_info.id]);
+    }, [width, feature, yCoord, yScale, usedPredData.predicate_info.id]);
 
     return(
         <div 
