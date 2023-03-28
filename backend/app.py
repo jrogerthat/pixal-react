@@ -22,6 +22,7 @@ from flask import Flask
 
 # data_path = 'static/data/augmented_superstore_data.csv'
 # predicates_path = 'static/data/augmented_superstore_predicates.json'
+
 # target_path = 'static/data/cars_iforest.csv'
 
 data_path = 'static/data/superstore_data_vis23.csv'

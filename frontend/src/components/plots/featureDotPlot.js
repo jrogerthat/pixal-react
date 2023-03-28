@@ -5,7 +5,7 @@ import * as d3 from "d3";
 
 export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
-    const [{selectedPredicate, categoricalFeatures}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate},] = useContext(DataContext);
 
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
@@ -19,7 +19,9 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
     const divRef = useRef();
 
     const [width, setWidth] = useState(500);
-    const [svgHeight, setSvgHeight] = useState(300)
+    const [svgHeight, setSvgHeight] = useState(300);
+
+    const [useExtent, setUseExtent] = useState(true);
     
     useEffect(() => {
         if(navBool){
@@ -46,8 +48,8 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
      }, [plotData, width, margin.x]);
  
      let yScale = useMemo(()=> {
-         return d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (margin.y)), 0])
-     }, [plotData, width]);
+         return useExtent ? d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (margin.y)), 0]) : d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (margin.y)), 0])
+     }, [plotData, width, useExtent]);
 
     useEffect(()=> {
 
