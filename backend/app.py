@@ -155,7 +155,7 @@ def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
         # print(sorted_num_attr)
         # print()
     
-    attribute_data = attribute_data_
+    # attribute_data = attribute_data_
 
     print(attribute_data)
     predicate_data = {
