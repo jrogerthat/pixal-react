@@ -137,23 +137,7 @@ def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
     
     num_pivot_bins = 40
-    attribute_data_ = {}
     attribute_data = {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
-    # for attr, v in attribute_data.items():
-    #     if attr == 'Order-Date':
-    #         sorted_num_attr = ['Quantity', 'precipitation', 'temperature']
-    #         # sorted_num_attr = sorted_num_attr + [x for x in numeric if x not in sorted_num_attr]
-    #     elif attr in ['precipitation', 'temperature']:
-    #         sorted_num_attr = ['Quantity']
-    #         # sorted_num_attr = sorted_num_attr + [x for x in numeric if x not in sorted_num_attr]
-    #     else:
-    #         sorted_num_attr = numeric
-    #     attribute_data_[attr] = {k: v[k] for k in sorted_num_attr}
-
-        # print(attr)
-        # sorted_num_attr = sorted(v.keys(), key=lambda x: abs(eval(v[x][1][-1].split('(')[-1].split(')')[0].replace('/','-'))), reverse=True)
-        # print(sorted_num_attr)
-        # print()
     
     # attribute_data = attribute_data_
 
@@ -161,7 +145,7 @@ def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
     predicate_data = {
         'features': predicate.predicate_attributes,
         'predicate_id': predicate_id,
-        'predicate_scores': predicate.get_distribution(target, num_bins=25, include_compliment=True).fillna(0).to_dict('records'),
+        'predicate_scores': predicate.get_distribution(target, num_bins=25, include_compliment=True).dropna().to_dict('records'),
         # 'predicate_scores': predicate.get_distribution(target, num_bins=int(num_score_bins), include_compliment=True).fillna(0).to_dict('records'),
         'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
         'attribute_data': attribute_data
