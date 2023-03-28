@@ -4,6 +4,7 @@ import os
 import json
 import pandas as pd
 import numpy as np
+from sklearn.neighbors import LocalOutlierFactor
 # from predicates import PredicateControl 
 import edit_predicates
 # import plot_pred
@@ -19,26 +20,77 @@ from flask import Flask
 # predicates_path = 'static/data/cars.json'
 # target_path = 'static/data/cars_iforest.csv'
 
-data_path = 'static/data/augmented_superstore_data.csv'
-predicates_path = 'static/data/augmented_superstore_predicates.json'
-target_path = 'static/data/cars_iforest.csv'
+# data_path = 'static/data/augmented_superstore_data.csv'
+# predicates_path = 'static/data/augmented_superstore_predicates.json'
+# target_path = 'static/data/cars_iforest.csv'
+
+data_path = 'static/data/superstore_data_vis23.csv'
+predicates_path = 'static/data/superstore_predicates_vis23.json'
 
 api = Flask(__name__)
 path = os.path.dirname(os.path.realpath(__file__))
 data = pd.read_csv(f'{path}/{data_path}')
-target = data.iforest_score
-data = data.drop('iforest_score', axis=1)
+
+target = data.lof
+data = data.drop('lof', axis=1)
+# lof = LocalOutlierFactor(n_neighbors=50).fit(data[['Quantity', 'Unit-Price', 'Unit-Cost']])
+# target = pd.Series(-lof.negative_outlier_factor_)
+
+# data = data.drop('lof', axis=1)
+# target = data.iforest_score
+# data = data.drop('iforest_score', axis=1)
+
+# data = data.rename(columns={'Date': 'Order-Date'})#, 'Temperature': 'temperature', 'Precipitation': 'precipitation'})
+print(data)
 data['Order-Date'] = pd.to_datetime(data['Order-Date'])
-dtypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'ordinial', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+# data['Order-Date'] = pd.to_datetime(data['Order-Date'])
+
+# dtypes = {'Order-Date': 'date',
+#  'State': 'nominal',
+#  'Segment': 'nominal',
+#  'Temperature': 'numeric',
+#  'Precipitation': 'numeric',
+#  'Quantity': 'numeric',
+#  'Sales': 'numeric',
+#  'Profit': 'numeric'}
+dtypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+# dtypes['Date'] = 'date'
+# dtypes['Precipitation'] = 'numeric'
+# dtypes['Temperature'] = 'numeric'
+# dtypes['Profit'] = 'numeric'
+# dtypes['Sales'] = 'numeric'
 dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
+numeric = dtypes['numeric']
+
+# api = Flask(__name__)
+# path = os.path.dirname(os.path.realpath(__file__))
+# data = pd.read_csv(f'{path}/{data_path}')
+# target = data.iforest_score
+# data = data.drop('iforest_score', axis=1)
+# data['Order-Date'] = pd.to_datetime(data['Order-Date'])
+# dtypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'ordinial', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+# dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
 
 # dtypes = infer_dtypes(data)
 # target = pd.read_csv(f'{path}/{target_path}')
 # target = target[target.columns[0]]
 
 with open(f'{path}/{predicates_path}', 'r') as f:
-    predicate_dicts = json.load(f)
-predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for predicate_dict in predicate_dicts.values()]
+    predicate_dicts = json.load(f).values()
+# predicate_dicts_ = []
+# for predicate_dict in predicate_dicts:
+#     predicate_dict_ = {}
+#     for k,v in predicate_dict.items():
+#         if k=='Date':
+#             predicate_dict_['Order-Date'] = v
+#         else:
+#             predicate_dict_[k] = v
+#     predicate_dicts_.append(predicate_dict_)
+# predicate_dicts = predicate_dicts_
+
+print(predicate_dicts)
+predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for predicate_dict in predicate_dicts]#.values()]
+
 bf = JZS(side='right')
 p = PredicateInduction(
     data, dtypes,
@@ -70,7 +122,7 @@ predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 def get_pred_dis():
     pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
     all_fun.save_predicate_id(0, predicate_id_path)
-    return all_fun.get_pred_distribution_data(all_fun.feat_val, pred)
+    return all_fun.get_pred_distribution_data(all_fun.feat_val, pred, 100)
 
 @api.route('/get_feature_cat')
 def get_feature_cat():
@@ -78,21 +130,40 @@ def get_feature_cat():
     #Segment,State,Sub-Category
     return test['State']
 
-
 @api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
-def get_selected_data(predicate_id, num_score_bins=50, num_pivot_bins=25):
+def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
     predicate = predicates[int(predicate_id)]
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
     
+    num_pivot_bins = 40
+    attribute_data_ = {}
+    attribute_data = {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
+    # for attr, v in attribute_data.items():
+    #     if attr == 'Order-Date':
+    #         sorted_num_attr = ['Quantity', 'precipitation', 'temperature']
+    #         # sorted_num_attr = sorted_num_attr + [x for x in numeric if x not in sorted_num_attr]
+    #     elif attr in ['precipitation', 'temperature']:
+    #         sorted_num_attr = ['Quantity']
+    #         # sorted_num_attr = sorted_num_attr + [x for x in numeric if x not in sorted_num_attr]
+    #     else:
+    #         sorted_num_attr = numeric
+    #     attribute_data_[attr] = {k: v[k] for k in sorted_num_attr}
+
+        # print(attr)
+        # sorted_num_attr = sorted(v.keys(), key=lambda x: abs(eval(v[x][1][-1].split('(')[-1].split(')')[0].replace('/','-'))), reverse=True)
+        # print(sorted_num_attr)
+        # print()
+    
+    attribute_data = attribute_data_
+
+    print(attribute_data)
     predicate_data = {
         'features': predicate.predicate_attributes,
         'predicate_id': predicate_id,
         'predicate_scores': predicate.get_distribution(target, num_bins=25, include_compliment=True).fillna(0).to_dict('records'),
-        # 'predicate_scores': target.to_frame().rename(columns={0: 'score'}).assign(predicate=predicate.mask).to_dict('records') if predicate is not None else None,
-        # 'attribute_score_data': {attr: pivot.get_plot_data_text(target, min_bins=10, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
-        # 'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, min_bins=10, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
+        # 'predicate_scores': predicate.get_distribution(target, num_bins=int(num_score_bins), include_compliment=True).fillna(0).to_dict('records'),
         'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
-        'attribute_data': {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
+        'attribute_data': attribute_data
     }
     return predicate_data
 
@@ -117,11 +188,20 @@ def save_predicates(path, predicates, predicates_path):
         json.dump(predicates, f)
     return predicates
 
-def get_predicates_dict(predicates, target):
-    predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=25, include_compliment=True) for i in range(len(predicates))}
+def get_predicates_dict(predicates, target, num_bins=25):
+    # bin_width  = .01
+    # ranges = [(target[p.mask].max() - target[p.mask].min()) for p in predicates]
+    # num_bins = [int(r**.1/bin_width) for r in ranges]
+    # print(num_bins)
+
+    # print(predicates)
+    # num_bins = [100 if p.is_negated else 25 for p in predicates]
+    # print(num_bins)
+
+    predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=num_bins, include_compliment=True) for i in range(len(predicates))}
     for k,v in predicates_dict.items():
         score = p.score(predicates[k])
-        predicates_dict[k]['score'] = max(-99999, score)
+        predicates_dict[k]['score'] = max(0, score)
     return predicates_dict
 
 @api.route('/add_predicate', methods=['GET', 'POST'])
