@@ -61,10 +61,10 @@ export const MarksControlComponent = ({setChecked}) => {
     };
    
     return(
-        <div className="marksControl">
+        <div className="marksControl" style={{width:230}}>
             <div>
                 <div style={{marginLeft:10}} className="head-3">Encoding</div>
-                <div style={{display:'flex', flexDirection:'row', color:'gray'}}>
+                <div style={{display:'flex', flexDirection:'column', color:'gray'}}>
                     <div>
                         <CoordDropX 
                         options={selectedPredicate.predicate_info.predicate.attribute_values} 
@@ -179,7 +179,7 @@ const CoordDrop = ({options, label, type}) => {
     };
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+        <FormControl sx={{ m: 1, minWidth: 90, p:.1 }} size="small">
         <InputLabel id="demo-select-small">{label}</InputLabel>
         <Select
             labelId="demo-select-small"
@@ -213,7 +213,7 @@ const CoordDropX = ({options, label, type}) => {
     };
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+        <FormControl sx={{ m: 1, minWidth: 90, p:.1 }} size="small">
         <InputLabel id="demo-select-small">{label}</InputLabel>
         <Select
             labelId="demo-select-small"

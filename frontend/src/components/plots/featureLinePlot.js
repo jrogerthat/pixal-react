@@ -22,8 +22,10 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
                 console.log('this is running', d3.select('.l-top').style('width').split('px')[0]);
             }
         }else if(explanBool){
-            if(!d3.select('.l-top').empty()){
-                setWidth(d3.select('.l-top').style('width').split('px')[0]);
+            // console.log('is this id right',d3.select(`#explan-${yCoord}`));
+            if(!d3.select(`#explan-${yCoord}`).empty()){
+
+                setWidth(d3.select(`#explan-${yCoord}`).style('width').split('px')[0]);
                 setSvgHeight(200)
             }
         }
@@ -35,7 +37,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
     
-    let margin = {x:(90), y:(svgHeight * .3)};
+    let margin = {x:((90)), y:(svgHeight * .3)};
   
     let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0] ? plotDataOptions[yCoord][0] : plotDataOptions[yCoord];
@@ -66,7 +68,11 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
 
         let wrap = svg.append('g');
 
+       if(navBool){
         wrap.attr("transform", `translate(${(margin.x/2) + 30}, ${((margin.y/2) - 15)})`)
+       }else{
+        wrap.attr("transform", `translate(${(margin.x/2) + 10}, ${((margin.y/2) - 9)})`)
+       }
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")
