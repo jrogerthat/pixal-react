@@ -31,8 +31,6 @@ const PredExplorePlot = ({width, height}) => {
     const yScale = useMemo(() => {
         if(predicateArray.length > 0){
             let maxArr =  usedData.flatMap(f => f.map(m => +m.density));
-
-            console.log('maxArr',maxArr)
             return d3.scaleLinear().range([(height-50), 2]).domain([0, d3.max(maxArr)]);
         }else{
              return d3.scaleLinear().range([height, 0]).domain([0, 1]);
@@ -89,7 +87,6 @@ const PredExplorePlot = ({width, height}) => {
         let groups = wrap.selectAll('g.pred_group').data(usedData).join('g').classed('pred_group', true);
 
         let bars = groups.selectAll('rect.dist').data(d => d).join('rect').classed('dist', true);
-
         bars.attr('fill', (d)=> calcColor(d));
         bars.attr('width', 5)
         bars.attr('height', (d)=> (height - 50)-yScale(d.density))

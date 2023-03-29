@@ -49,15 +49,15 @@ const getExplanation = (xC, yC, selectedPredicate) => {
 
 export const MarksControlComponent = ({setChecked}) => {
 
-    const [{selectedPredicate, xCoord},] = useContext(DataContext);
+    const [{selectedPredicate, xCoord}, dispatch] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
 
 
     const handleChange = (event) => {
-        console.log('change')
         setChecked(event.target.checked);
+        dispatch({type: "CHANGE_SCALE", scaleExtent: event.target.checked})
     };
    
 

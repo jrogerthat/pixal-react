@@ -5,13 +5,13 @@ import * as d3 from "d3";
 
 export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
-    const [{selectedPredicate},] = useContext(DataContext);
+    const [{selectedPredicate, scaleExtent},] = useContext(DataContext);
+
+    console.log('scale extent',scaleExtent)
 
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
     }, [selectedPredicate, bookmarkData]);
-
-    console.log(xCoord, yCoord, usedPredData);
    
     let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0];
@@ -45,12 +45,12 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
     let margin = {x:(90), y:(svgHeight * .3)};
 
     let xScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (width - margin.x)])
+        return scaleExtent ? d3.scaleLinear().domain(d3.extent(plotData.map(m => m[xCoord]))).range([0, (width - margin.x)]) : d3.scaleLinear().domain([0, d3.max(plotData.map(m => m[xCoord]))]).range([0, (width - margin.x)])
      }, [plotData, width, margin.x]);
  
      let yScale = useMemo(()=> {
          return useExtent ? d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (margin.y)), 0]) : d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? yCoord.toLowerCase() : yCoord]))).range([(svgHeight - (margin.y)), 0])
-     }, [plotData, width, useExtent]);
+     }, [plotData, width, useExtent, scaleExtent]);
 
     useEffect(()=> {
 
@@ -105,7 +105,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
         .style('font-size', navBool || explanBool ? 10 : 11)
         .style('font-weight', 800)
 
-    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id]);
+    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id, scaleExtent]);
 
     return(
         <div 
