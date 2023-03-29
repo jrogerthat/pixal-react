@@ -46,7 +46,8 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
     }, [width, xCoord]);
 
     let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (margin.y)), 0])
+        // return d3.scaleLinear().domain([0, d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (margin.y)), 0])
+        return d3.scaleLinear().domain(d3.extent(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))).range([(svgHeight - (margin.y)), 2])
     }, [svgHeight, yCoord]);
     
     const svgRef = useRef(null);

@@ -10,9 +10,10 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
     }, [selectedPredicate, bookmarkData]);
+
+    console.log(xCoord, yCoord, usedPredData);
    
     let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
-
     let plotData = plotDataOptions[yCoord][0];
 
     const svgRef = useRef(null);
@@ -76,7 +77,9 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
 
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => xScale(+d[xCoord]))
-        .attr('cy', (d)=> yScale(+d[yCoord.toLowerCase()]))
+        .attr('cy', (d)=> {
+            console.log(d, yCoord, yScale.range(), yScale(+d[yCoord]));
+            return yCoord === 'Score' ? yScale(d.score) : yScale(+d[yCoord])})
         .attr('r', navBool || explanBool ? 4 : 6)
         .attr('fill', (d)=> d.predicate === 1 ? usedPredData.predicate_info.color : 'gray')
         .attr('fill-opacity', .7)
@@ -92,7 +95,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
         .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
         .style('font-size', navBool || explanBool ? 10 : 12)
         .style('font-weight', 800)
-
 
         // Add X axis label:
         svg.append("text")
