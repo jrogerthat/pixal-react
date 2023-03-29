@@ -136,13 +136,14 @@ def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
     predicate = predicates[int(predicate_id)]
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
     
-    num_pivot_bins = 40
-    attribute_data = {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
-    
+    # num_pivot_bins = 35
+    # num_score_bins = 100
+    predicate_scores = predicate.get_distribution(target, num_bins=num_score_bins, include_compliment=True).dropna().to_dict('records')
+
     predicate_data = {
         'features': predicate.predicate_attributes,
         'predicate_id': predicate_id,
-        'predicate_scores': predicate.get_distribution(target, num_bins=25, include_compliment=True).dropna().to_dict('records'),
+        'predicate_scores': predicate_scores,
         # 'predicate_scores': predicate.get_distribution(target, num_bins=int(num_score_bins), include_compliment=True).fillna(0).to_dict('records'),
         'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
         'attribute_data': attribute_data
@@ -256,7 +257,7 @@ def copy_predicate(predicate_id):
 @api.route('/get_predicate_data', methods=['GET', 'POST'])
 def get_predicate_data():
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=50)
     return predicates_dict
 
 @api.route('/get_predicate_score', methods=['GET', 'POST'])
