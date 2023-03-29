@@ -55,7 +55,7 @@ const OtherLegend = ({data}) => {
                 fontSize:11, 
                 marginLeft: i > 0 ? 17 : 0}}
             >
-                {`${o[0]}: ${o[1].join(', ')}`}
+                {`${o[0]}:`} <span style={{fontWeight:800}}>{`${o[1].join(', ')}`}</span>
             </div>
         ))
     }
@@ -82,10 +82,11 @@ export const PixalFeatureNav = ({feature}) => {
                 style={{
                     backgroundColor: `${selectedPredicate.predicate_info.color}`, 
                     marginRight:5}} />
-            <span style={{fontSize:11}}>{`Data points with ${feature}: ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+            <span style={{fontSize:11}}>{`Data points with ${feature}: `} 
+            <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+            </span>
             </div>
            
-        
                 {
                     others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
                          <svg 
@@ -107,7 +108,8 @@ export const PixalFeatureNav = ({feature}) => {
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-           <span style={{fontSize:11}}>{`Data points with ${feature}: ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+           <span style={{fontSize:11}}>{`Data points with ${feature}: `}
+           <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span></span>
            </div>
            {
             others.length > 0 && (
@@ -128,8 +130,9 @@ export const PixalFeatureNav = ({feature}) => {
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
             <span 
             style={{fontSize:11}}>
-                {`Data points with ${feature}:`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
-            </span>
+                {`Data points with ${feature}: `}
+                <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
+                </span></span>
            </div>
            {
             others.length > 0 && (

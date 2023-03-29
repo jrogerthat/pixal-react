@@ -142,7 +142,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         .attr("text-anchor", "end")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", -(svgHeight/4))
+        .attr("x", navBool ? (-(svgHeight/4) + 20) : (-(svgHeight/4)))
         .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
         .style('font-size', navBool || explanBool ? 10 : 11)
         .style('font-weight', 800)
