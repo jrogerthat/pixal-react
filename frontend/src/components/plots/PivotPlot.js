@@ -60,7 +60,6 @@ export const MarksControlComponent = ({setChecked}) => {
         dispatch({type: "CHANGE_SCALE", scaleExtent: event.target.checked})
     };
    
-
     return(
         <div className="marksControl">
             <div>
@@ -124,10 +123,11 @@ export const MarksControlComponent = ({setChecked}) => {
                 </div>
             </div>
 
-            <div><FormGroup>
+            <div style={{marginTop:30, marginLeft:10, fontSize:9}}><FormGroup>
             <FormControlLabel 
-            control={<Switch defaultChecked />} 
+            control={<Switch size="small"defaultChecked />} 
             onChange={handleChange}
+            style={{fontSize:9}}
             label="Y Scale Extent" />
             {/* <FormControlLabel disabled control={<Switch />} label="Disabled" /> */}
             </FormGroup></div>
