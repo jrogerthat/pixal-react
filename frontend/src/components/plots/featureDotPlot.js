@@ -78,7 +78,6 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
         let points = wrap.selectAll('circle.point').data(plotData).join('circle').classed('point', true);
         points.attr('cx', (d) => xScale(+d[xCoord]))
         .attr('cy', (d)=> {
-            console.log(d, yCoord, yScale.range(), yScale(+d[yCoord]));
             return yCoord === 'Score' ? yScale(d.score) : yScale(+d[yCoord])})
         .attr('r', navBool || explanBool ? 4 : 6)
         .attr('fill', (d)=> d.predicate === 1 ? usedPredData.predicate_info.color : 'gray')
