@@ -55,7 +55,14 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkDa
 
         let wrap = svg.append('g').classed('wrap', true);
 
-        wrap.attr("transform", `translate(${(explanBool ? 25 : (margin.x/2)) + 30}, ${((margin.y/2) - 15)})`)
+        if(navBool){
+            wrap.attr("transform", `translate(${((margin.x/2)) + 30}, ${((margin.y/2) - 30)})`)
+        }else if(explanBool){
+            wrap.attr("transform", `translate(${((margin.x/2)) + 20}, ${((margin.y/2) - 20)})`)
+        }else{
+            wrap.attr("transform", `translate(${((margin.x/2)) + 30}, ${((margin.y/2) - 40)})`)
+        }
+       
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")

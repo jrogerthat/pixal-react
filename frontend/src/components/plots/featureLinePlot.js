@@ -151,7 +151,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         svg.append("text")
         .attr("text-anchor", "middle")
         .attr("x", (width/2))
-        .attr("y", (svgHeight + 15))
+        .attr("y", navBool ? (svgHeight + 15) : (svgHeight + 5))
         .text(xCoord)
         .style('font-size', navBool || explanBool ? 10 : 11)
         .style('font-weight', 800)
