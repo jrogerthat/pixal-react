@@ -4,9 +4,7 @@ import * as d3 from "d3";
 
 export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkData}) => {
    
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
-
-    console.log('bookmarkdata',bookmarkData)
+    const [{selectedPredicate, scaleExtent}] = useContext(DataContext);
 
     const [width, setWidth] = useState(550);
     const [svgHeight, setSvgHeight] = useState(300)
@@ -44,8 +42,8 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkDa
 
     
     let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (margin.y)), 0])
-    }, [svgHeight, yCoord])
+        return scaleExtent ? d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))).range([(svgHeight - (margin.y)), 0]) : d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (margin.y)), 0])
+    }, [svgHeight, yCoord, scaleExtent])
    
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -100,7 +98,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkDa
         .style('font-weight', 800)
        
 
-    }, [width, feature, yCoord, yScale, usedPredData.predicate_info.id]);
+    }, [width, feature, yCoord, yScale, usedPredData.predicate_info.id, scaleExtent]);
 
     return(
         <div 

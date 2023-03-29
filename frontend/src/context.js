@@ -22,7 +22,8 @@ const initialState = {
   bookmarkedPlots: [],
   xCoord: null,
   yCoord: "score",
-  negatedArray : []
+  negatedArray : [],
+  scaleExtent: true,
 };
 
 const reducer = (state, action) => {
@@ -68,6 +69,9 @@ const reducer = (state, action) => {
 
     case "DELETE_PREDICATE":
       return {...state, deletedPredicates: action.deleted}
+
+    case "CHANGE_SCALE":
+      return {...state, scaleExtent: action.scaleExtent}
 
     default:
       throw new Error();

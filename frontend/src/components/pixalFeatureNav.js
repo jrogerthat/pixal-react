@@ -13,7 +13,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
       }, [selectedPredicate]);
 
     const handleClick = (d) => {
-        console.log('DDD on feature', d);
+  
         dispatch({type:'FEATURE_SELECTED', feature: d})
     }
 

@@ -140,6 +140,10 @@ def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
     # num_score_bins = 100
     predicate_scores = predicate.get_distribution(target, num_bins=num_score_bins, include_compliment=True).dropna().to_dict('records')
 
+    attribute_data = {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
+    
+    # attribute_data = attribute_data_
+
     predicate_data = {
         'features': predicate.predicate_attributes,
         'predicate_id': predicate_id,

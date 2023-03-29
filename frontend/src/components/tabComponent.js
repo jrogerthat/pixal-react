@@ -39,8 +39,6 @@ function a11yProps(index) {
   };
 }
 
-
-
 export default function TabComponent() {
 
   const [value, setValue] = React.useState(0);

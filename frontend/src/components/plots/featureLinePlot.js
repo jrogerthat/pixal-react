@@ -4,13 +4,13 @@ import * as d3 from "d3";
 
 export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, scaleExtent}, dispatch] = useContext(DataContext);
 
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
     }, [selectedPredicate, bookmarkData]);
 
-    const [width, setWidth] = useState(500);
+    const [width, setWidth] = useState(570);
     const [svgHeight, setSvgHeight] = useState(300)
     
     useEffect(() => {
@@ -45,9 +45,12 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         return d3.scaleTime().domain(d3.extent(plotData.map(m => new Date(m[xCoord])))).range([0, (width - margin.x)])
     }, [width, xCoord]);
 
+    
+
     let yScale = useMemo(()=> {
-        return d3.scaleLinear().domain([0,d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (margin.y)), 0])
-    }, [svgHeight, yCoord]);
+        // return d3.scaleLinear().domain([0, d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (margin.y)), 0])
+        return scaleExtent ? d3.scaleLinear().domain(d3.extent(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))).range([(svgHeight - (margin.y)), 2]) : d3.scaleLinear().domain([0, d3.max(plotData.map(m => yCoord === 'Score' ? m[yCoord.toLowerCase()] : m[yCoord]))]).range([(svgHeight - (margin.y)), 2])
+    }, [svgHeight, yCoord, scaleExtent]);
     
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -67,12 +70,13 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")
-        .call(d3.axisBottom(xScale))
+        .call(d3.axisBottom(xScale).ticks(d3.timeMonth, 1).tickFormat(d3.timeFormat('%b %y')))
+
 
         xAxis.selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end")
-        .style('font-size', navBool || explanBool ? 9 : 11)
+        .style('font-size', navBool || explanBool ? 6 : 7)
     
         let yAxis = wrap.append('g')
         .attr("transform", "translate(0, 0)")
@@ -147,7 +151,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         .style('font-weight', 800)
 
     
-    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id]);
+    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id, scaleExtent]);
 
     return(
         <div 

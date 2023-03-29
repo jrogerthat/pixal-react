@@ -24,7 +24,7 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-      
+     
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data})
     }
     

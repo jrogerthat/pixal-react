@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { FeatureBarPlot } from "./featureBarPlot";
 import { FeatureDotPlot } from "./featureDotPlot";
-import { Button } from "@mui/material";
+import { Button, FormControlLabel, FormGroup, Switch, ToggleButton } from "@mui/material";
 import { FeatureLinePlot } from "./featureLinePlot";
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 
@@ -15,10 +15,11 @@ export const  PivotPlot = () => {
 
     const [{selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
     const [encoding, setEncoding] = useState(null);
+    const [checked, setChecked] = useState(true);
    
     return (
         <div className="r-top">
-        <MarksControlComponent />
+        <MarksControlComponent setChecked={setChecked}/>
         <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
            <WhichPlot setEncoding={setEncoding} />
            <div className="bookmark-button" style={{marginTop:7}}>
@@ -46,14 +47,19 @@ const getExplanation = (xC, yC, selectedPredicate) => {
     }
 }
 
-export const MarksControlComponent = () => {
+export const MarksControlComponent = ({setChecked}) => {
 
-    const [{selectedPredicate, xCoord},] = useContext(DataContext);
+    const [{selectedPredicate, xCoord}, dispatch] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
-    console.log('others',others);
 
+
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+        dispatch({type: "CHANGE_SCALE", scaleExtent: event.target.checked})
+    };
+   
     return(
         <div className="marksControl">
             <div>
@@ -116,6 +122,15 @@ export const MarksControlComponent = () => {
                    
                 </div>
             </div>
+
+            <div style={{marginTop:30, marginLeft:10, fontSize:9}}><FormGroup>
+            <FormControlLabel 
+            control={<Switch size="small"defaultChecked />} 
+            onChange={handleChange}
+            style={{fontSize:9}}
+            label="Y Scale Extent" />
+            {/* <FormControlLabel disabled control={<Switch />} label="Disabled" /> */}
+            </FormGroup></div>
         </div>
     )
 }

@@ -9,7 +9,7 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const BookmarkedPlots = () => {
     const [{bookmarkedPlots}, dispatch] = useContext(DataContext);
 
-    console.log('BOOKMARKED PLOTS', bookmarkedPlots)
+   
 
     const ParseBookmark = ({book}) => {
         
