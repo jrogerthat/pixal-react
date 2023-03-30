@@ -31,6 +31,7 @@ export const ExplanationComponent = () => {
                     onClick={()=> dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: selectedPredicate, x: xCoord,  y: k[0]  })}
                     >
                         <div
+                        id={`explan-${k[0]}`}
                         style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3}}
                         ><WhichPlot yCoord={k[0]} /></div>
                         <div style={{padding:10, marginTop:10}}>
@@ -48,6 +49,8 @@ export const ExplanationComponent = () => {
 
 const WhichPlot = ({yCoord}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord }, dispatch] = useContext(DataContext);
+
+
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 

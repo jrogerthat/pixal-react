@@ -55,7 +55,7 @@ const OtherLegend = ({data}) => {
                 fontSize:11, 
                 marginLeft: i > 0 ? 17 : 0}}
             >
-                {`${o[0]}: ${o[1].join(', ')}`}
+                {`${o[0]}:`} <span style={{fontWeight:800}}>{`${o[1].join(', ')}`}</span>
             </div>
         ))
     }
@@ -74,18 +74,19 @@ export const PixalFeatureNav = ({feature}) => {
     
         <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
 
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
-            <div>
+        <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+            <div style={{justifyContent:"center"}}>
                 <svg 
                 width={12} 
                 height={12} 
                 style={{
                     backgroundColor: `${selectedPredicate.predicate_info.color}`, 
                     marginRight:5}} />
-            <span style={{fontSize:11}}>{`Data points with ${feature}: ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+            <span style={{fontSize:11}}>{`Data points with ${feature}: `} 
+            <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+            </span>
             </div>
            
-        </div>
                 {
                     others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
                          <svg 
@@ -96,17 +97,19 @@ export const PixalFeatureNav = ({feature}) => {
                         marginRight:5}} /><span style={{fontSize:11}}>All other data points.</span>
                     </div>
                 }
+                </div>
         </div>
     }else if(feature === "Order-Date"){
         return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
          <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
-         <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
+         <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
             <div>
                <svg 
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-           <span style={{fontSize:11}}>{`Data points with ${feature}: ${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+           <span style={{fontSize:11}}>{`Data points with ${feature}: `}
+           <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span></span>
            </div>
            {
             others.length > 0 && (
@@ -119,7 +122,7 @@ export const PixalFeatureNav = ({feature}) => {
        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
        <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
        
-       <div style={{display:'flex', flexDirection:'column', alignContent:'center', marginLeft:15}}>
+       <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
             <div>
                <svg 
                width={12} 
@@ -127,8 +130,9 @@ export const PixalFeatureNav = ({feature}) => {
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
             <span 
             style={{fontSize:11}}>
-                {`Data points with ${feature}:`}{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
-            </span>
+                {`Data points with ${feature}: `}
+                <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
+                </span></span>
            </div>
            {
             others.length > 0 && (

@@ -40,9 +40,9 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkDa
         return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (width - margin.x)]).padding(0.2);
     }, [width, feature])
 
-    
+    let extentOfData = d3.extent(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]));
     let yScale = useMemo(()=> {
-        return scaleExtent ? d3.scaleLinear().domain(d3.extent(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))).range([(svgHeight - (margin.y)), 0]) : d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (margin.y)), 0])
+        return scaleExtent ? d3.scaleLinear().domain([extentOfData[0] - (extentOfData[0]*.05), extentOfData[1]]).range([(svgHeight - (margin.y)), 0]) : d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (margin.y)), 0])
     }, [svgHeight, yCoord, scaleExtent])
    
     const svgRef = useRef(null);
@@ -55,7 +55,14 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, bookmarkDa
 
         let wrap = svg.append('g').classed('wrap', true);
 
-        wrap.attr("transform", `translate(${(explanBool ? 25 : (margin.x/2)) + 30}, ${((margin.y/2) - 15)})`)
+        if(navBool){
+            wrap.attr("transform", `translate(${((margin.x/2)) + 30}, ${((margin.y/2) - 30)})`)
+        }else if(explanBool){
+            wrap.attr("transform", `translate(${((margin.x/2)) + 20}, ${((margin.y/2) - 20)})`)
+        }else{
+            wrap.attr("transform", `translate(${((margin.x/2)) + 30}, ${((margin.y/2) - 40)})`)
+        }
+       
 
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin.y)) + ")")
