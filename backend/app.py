@@ -33,7 +33,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 data = pd.read_csv(f'{path}/{data_path}')
 
 target = data.lof
-data = data.drop('lof', axis=1)
+# data = data.drop('lof', axis=1)
 # lof = LocalOutlierFactor(n_neighbors=50).fit(data[['Quantity', 'Unit-Price', 'Unit-Cost']])
 # target = pd.Series(-lof.negative_outlier_factor_)
 
@@ -42,7 +42,6 @@ data = data.drop('lof', axis=1)
 # data = data.drop('iforest_score', axis=1)
 
 # data = data.rename(columns={'Date': 'Order-Date'})#, 'Temperature': 'temperature', 'Precipitation': 'precipitation'})
-print(data)
 data['Order-Date'] = pd.to_datetime(data['Order-Date'])
 # data['Order-Date'] = pd.to_datetime(data['Order-Date'])
 
@@ -136,20 +135,20 @@ def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
     predicate = predicates[int(predicate_id)]
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
     
-    # num_pivot_bins = 35
-    # num_score_bins = 100
+    num_pivot_bins = 35
+    num_score_bins = 40
     predicate_scores = predicate.get_distribution(target, num_bins=num_score_bins, include_compliment=True).dropna().to_dict('records')
 
     attribute_data = {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr != attr} for attr,pivot in pivots.items()}  if predicate is not None else None
-    
-    # attribute_data = attribute_data_
+    attribute_score_data = {attr: pivot.get_plot_data_text('lof', max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None
+    for k,v in attribute_score_data.items():
+        attribute_score_data[k] = ([{'score' if ki=='lof' else ki: vi for ki,vi in r.items()} for r in v[0]], v[1])
 
     predicate_data = {
         'features': predicate.predicate_attributes,
         'predicate_id': predicate_id,
         'predicate_scores': predicate_scores,
-        # 'predicate_scores': predicate.get_distribution(target, num_bins=int(num_score_bins), include_compliment=True).fillna(0).to_dict('records'),
-        'attribute_score_data': {attr: pivot.get_plot_data_text(target, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None,
+        'attribute_score_data': attribute_score_data,
         'attribute_data': attribute_data
     }
     return predicate_data
@@ -193,7 +192,7 @@ def get_predicates_dict(predicates, target, num_bins=25):
 
 @api.route('/add_predicate', methods=['GET', 'POST'])
 def add_predicate():
-    attribute_values_str = list(request.args.to_dict().keys())[0].replace(' ', '')
+    attribute_values_str = list(request.args.to_dict().keys())[0]#.replace(' ', '')
     attribute_value_strs = [(a+']') for a in attribute_values_str.split(']')[:-1]]
     attribute_values_dict = dict([a.split(':') for a in attribute_value_strs])
     attribute_values = {k: parse_value_string(v, dtypes[k]) for k,v in attribute_values_dict.items()}
@@ -208,7 +207,7 @@ def add_predicate():
     predicates.append(predicate)
     
     target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
     # with open(f"{path}/{new_predicates_path}", 'wb') as f:
     #     json.dump(predicates_dict, f)
@@ -224,22 +223,28 @@ def edit_predicate(predicate_id, negate=0):
     predicate.is_negated = bool(int(negate))
     predicates[predicate_id] = predicate
     # pd.Series(np.random.normal(size=len(predicate.mask)))
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
 
 @api.route('/edit_predicate_clause', methods=['GET', 'POST'])
 def edit_predicate_clause():
-    attribute_values_str, predicate_id = list(request.args.to_dict().keys())[0].replace(' ', '').split(',"id":')
+    attribute_values_str, predicate_id = list(request.args.to_dict().keys())[0].split(',"id":')#.replace(' ', '').split(',"id":')
+    print(attribute_values_str)
+
     predicate_id = int(predicate_id[:-1].replace('"', '').replace("'", ''))
     attribute_values_str = attribute_values_str.split('"features":')[-1]
 
     attribute_value_strs = [(a+']').replace('"', '') for a in attribute_values_str.split(']')[:-1]]
     attribute_values_dict = dict([a.split(':') for a in attribute_value_strs])
+    print(attribute_values_dict)
 
     attribute_values = {k.replace('{', '').replace(',', ''): parse_value_string(str(v), dtypes[k.replace('{', '').replace(',', '')]) for k,v in attribute_values_dict.items()}
+    print(attribute_values)
+    
     predicate = Predicate(data, dtypes, **attribute_values)
+    print(predicate.attribute_mask.sum(axis=0))
     predicates[predicate_id] = predicate
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
 
 @api.route('/delete_predicate/<predicate_id>', methods=['GET', 'POST'])
@@ -247,7 +252,7 @@ def delete_predicate(predicate_id):
     predicate_id = int(predicate_id)
     del predicates[predicate_id]
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
 
 @api.route('/copy_predicate/<predicate_id>', methods=['GET', 'POST'])
@@ -255,19 +260,19 @@ def copy_predicate(predicate_id):
     predicate_id = int(predicate_id)
     predicates.append(predicates[predicate_id])
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
 
 @api.route('/get_predicate_data', methods=['GET', 'POST'])
 def get_predicate_data():
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = get_predicates_dict(predicates, target, num_bins=50)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
 
 @api.route('/get_predicate_score', methods=['GET', 'POST'])
 def get_predicate_score():
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
-    predicates_dict = get_predicates_dict(predicates, target)
+    predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
     return predicates_dict
 
 if __name__ == "__main__":
