@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import AddPredBox from '../predicateExploreComponents/addPredicateBox';
 import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
+import * as d3 from 'd3';
 
 export default function PredicateNav({setHighlightPred}) {
 
@@ -13,6 +14,8 @@ export default function PredicateNav({setHighlightPred}) {
   const filteredPredicates = useMemo(() => {
     return predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse();
   }, [predicateArray]);
+
+  let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score))
 
   return (
     <div className="pred-exp-nav">
@@ -38,12 +41,14 @@ export default function PredicateNav({setHighlightPred}) {
            key={`pred-edir-${p.id}`} 
            predicateData={p} 
            setHighlightPred={setHighlightPred}
+           scoreExtent={scoreExtent}
            />
           )) : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1).map(p => (
             <PredicateComp
             key={`pred-edir-${p.id}`} 
             predicateData={p} 
             setHighlightPred={setHighlightPred}
+            scoreExtent={scoreExtent}
             />))
         }
       </div>

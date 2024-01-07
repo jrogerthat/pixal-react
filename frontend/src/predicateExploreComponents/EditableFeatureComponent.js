@@ -11,6 +11,7 @@ import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { Typography } from '@mui/material';
 import { BasicDatePickerComp } from './DatePickerComponent';
+import styled from '@emotion/styled';
 
 
 const DropCheckComponent = ({cat, selected, options, predData}) => {
@@ -73,22 +74,28 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
     )
 }
 
+const RangeDivStyled = styled.div`
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+`
+
 const RangeSlider = ({range, data, predData}) => {
 
-    const [, dispatch] = useContext(DataContext);
-    const [value, setValue] = useState(data[1]);
-    const [pred, setPred] = useState(predData.predicate.attribute_values);
+  const [, dispatch] = useContext(DataContext);
+  const [value, setValue] = useState(data[1]);
+  const [pred, setPred] = useState(predData.predicate.attribute_values);
 
-    const marks = [
-        {
-        value: range[0],
-        label: range[0],
-        },
-        {
-        value: range[1],
-        label: range[1],
-        }
-    ];
+  // const marks = [
+  //     {
+  //     value: range[0],
+  //     label: range[0],
+  //     },
+  //     {
+  //     value: range[1],
+  //     label: range[1],
+  //     }
+  // ];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -106,19 +113,26 @@ const RangeSlider = ({range, data, predData}) => {
   }
 
   return (
-    <div style={{ width: 300, display:'inline' }}>
+    <RangeDivStyled style={{width:300}}>
+      <span
+      style={{fontSize:11, paddingRight:4}}
+      >{range[0]}</span>
       <Slider
         getAriaLabel={() => data[0]}
         value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
-        // getAriaValueText={data[0]}
+        size="small"
+        aria-label="Small"
         min={range[0]}
         max={range[1]}
-        marks={marks}
+        // marks={marks}
         onMouseUp={useMouseUp}
       />
-    </div>
+    <span
+    style={{fontSize:11, paddingLeft:4}}
+    >{range[1]}</span>
+    </RangeDivStyled>
   );
 }
 

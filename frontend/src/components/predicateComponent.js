@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton } from '../predicateExploreComponents/predicateEditButtons';
 import EditableFeatureComponent from '../predicateExploreComponents/EditableFeatureComponent';
+import * as d3 from 'd3'
 
 const StaticClauseComponent = ({data}) => {
     return <div
@@ -32,10 +33,9 @@ const staticFeatureValues = (data) => {
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData}) {
+export default function PredicateComp({predicateData, scoreExtent}) {
  
     const features = Object.entries(predicateData.predicate.attribute_values)
-    
     const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
 
     let isHidden = () => {
@@ -62,6 +62,8 @@ export default function PredicateComp({predicateData}) {
     }
 
     let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})
+
+    let bayesScale = d3.scaleLinear().domain(scoreExtent).range([25, 125])
     
     return (
         <div className="pred-wrap"
@@ -81,14 +83,23 @@ export default function PredicateComp({predicateData}) {
                     borderBottom:"1px solid #d3d3d3",
                     display:'flex',
                     flexDirection:'row',
-                    alignItems:'end',
+                    justifyContent:'space-between',
+                    gap:10,
+                    alignItems:'stretch',
                     paddingLeft:12,
                     paddingTop:5
                     }}>
-                    <div style={{float:'right'}}>
+                    {/* <div style={{float:'right'}}> */}
+                    <div>
                     <span>Bayes Factor Score:</span>
-                    <span>{predicateData.predicate.score.toFixed(2)}</span>
+                    <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
                     </div>
+                    <div style={{display:'inline', width:150, backgroundColor:'#d3d3d3', borderRadius:15, paddingTop:2}}>
+                        <svg
+                    style={{height: 20, width:'100%'}}
+                    ><rect width={5} height={35} x={bayesScale(predicateData.predicate.score)} style={{fill:'gray'}} />
+                    </svg></div>
+                    
                 </div>
                 {
                     features.map((f, i)=> (
