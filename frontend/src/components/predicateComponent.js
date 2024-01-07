@@ -36,7 +36,7 @@ TODO: hook this up to actually create a predicate
 export default function PredicateComp({predicateData, scoreExtent}) {
  
     const features = Object.entries(predicateData.predicate.attribute_values)
-    const [{editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
+    const [{predicateArray, editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
 
     let isHidden = () => {
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
@@ -94,10 +94,24 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     <span>Bayes Factor Score:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
                     </div>
-                    <div style={{display:'inline', width:150, backgroundColor:'#d3d3d3', borderRadius:15, paddingTop:2}}>
+                    <div style={{display:'inline', 
+                    width:150, 
+                    backgroundColor:'rgba(244, 239, 239, 0.78)', 
+                    fillOpacity:.5,
+                    borderRadius:15, 
+                    paddingTop:2}}>
                         <svg
                     style={{height: 20, width:'100%'}}
-                    ><rect width={5} height={35} x={bayesScale(predicateData.predicate.score)} style={{fill:'gray'}} />
+                    >{
+                        predicateArray.map((p)=> 
+                        <rect id={`${p.id}`} 
+                        width={p.id === predicateData.id ? 4 : 3} 
+                        height={35} 
+                        x={bayesScale(p.predicate.score)} 
+                        y={1}
+                        style={{fill:p.id === predicateData.id ? p.color : 'gray', fillOpacity: p.id === predicateData.id ? 1 : .3}} 
+                        />)
+                    }
                     </svg></div>
                     
                 </div>
