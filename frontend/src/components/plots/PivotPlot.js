@@ -22,7 +22,7 @@ export const  PivotPlot = () => {
         <MarksControlComponent setChecked={setChecked}/>
         <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
            <WhichPlot setEncoding={setEncoding} />
-           <div className="bookmark-button" style={{marginTop:7}}>
+           <div className="bookmark-button" style={{display: 'flex', flexDirection:'rows', marginTop:7, justifyContent:'flex-end'}}>
             <Button
             onClick={() => {
                 dispatch({type: "ADD_BOOKMARK_PLOT", 
