@@ -29,7 +29,7 @@ const staticFeatureValues = (data) => {
         </span></div>
 
     }else if(isNaN(valArr[0]) === false){
-        return <div style={{marginTop:25, display:'flex', flexDirection:'row', width:'85%'}}> <span
+        return <div style={{marginTop:30, display:'flex', flexDirection:'row', width:'85%'}}> <span
         style={{fontSize:11, paddingRight:4}}
         >{numericalRanges[data[0]][0]}</span>
         <Slider
