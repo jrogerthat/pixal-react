@@ -9,6 +9,11 @@ const categoryDict = {
   'Sub-Category': ['Machine', 'Bookcases', 'Chairs', 'Tables', 'Storage', 'Appliances', 'Copiers']
 }
 
+const numericalDict = {
+  precipitation : [-32 , 80],
+  temperature: [-32, 80]
+}
+
 
 const initialState = {
   predicateArray: [],
@@ -17,6 +22,7 @@ const initialState = {
   editMode: true,
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
+  numericalDict: numericalDict,
   hiddenPredicates: [],
   deletedPredicates: [],
   bookmarkedPlots: [],

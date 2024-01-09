@@ -79,23 +79,10 @@ const RangeDivStyled = styled.div`
   flex-direction:row;
   align-items:center;
 `
-
 export const RangeSlider = ({range, data, predData}) => {
-
   const [, dispatch] = useContext(DataContext);
   const [value, setValue] = useState(data[1]);
   const [pred, setPred] = useState(predData.predicate.attribute_values);
-
-  // const marks = [
-  //     {
-  //     value: range[0],
-  //     label: range[0],
-  //     },
-  //     {
-  //     value: range[1],
-  //     label: range[1],
-  //     }
-  // ];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -105,10 +92,10 @@ export const RangeSlider = ({range, data, predData}) => {
   };
 
   const useMouseUp = () => {
-        let pass = {features: pred, id: predData.id}
-        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
-        })
+    let pass = {features: pred, id: predData.id}
+    useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
+        dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+    })
   }
 
   return (
@@ -138,23 +125,19 @@ export const RangeSlider = ({range, data, predData}) => {
 
 export default function EditableFeatureComponent({data, predData}){
 
-    const [{predicateArray, categoricalFeatures, categoryDict}] = useContext(DataContext);
-    const numericalClauses = ['precipitation', 'temperature'];
-    const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
+    const [{predicateArray, categoricalFeatures, categoryDict, numericalDict}] = useContext(DataContext);
 
-    console.log('data in ediable feature omponen',data)
-
-    if(numericalClauses.indexOf(data[0]) > -1){
-        return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
-        <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
-        {`${data[0]}: `}
-        </Typography>
-        <RangeSlider range={numericalRanges[data[0]]} data={data} predData={predData}/>
-        </div>
+    if(Object.keys(numericalDict).indexOf(data[0]) > -1){
+      return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
+      <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
+      {`${data[0]}: `}
+      </Typography>
+      <RangeSlider range={numericalDict[data[0]]} data={data} predData={predData}/>
+      </div>
     }else if(categoricalFeatures.indexOf(data[0]) > -1){
-        return <div>
-        <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
-        </div>
+      return <div>
+      <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
+      </div>
     }
 
     // return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
