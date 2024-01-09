@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useContext, useState } from 'react';
 import { DataContext } from '../context';
-import { CopyButton, DeleteButton, HideButton, InvertButton } from '../predicateExploreComponents/predicateEditButtons';
+import { CopyButton, DeleteButton, HideButton, InvertButton, EditButton } from '../predicateExploreComponents/predicateEditButtons';
 import EditableFeatureComponent from '../predicateExploreComponents/EditableFeatureComponent';
 import * as d3 from 'd3'
 import { Slider } from '@mui/material';
@@ -165,6 +165,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     <DeleteButton predicateData={predicateData} />
                     <HideButton predicateData={predicateData} />
                     <CopyButton predicateData={predicateData} />
+                    <EditButton predicateData={predicateData} />
                     </div>
                     <div
                     style={{width:30}}
