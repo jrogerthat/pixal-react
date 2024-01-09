@@ -19,10 +19,9 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
                 setSvgHeight(180);
 
-                console.log('this is running', d3.select('.l-top').style('width').split('px')[0]);
             }
         }else if(explanBool){
-            // console.log('is this id right',d3.select(`#explan-${yCoord}`));
+          
             if(!d3.select(`#explan-${yCoord}`).empty()){
 
                 setWidth(d3.select(`#explan-${yCoord}`).style('width').split('px')[0]);

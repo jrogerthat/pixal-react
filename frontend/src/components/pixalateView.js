@@ -10,7 +10,7 @@ function Pixalate() {
 
   const [{selectedPredicate}] = useContext(DataContext);
 
-  console.log('slelected', selectedPredicate);
+  
 
   if(selectedPredicate && !selectedPredicate.attribute_data){
     return(
