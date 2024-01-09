@@ -136,7 +136,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
             .attr('text-anchor', 'middle')
             
         // }
-
+    if(navBool || explanBool){
         // Y axis label:
         wrap.append("text")
         .attr("text-anchor", "end")
@@ -155,7 +155,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         .text(xCoord)
         .style('font-size', navBool || explanBool ? 10 : 11)
         .style('font-weight', 800)
-
+    }
     
     }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id, scaleExtent]);
 

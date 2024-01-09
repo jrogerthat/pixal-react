@@ -80,7 +80,7 @@ const RangeDivStyled = styled.div`
   align-items:center;
 `
 
-const RangeSlider = ({range, data, predData}) => {
+export const RangeSlider = ({range, data, predData}) => {
 
   const [, dispatch] = useContext(DataContext);
   const [value, setValue] = useState(data[1]);
@@ -107,7 +107,6 @@ const RangeSlider = ({range, data, predData}) => {
   const useMouseUp = () => {
         let pass = {features: pred, id: predData.id}
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-           
             dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
   }
@@ -126,6 +125,7 @@ const RangeSlider = ({range, data, predData}) => {
         aria-label="Small"
         min={range[0]}
         max={range[1]}
+        // disabled={true}
         // marks={marks}
         onMouseUp={useMouseUp}
       />
@@ -141,6 +141,8 @@ export default function EditableFeatureComponent({data, predData}){
     const [{predicateArray, categoricalFeatures, categoryDict}] = useContext(DataContext);
     const numericalClauses = ['precipitation', 'temperature'];
     const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
+
+    console.log('data in ediable feature omponen',data)
 
     if(numericalClauses.indexOf(data[0]) > -1){
         return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>

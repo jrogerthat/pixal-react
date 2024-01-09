@@ -6,9 +6,6 @@ import * as d3 from "d3";
 export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
  
     const [{selectedPredicate, scaleExtent},] = useContext(DataContext);
-
-    console.log('scale extent',scaleExtent)
-
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
     }, [selectedPredicate, bookmarkData]);
@@ -84,25 +81,27 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
         .attr('fill-opacity', .7)
         .attr('stroke', 'gray')
         .attr('stroke-width', 1)
+        
+        if(navBool || explanBool){
+            // Y axis label:
+            wrap.append("text")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -40)
+            .attr("x", -((svgHeight/4) + 10))
+            .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
+            .style('font-size', navBool || explanBool ? 10 : 12)
+            .style('font-weight', 800)
 
-        // Y axis label:
-        wrap.append("text")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -40)
-        .attr("x", -((svgHeight/4) + 10))
-        .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
-        .style('font-size', navBool || explanBool ? 10 : 12)
-        .style('font-weight', 800)
-
-        // Add X axis label:
-        svg.append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", (width/2))
-        .attr("y", (svgHeight - 10))
-        .text(xCoord)
-        .style('font-size', navBool || explanBool ? 10 : 11)
-        .style('font-weight', 800)
+            // Add X axis label:
+            svg.append("text")
+            .attr("text-anchor", "middle")
+            .attr("x", (width/2))
+            .attr("y", (svgHeight - 10))
+            .text(xCoord)
+            .style('font-size', navBool || explanBool ? 10 : 11)
+            .style('font-weight', 800)
+        }
 
     }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id, scaleExtent]);
 
