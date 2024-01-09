@@ -16,23 +16,72 @@ export const  PivotPlot = () => {
     const [{selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
     const [encoding, setEncoding] = useState(null);
     const [checked, setChecked] = useState(true);
-   
+    let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
+    let yOptions = ['Score', ...keys]
+    let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
+
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+        dispatch({type: "CHANGE_SCALE", scaleExtent: event.target.checked})
+    };
+
     return (
-        <div className="r-top">
-        <MarksControlComponent setChecked={setChecked}/>
+        <div className="r-top" style={{display:'flex', flexDirection:'row'}}>
+        {/* <MarksControlComponent setChecked={setChecked} yCoord={yCoord} encoding={encoding} /> */}
+        <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+            <div style={{
+                marginTop:5,
+                marginLeft:5,
+                alignItems:'flex-end', 
+                flexDirection:'column',
+                display:'flex'}}>
+                <Legend selectedPredicate={selectedPredicate} xCoord={xCoord}/>
+                <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', paddingTop:50}}>
+                    <CoordDrop 
+                        options={yOptions} 
+                        label={"y"} 
+                        type={"yCoord"}
+                    />
+                    <div style={{fontSize:7}}>
+                        <FormGroup>
+                            <FormControlLabel 
+                            control={<Switch size="small"defaultChecked />} 
+                            onChange={handleChange}
+                            style={{fontSize:7}}
+                            label="Y Scale Extent" 
+                            size="small"/>
+                        </FormGroup>
+                    </div>
+                </div>
+            </div>
+            <div className="bookmark-button" 
+                style={{display: 'flex', 
+                flexDirection:'row', 
+                marginTop:7, 
+                justifyContent:'flex-start', 
+                }}>
+                    <Button
+                    onClick={() => {
+                        dispatch({type: "ADD_BOOKMARK_PLOT", 
+                        bookmarked: {'x': xCoord, 'y': yCoord, 
+                        'encoding': encoding, 
+                        'selectedPredicate': {...selectedPredicate}, 
+                        'color': selectedPredicate.predicate_info.color,
+                        'feature': {...selectedPredicate.feature}, 
+                        'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
+                    ><BookmarkAddIcon/>Bookmark Plot</Button>
+            </div>
+        </div>
         <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
-           <WhichPlot setEncoding={setEncoding} />
-           <div className="bookmark-button" style={{display: 'flex', flexDirection:'rows', marginTop:7, justifyContent:'flex-end'}}>
-            <Button
-            onClick={() => {
-                dispatch({type: "ADD_BOOKMARK_PLOT", 
-                bookmarked: {'x': xCoord, 'y': yCoord, 
-                'encoding': encoding, 
-                'selectedPredicate': {...selectedPredicate}, 
-                'color': selectedPredicate.predicate_info.color,
-                'feature': {...selectedPredicate.feature}, 
-                'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
-            ><BookmarkAddIcon/>Bookmark Plot</Button>
+            <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+        
+            <WhichPlot setEncoding={setEncoding} />
+            </div>
+            <div style={{display:"flex", justifyContent:'center'}}>
+            <CoordDropX  
+                options={selectedPredicate.predicate_info.predicate.attribute_values} 
+                label={"x"} 
+                type={"xCoord"}/>
             </div>
         </div>
       </div>
@@ -47,58 +96,60 @@ const getExplanation = (xC, yC, selectedPredicate) => {
     }
 }
 
-export const MarksControlComponent = ({setChecked}) => {
+const Legend = ({selectedPredicate, xCoord, others}) => {
+    return(
+        <div>
+        <div style={{display:'inline'}}>
+            <svg width={12} height={12} style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+            <div 
+            style={{fontSize:13,
+                    display:'inline'
+            }}>
+            {/* {`Data points with`}  */}
+            <span style={{fontWeight:800}}>{`${xCoord}:`}</span></div>
+            <div style={{fontSize:13, display:'inline'}}>
+            {`${selectedPredicate.predicate_info.predicate.attribute_values[xCoord].join(', ')}`}
+            </div>
+        </div>
+        <div style={{marginTop:5}}>
+        <svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5, display:'inline'}}/>
+        {/* </div> */}
+        {
+            others && others.length > 0 ? <div style={{display:'inline'}}>
+            {
+                 others.map((o, i) => (
+                     <div 
+                     key={o[0]}
+                     style={{
+                         fontSize:13, 
+                         display:'inline'
+                     }}
+                     >
+                         <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
+                     </div>
+                 ))
+             }
+            </div> : <div style={{display:'inline'}}>
+             <span style={{fontSize:13}}>All other data.</span>
+         </div>
+        }
+        </div>
+    </div>
+    
+    )
+}
 
+export const MarksControlComponent = ({setChecked, yCoord, encoding}) => {
     const [{selectedPredicate, xCoord}, dispatch] = useContext(DataContext);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
-
-
-    const handleChange = (event) => {
-        setChecked(event.target.checked);
-        dispatch({type: "CHANGE_SCALE", scaleExtent: event.target.checked})
-    };
    
     return(
-        <div className="marksControl" style={{width:230}}>
-            <div>
-                <div style={{marginLeft:10}} className="head-3">Encoding</div>
-                <div style={{display:'flex', flexDirection:'column', color:'gray'}}>
-                    <div>
-                        <CoordDropX 
-                        options={selectedPredicate.predicate_info.predicate.attribute_values} 
-                        label={"x"} 
-                        type={"xCoord"}
-                        />
-                    </div>
-                    <div>
-                        <CoordDrop 
-                        options={yOptions} 
-                        label={"y"} 
-                        type={"yCoord"}
-                        />
-                    </div>
-                </div>
-            </div>
+        <div className="marksControl" style={{width:200}}>
             <div style={{marginTop:40, marginLeft:10}}>
-                
-                <div>
-                <svg 
-                width={12} 
-                height={12} 
-                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-                <div 
-                style={{fontSize:13,
-                        display:'inline'
-                }}>
-                    {`Data points with`} <span style={{fontWeight:800}}>{`${xCoord}:`}</span></div>
-                <div style={{fontSize:13}}>
-                    {`${selectedPredicate.predicate_info.predicate.attribute_values[xCoord].join(', ')}`}
-                    </div>
-                </div>
         
-                <div style={{marginTop:10}}>
+                {/* <div style={{marginTop:10}}>
                     <svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5, display:'inline'}}/>
                 {
                     others.length > 0 ? <div style={{display:'inline'}}>
@@ -120,17 +171,22 @@ export const MarksControlComponent = ({setChecked}) => {
                     </div>
                 }
                    
-                </div>
+                </div> */}
             </div>
 
-            <div style={{marginTop:30, marginLeft:10, fontSize:9}}><FormGroup>
-            <FormControlLabel 
-            control={<Switch size="small"defaultChecked />} 
-            onChange={handleChange}
-            style={{fontSize:9}}
-            label="Y Scale Extent" />
-            {/* <FormControlLabel disabled control={<Switch />} label="Disabled" /> */}
-            </FormGroup></div>
+            <div className="bookmark-button" 
+           style={{display: 'flex', flexDirection:'row', marginTop:7}}>
+            <Button
+            onClick={() => {
+                dispatch({type: "ADD_BOOKMARK_PLOT", 
+                bookmarked: {'x': xCoord, 'y': yCoord, 
+                'encoding': encoding, 
+                'selectedPredicate': {...selectedPredicate}, 
+                'color': selectedPredicate.predicate_info.color,
+                'feature': {...selectedPredicate.feature}, 
+                'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
+            ><BookmarkAddIcon/>Bookmark Plot</Button>
+            </div>
         </div>
     )
 }
@@ -146,7 +202,15 @@ const WhichPlot = ({setEncoding}) => {
     if(categoricalBool){
         setEncoding('bar')
         return  <div style={{marginTop:20}}>
-            <FeatureBarPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool} feature={selectedPredicate.feature[0]} /></div>
+            <FeatureBarPlot 
+            xCoord={xCoord} 
+            yCoord={yCoord} 
+            categorical={categoricalBool} 
+            feature={selectedPredicate.feature[0]} 
+            pivotBool={true}
+            explanBool={false}
+            navBool={false}
+            /></div>
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         setEncoding('line')
         return <div style={{marginTop:20}}>
@@ -154,7 +218,14 @@ const WhichPlot = ({setEncoding}) => {
     }else{
         setEncoding('dot')
         return <div style={{marginTop:20}}>
-       <FeatureDotPlot xCoord={xCoord} yCoord={yCoord} categorical={categoricalBool}/></div>
+       <FeatureDotPlot 
+        xCoord={xCoord} 
+        yCoord={yCoord} 
+        categorical={categoricalBool}
+        pivotBool={true}
+        explanBool={false}
+        navBool={false}
+        /></div>
     }
 }
 
