@@ -27,7 +27,6 @@ export const  PivotPlot = () => {
 
     return (
         <div className="r-top" style={{display:'flex', flexDirection:'row'}}>
-        {/* <MarksControlComponent setChecked={setChecked} yCoord={yCoord} encoding={encoding} /> */}
         <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
             <div style={{
                 marginTop:5,
@@ -36,7 +35,7 @@ export const  PivotPlot = () => {
                 flexDirection:'column',
                 display:'flex'}}>
                 <Legend selectedPredicate={selectedPredicate} xCoord={xCoord}/>
-                <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', paddingTop:50}}>
+                <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', paddingTop:50, marginLeft:10}}>
                     <CoordDrop 
                         options={yOptions} 
                         label={"y"} 
@@ -136,58 +135,6 @@ const Legend = ({selectedPredicate, xCoord, others}) => {
         </div>
     </div>
     
-    )
-}
-
-export const MarksControlComponent = ({setChecked, yCoord, encoding}) => {
-    const [{selectedPredicate, xCoord}, dispatch] = useContext(DataContext);
-    let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
-    let yOptions = ['Score', ...keys]
-    let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
-   
-    return(
-        <div className="marksControl" style={{width:200}}>
-            <div style={{marginTop:40, marginLeft:10}}>
-        
-                {/* <div style={{marginTop:10}}>
-                    <svg width={13} height={12} style={{backgroundColor: 'gray', marginRight:5, display:'inline'}}/>
-                {
-                    others.length > 0 ? <div style={{display:'inline'}}>
-                        {
-                            others.map((o, i) => (
-                                <div 
-                                key={o[0]}
-                                style={{
-                                    fontSize:13, 
-                                    display:'inline'
-                                }}
-                                >
-                                    <span style={{fontWeight:800}}>{`${o[0]}`}</span>{`: ${o[1].join(', ')}`}
-                                </div>
-                            ))
-                        }
-                    </div> : <div style={{display:'inline'}}>
-                        <span style={{fontSize:13}}>All other data points.</span>
-                    </div>
-                }
-                   
-                </div> */}
-            </div>
-
-            <div className="bookmark-button" 
-           style={{display: 'flex', flexDirection:'row', marginTop:7}}>
-            <Button
-            onClick={() => {
-                dispatch({type: "ADD_BOOKMARK_PLOT", 
-                bookmarked: {'x': xCoord, 'y': yCoord, 
-                'encoding': encoding, 
-                'selectedPredicate': {...selectedPredicate}, 
-                'color': selectedPredicate.predicate_info.color,
-                'feature': {...selectedPredicate.feature}, 
-                'explanation': getExplanation(xCoord, yCoord, selectedPredicate)}})}}
-            ><BookmarkAddIcon/>Bookmark Plot</Button>
-            </div>
-        </div>
     )
 }
 
