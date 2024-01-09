@@ -72,7 +72,15 @@ export const PixalFeatureNav = ({feature}) => {
     
         return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
     
-        <FeatureBarPlot xCoord={feature} yCoord={'Score'} categorical={categoricalBool} feature={feature} navBool={true} />
+        <FeatureBarPlot 
+            xCoord={feature} 
+            yCoord={'Score'} 
+            categorical={categoricalBool} 
+            feature={feature} 
+            navBool={true}
+            pivotBool={false}
+            explanBool={false}
+        />
 
         <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
             <div style={{justifyContent:"center"}}>

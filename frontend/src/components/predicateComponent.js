@@ -4,12 +4,14 @@ import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton } from '../predicateExploreComponents/predicateEditButtons';
 import EditableFeatureComponent from '../predicateExploreComponents/EditableFeatureComponent';
 import * as d3 from 'd3'
+import { Slider } from '@mui/material';
 
 const StaticClauseComponent = ({data}) => {
+
     return <div
-    style={{paddingLeft:10}}
-    ><span>{`${data[0]}: `}</span>
-    {staticFeatureValues(data[1])}
+    style={{paddingLeft:10, display:'flex', flexDirection:'row', alignItems:'center'}}
+    ><div style={{paddingRight:10}}><span>{`${data[0]}: `}</span></div>
+    {staticFeatureValues(data)}
     </div>
 }
 
@@ -17,11 +19,32 @@ const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(
 
 const staticFeatureValues = (data) => {
 
-    let valArr = (Array.isArray(data)) ? data : Object.entries(data)[0][1];
+    const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
 
-    if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){
+    let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
+
+    if(isDate(valArr[0]) && data[0] === 'Order-Date'){ 
+        // if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){ 
         return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
         </span></div>
+
+    }else if(isNaN(valArr[0]) === false){
+        return <div style={{marginTop:25, display:'flex', flexDirection:'row', width:'85%'}}> <span
+        style={{fontSize:11, paddingRight:4}}
+        >{numericalRanges[data[0]][0]}</span>
+        <Slider
+          getAriaLabel={() => data[0]}
+          value={valArr}
+          valueLabelDisplay="on"
+          size="small"
+          aria-label="Small"
+          min={numericalRanges[data[0]][0]}
+          max={numericalRanges[data[0]][1]}
+          disabled={true}
+        />
+      <span
+      style={{fontSize:11, paddingLeft:4}}
+      >{numericalRanges[data[0]][1]}</span></div>
     }else if(valArr.length === 1){
         return  <div className="feature-value">{` ${valArr[0]}`}</div>
     }
@@ -117,7 +140,8 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                 </div>
                 {
                     features.map((f, i)=> (
-                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : <StaticClauseComponent key={`f-${i+1}`} data={f}/>
+                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : 
+                        <StaticClauseComponent key={`f-${i+1}`} data={f}/>
                     ))
                 }
             </div>
