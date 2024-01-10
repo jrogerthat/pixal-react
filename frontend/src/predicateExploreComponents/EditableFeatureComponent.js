@@ -14,6 +14,15 @@ import { BasicDatePickerComp } from './DatePickerComponent';
 import styled from '@emotion/styled';
 
 
+export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) => {
+  console.log(presentFeatureArray)
+  return(
+    presentFeatureArray.map((f, i)=> (
+      <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/>
+    ))
+  )
+}
+
 const DropCheckComponent = ({cat, selected, options, predData}) => {
   
     let [selectedNames, setSelectedNames] = useState(selected);
@@ -30,16 +39,11 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
 
         let newPred = {...pred};
         newPred[cat]  = newSelected;
-
         let pass = {features: newPred, id: predData.id}
 
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-           
             dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
-
-
-        
   };
     return (
         <div>

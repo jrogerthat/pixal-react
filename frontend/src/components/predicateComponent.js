@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useState } from 'react';
 import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton, EditButton } from '../predicateExploreComponents/predicateEditButtons';
-import EditableFeatureComponent from '../predicateExploreComponents/EditableFeatureComponent';
+import EditableFeatureComponent, { EditableFeatureCompWrap } from '../predicateExploreComponents/EditableFeatureComponent';
 import * as d3 from 'd3'
 import { Slider } from '@mui/material';
 
@@ -142,10 +142,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     
                 </div>
                 {
-                    features.map((f, i)=> (
-                        editing ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : 
-                        <StaticClauseComponent key={`f-${i+1}`} data={f}/>
-                    ))
+                    editing ? <EditableFeatureCompWrap presentFeatureArray={features} predicateData={predicateData} /> : features.map((f, i)=> (<StaticClauseComponent key={`f-${i+1}`} data={f}/>))
                 }
             </div>
             {
