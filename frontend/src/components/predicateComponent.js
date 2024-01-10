@@ -60,6 +60,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
  
     const features = Object.entries(predicateData.predicate.attribute_values)
     const [{predicateArray, editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
+    const [editing, setEditing] = useState(false);
 
     let isHidden = () => {
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
@@ -87,6 +88,8 @@ export default function PredicateComp({predicateData, scoreExtent}) {
     let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})
 
     let bayesScale = d3.scaleLinear().domain(scoreExtent).range([25, 125])
+
+    console.log("PRED DATAAA", predicateData);
     
     return (
         <div className="pred-wrap"
@@ -140,7 +143,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                 </div>
                 {
                     features.map((f, i)=> (
-                        editMode ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : 
+                        editing ? <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/> : 
                         <StaticClauseComponent key={`f-${i+1}`} data={f}/>
                     ))
                 }
@@ -165,7 +168,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     <DeleteButton predicateData={predicateData} />
                     <HideButton predicateData={predicateData} />
                     <CopyButton predicateData={predicateData} />
-                    <EditButton predicateData={predicateData} />
+                    <EditButton predicateData={predicateData} setEditing={setEditing} editing={editing} />
                     </div>
                     <div
                     style={{width:30}}

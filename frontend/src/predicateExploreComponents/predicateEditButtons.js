@@ -41,13 +41,11 @@ const HideButton = ({predicateData}) => {
         </Button>
     )
 }
-const EditButton = ({predicateData}) => {
+const EditButton = ({predicateData, editing, setEditing}) => {
 
-    const [editable, setEditable] = useState(false);
-    
     function editChange(){
         console.log('predicate', predicateData)
-        editable ? setEditable(false) : setEditable(true);
+        editing ? setEditing(false) : setEditing(true);
     }
     return (
     <Button
@@ -60,7 +58,7 @@ const EditButton = ({predicateData}) => {
         }}
         onClick={editChange}
         >{
-            editable ? <EditOffTwoToneIcon /> : <DriveFileRenameOutlineTwoToneIcon />
+            editing ? <EditOffTwoToneIcon /> : <DriveFileRenameOutlineTwoToneIcon />
         }
     </Button>
     )
@@ -92,6 +90,8 @@ const CopyButton = ({predicateData}) => {
     
     const HandleCopy = () => {
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
+
+            console.log('DATA COPY', data.data)
            
             dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
