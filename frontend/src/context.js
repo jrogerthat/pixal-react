@@ -3,6 +3,8 @@ import formatPredicateArray from "./dataFormating";
 
 export const DataContext = createContext();
 
+const dTypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+
 const categoryDict = {
   'State': ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'U.S. Virgin Islands', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
   'Segment': ['Consumer', 'Home Office','Corporate'],
@@ -14,7 +16,6 @@ const numericalDict = {
   temperature: [-32, 80]
 }
 
-
 const initialState = {
   predicateArray: [],
   selectedPredicate:null,
@@ -23,6 +24,7 @@ const initialState = {
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
   numericalDict: numericalDict,
+  dataTypes: dTypes,
   hiddenPredicates: [],
   deletedPredicates: [],
   bookmarkedPlots: [],
