@@ -114,6 +114,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     }}>
                     {/* <div style={{float:'right'}}> */}
                     <div>
+                    {predicateData.parent && <span>{`(Cloned from ${predicateData.parent})  `}</span>}
                     <span>Bayes Factor Score:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
                     </div>
