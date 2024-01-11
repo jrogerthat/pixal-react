@@ -97,9 +97,10 @@ const CopyButton = ({predicateData}) => {
             let childId = Object.keys(data.data).length - 1;
             let parentId = predicateData.id;
             if(Object.keys(parentToChildArray).includes(parentId)){
-                parentToChildArray[parentId].append(childId);
+                parentToChildArray[parentId].push(childId);
             }else{
-                parentToChildArray[parentId] = [childId];
+                parentToChildArray[parentId] = [];
+                parentToChildArray[parentId].push(childId);
             }
             data.data[Object.keys(data.data).length - 1].parent = predicateData.id
             dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildArray: parentToChildArray})

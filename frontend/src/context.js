@@ -32,7 +32,7 @@ const initialState = {
   yCoord: "score",
   negatedArray : [],
   scaleExtent: true,
-  parentToChildArray: [],
+  parentToChildArray: {},
 };
 
 const reducer = (state, action) => {
