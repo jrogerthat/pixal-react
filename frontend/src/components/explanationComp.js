@@ -50,8 +50,6 @@ export const ExplanationComponent = () => {
 const WhichPlot = ({yCoord}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord }, dispatch] = useContext(DataContext);
 
-
-
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
     if(categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1){
@@ -60,7 +58,10 @@ const WhichPlot = ({yCoord}) => {
         xCoord={xCoord} 
         yCoord={yCoord} 
         categorical={categoricalBool} feature={selectedPredicate.feature[0]}
-        explanBool={true} />
+        explanBool={true} 
+        pivotBool={false}
+        navBool={false}
+        />
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         // setEncoding('line')
         return <FeatureLinePlot 

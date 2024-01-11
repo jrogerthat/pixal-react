@@ -9,13 +9,30 @@ import * as d3 from 'd3';
 export default function PredicateNav({setHighlightPred}) {
 
   const [addPredMode, setAddPredMode] = useState(false);
-  const [{editMode, predicateArray, hiddenPredicates, deletedPredicates}, dispatch] = useContext(DataContext);
+  const [{editMode, predicateArray, hiddenPredicates, deletedPredicates, parentToChildDict}, dispatch] = useContext(DataContext);
 
-  const filteredPredicates = useMemo(() => {
-    return predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => a.predicate.score - b.predicate.score).reverse();
-  }, [predicateArray]);
+  const filteredPredicates = useMemo(() => {  
+    const test = predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => b.predicate.score - a.predicate.score)
+    const parents = test.filter(f => Object.keys(parentToChildDict).includes(f.id));
+    let child = []
+    if(parents.length === 0){
+      return test;
+    }else{
+      let starter = parents.map(p => {
+        let children = test.filter(f => parentToChildDict[p.id].includes(+f.id));
+        child = [...child, ...children.map(m => +m.id)]
+        p.children = children
+        return p
+      });
 
-  let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score))
+      let notKid = test.filter(t => child.indexOf(+t.id) === -1 && Object.keys(parentToChildDict).indexOf(t.id) === -1);
+      let combo = [...starter, ...notKid];
+      return combo;
+    }
+  }, [predicateArray, parentToChildDict]);
+
+  console.log('FILTERED PRED', filteredPredicates);
+  let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score));
 
   return (
     <div className="pred-exp-nav">

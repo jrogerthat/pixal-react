@@ -57,7 +57,7 @@ const StaticFeatureValues = (data) => {
 TODO: hook this up to actually create a predicate
 */
 export default function PredicateComp({predicateData, scoreExtent}) {
- 
+   
     const features = Object.entries(predicateData.predicate.attribute_values)
     const [{predicateArray, editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     const [editing, setEditing] = useState(false);
@@ -127,7 +127,8 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     style={{height: 20, width:'100%'}}
                     >{
                         predicateArray.map((p)=> 
-                        <rect id={`${p.id}`} 
+                        <rect 
+                        key={`${p.id}`} 
                         width={p.id === predicateData.id ? 4 : 3} 
                         height={35} 
                         x={bayesScale(p.predicate.score)} 

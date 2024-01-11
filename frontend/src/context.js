@@ -32,7 +32,7 @@ const initialState = {
   yCoord: "score",
   negatedArray : [],
   scaleExtent: true,
-  parentToChildArray: {},
+  parentToChildDict: {},
 };
 
 const reducer = (state, action) => {
@@ -50,12 +50,12 @@ const reducer = (state, action) => {
       return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
     case "UPDATE_PARENT_CHILD_ARRAY":
-      return {...DataContext, parentToChildArray: action.pcArray}
+      return {...DataContext, parentToChildDict: action.pcArray}
 
     case "SET_PREDICATE_EXPLORE_DATA":
       let arr = formatPredicateArray(action.predData);
-      let pToC = action.parentToChildArray !== null ? action.parentToChildArray : state.parentToChildArray;
-      return {...state, predicateArray: arr, parentToChildArray: pToC}
+      let pToC = action.parentToChildDict !== null ? action.parentToChildDict : state.parentToChildDict;
+      return {...state, predicateArray: arr, parentToChildDict: pToC}
 
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};
