@@ -5,10 +5,10 @@ import randomColor from 'randomcolor'
  * @returns predicate array
  */
 const formatPredicateArray = (preds) => {
-   
+    console.log('PREDDDSSSSS',preds);
     return Object.entries(preds).map((m) => {
         let predOb = m[1].attribute_values ? m[1] : {'attribute_values': m[1], 'negated': false};
-        return {id: m[0], predicate: predOb, color: colorArray.length < +m[0] ? randomColor() : colorArray[+m[0]] }
+        return {id: m[0], parent: m[1].parent ? m[1].parent : null, predicate: predOb, color: colorArray.length < +m[0] ? randomColor() : colorArray[+m[0]] }
     });
 }
 

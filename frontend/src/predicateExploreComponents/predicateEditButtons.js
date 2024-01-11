@@ -91,8 +91,7 @@ const CopyButton = ({predicateData}) => {
     const HandleCopy = () => {
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
 
-            console.log('DATA COPY', data.data)
-           
+            data.data[Object.keys(data.data).length - 1].parent = predicateData.id
             dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
         })
     }

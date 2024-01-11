@@ -12,7 +12,7 @@ const categoryDict = {
 }
 
 const numericalDict = {
-  precipitation : [-32 , 80],
+  precipitation : [0, 20],
   temperature: [-32, 80]
 }
 
