@@ -24,14 +24,11 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-     
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data})
+      console.log('data', data)
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data, parentToChildArray: null})
     }
     
   }, [loaded])
-
-  
-
 
   return (
     <div className="App">

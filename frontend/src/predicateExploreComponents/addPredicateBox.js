@@ -18,7 +18,7 @@ function AddPredBox({setAddPredMode}){
         setAddPredMode(null);
 
         useGetAxiosAsync(`add_predicate?${newPred}`).then(data => {
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildArray: null})
         })
     }
 

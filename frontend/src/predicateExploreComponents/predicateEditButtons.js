@@ -87,16 +87,24 @@ const DeleteButton = ({predicateData}) => {
 }
 
 const CopyButton = ({predicateData}) => {
+
+    const [{parentToChildArray}, dispatch] = useContext(DataContext);
     
     const HandleCopy = () => {
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
 
+
+            let childId = Object.keys(data.data).length - 1;
+            let parentId = predicateData.id;
+            if(Object.keys(parentToChildArray).includes(parentId)){
+                parentToChildArray[parentId].append(childId);
+            }else{
+                parentToChildArray[parentId] = [childId];
+            }
             data.data[Object.keys(data.data).length - 1].parent = predicateData.id
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildArray: parentToChildArray})
         })
     }
-    
-    const[{},dispatch] = useContext(DataContext);
 
     return(
         <Button 
@@ -128,7 +136,7 @@ const InvertButton = ({predicateData}) => {
 
         useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
 
-              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildArray: null})
         })
     }
     return(
