@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
 import Slider from '@mui/material/Slider';
@@ -9,17 +9,40 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { BasicDatePickerComp } from './DatePickerComponent';
 import styled from '@emotion/styled';
 
 
 export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) => {
-  console.log(presentFeatureArray)
+  const [{dataTypes, numericalDict}, dispatch] = useContext(DataContext);
+  const [featureArray, setFeatureArray] = useState(presentFeatureArray);
+
+  const combinedFeatureArraySorted = useMemo(() => {
+    let combinedFeatureArrayFirst = Object.entries(dataTypes).map((dt, i) => {
+      let isPresent = featureArray.map(p => p[0]).indexOf(dt[0]);
+      return {feature: dt[0], data_type:dt[1], presentFeat: isPresent > -1 ? featureArray[isPresent] : null}
+    });
+  
+    return [...combinedFeatureArrayFirst.filter(f => f.presentFeat != null), ...combinedFeatureArrayFirst.filter(f => f.presentFeat == null)]
+    
+  }, [featureArray]);
+  
   return(
-    presentFeatureArray.map((f, i)=> (
-      <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/>
-    ))
+    <div style={{paddingLeft:5}}>{
+    combinedFeatureArraySorted.map((f, i)=> {
+      return(
+      f.presentFeat === null ? <div style={{display:'inline'}}>
+        <Button 
+          onClick={() => {
+            let values = f.data_type == 'nominal' ? [] : numericalDict[f.feature];
+            setFeatureArray([...featureArray, [f.feature, values]]);
+          }}
+          variant="outlined" 
+          size='small' 
+          style={{margin:3}}>{`Add ${f.feature}`}</Button>
+      </div> : <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/>
+    )})}</div>
   )
 }
 
@@ -129,18 +152,18 @@ export const RangeSlider = ({range, data, predData}) => {
 
 export default function EditableFeatureComponent({data, predData}){
 
-    const [{predicateArray, categoricalFeatures, categoryDict, numericalDict}] = useContext(DataContext);
+    const [{categoryDict, numericalDict}] = useContext(DataContext);
 
-    if(Object.keys(numericalDict).indexOf(data[0]) > -1){
+    if(data.data_type === 'numeric'){
       return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
       <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
-      {`${data[0]}: `}
+      {`${data.feature}: `}
       </Typography>
-      <RangeSlider range={numericalDict[data[0]]} data={data} predData={predData}/>
+      <RangeSlider range={numericalDict[data.feature]} data={data.presentFeat} predData={predData}/>
       </div>
-    }else if(categoricalFeatures.indexOf(data[0]) > -1){
+    }else if(data.data_type === 'nominal'){
       return <div>
-      <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
+      <DropCheckComponent cat={data.feature} selected={data.presentFeat[1]} options={categoryDict[data.feature]} predData={predData}/>
       </div>
     }
 
@@ -148,5 +171,5 @@ export default function EditableFeatureComponent({data, predData}){
     // <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
     // </div>
     // return <DateTimePickerValue />
-    return <BasicDatePickerComp predData={predData} label={data[0]} dateRange={data[1]}/>
+    return <BasicDatePickerComp predData={predData} label={data.feature} dateRange={data.presentFeat[1]}/>
 }

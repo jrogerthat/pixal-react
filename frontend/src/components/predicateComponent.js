@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useState } from 'react';
 import { DataContext } from '../context';
 import { CopyButton, DeleteButton, HideButton, InvertButton, EditButton } from '../predicateExploreComponents/predicateEditButtons';
-import EditableFeatureComponent, { EditableFeatureCompWrap } from '../predicateExploreComponents/EditableFeatureComponent';
+import { EditableFeatureCompWrap } from '../predicateExploreComponents/EditableFeatureComponent';
 import * as d3 from 'd3'
 import { Slider } from '@mui/material';
 
@@ -11,15 +11,15 @@ const StaticClauseComponent = ({data}) => {
     return <div
     style={{paddingLeft:10, display:'flex', flexDirection:'row', alignItems:'center'}}
     ><div style={{paddingRight:10}}><span>{`${data[0]}: `}</span></div>
-    {staticFeatureValues(data)}
+    {StaticFeatureValues(data)}
     </div>
 }
 
 const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 
-const staticFeatureValues = (data) => {
+const StaticFeatureValues = (data) => {
 
-    const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
+    const [{numericalDict}] = useContext(DataContext);
 
     let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
 
@@ -31,20 +31,20 @@ const staticFeatureValues = (data) => {
     }else if(isNaN(valArr[0]) === false){
         return <div style={{marginTop:25, display:'flex', flexDirection:'row', width:'85%'}}> <span
         style={{fontSize:11, paddingRight:4}}
-        >{numericalRanges[data[0]][0]}</span>
+        >{numericalDict[data[0]][0]}</span>
         <Slider
           getAriaLabel={() => data[0]}
           value={valArr}
           valueLabelDisplay="on"
           size="small"
           aria-label="Small"
-          min={numericalRanges[data[0]][0]}
-          max={numericalRanges[data[0]][1]}
+          min={numericalDict[data[0]][0]}
+          max={numericalDict[data[0]][1]}
           disabled={true}
         />
       <span
       style={{fontSize:11, paddingLeft:4}}
-      >{numericalRanges[data[0]][1]}</span></div>
+      >{numericalDict[data[0]][1]}</span></div>
     }else if(valArr.length === 1){
         return  <div className="feature-value">{` ${valArr[0]}`}</div>
     }
@@ -86,10 +86,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
     }
 
     let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})
-
     let bayesScale = d3.scaleLinear().domain(scoreExtent).range([25, 125])
-
-    console.log("PRED DATAAA", predicateData);
     
     return (
         <div className="pred-wrap"

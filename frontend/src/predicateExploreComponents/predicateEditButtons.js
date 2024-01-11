@@ -44,7 +44,7 @@ const HideButton = ({predicateData}) => {
 const EditButton = ({predicateData, editing, setEditing}) => {
 
     function editChange(){
-        console.log('predicate', predicateData)
+        
         editing ? setEditing(false) : setEditing(true);
     }
     return (
