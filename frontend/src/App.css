@@ -37,7 +37,16 @@ body {
   float: right;
  
 }
-
+.pred-exp-nav-large {
+  width: 50%;
+  /* background-color: #FFF; */
+  padding:10px;
+  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  overflow-y: auto;
+}
 /* FOR PREDICATE NAV */
 .pred-exp-nav {
 

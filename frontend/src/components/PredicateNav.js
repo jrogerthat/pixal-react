@@ -6,7 +6,7 @@ import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
 import * as d3 from 'd3';
 
-const NestedWrapper = ({predicateData, setHighlightPred, scoreExtent}) => {
+export const NestedWrapper = ({predicateData, scoreExtent}) => {
  
   let predArray = predicateData.children ? [...predicateData.children, predicateData] : [predicateData];
 
@@ -24,7 +24,7 @@ const NestedWrapper = ({predicateData, setHighlightPred, scoreExtent}) => {
         <PredicateComp
           // key={`pred-edir-${p.id}`} 
           predicateData={p} 
-          setHighlightPred={setHighlightPred}
+          // setHighlightPred={setHighlightPred}
           scoreExtent={scoreExtent}
           />
         </div>
@@ -33,7 +33,7 @@ const NestedWrapper = ({predicateData, setHighlightPred, scoreExtent}) => {
   )
 }
 
-export default function PredicateNav({setHighlightPred}) {
+export default function PredicateNav() {
 
   const [addPredMode, setAddPredMode] = useState(false);
   const [{editMode, predicateArray, hiddenPredicates, deletedPredicates, parentToChildDict}, dispatch] = useContext(DataContext);
@@ -87,7 +87,7 @@ export default function PredicateNav({setHighlightPred}) {
           <NestedWrapper 
             key={`pred-edir-${p.id}`} 
             predicateData={p} 
-            setHighlightPred={setHighlightPred}
+            // setHighlightPred={setHighlightPred}
             scoreExtent={scoreExtent}
           />
           ))
