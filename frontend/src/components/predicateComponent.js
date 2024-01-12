@@ -108,8 +108,8 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                 height: plotMode === 'overlap' ? "inherit" : 350,
                 cursor: 'pointer'//(editMode === true) ? 'pointer' : null
             }}
-            onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}
-            onMouseLeave={() => editMode ? handleHover(null) : null}
+            onMouseEnter={() => editMode && plotMode === 'overlap' ? handleHover(predicateData.id) : null}
+            onMouseLeave={() => editMode && plotMode === 'overlap' ? handleHover(null) : null}
             onClick={handleClick}
         >
             {/* <div> */}
