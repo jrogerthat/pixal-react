@@ -5,11 +5,8 @@ import { FeatureBarPlot } from "./plots/featureBarPlot";
 import { FeatureDotPlot } from "./plots/featureDotPlot";
 import { FeatureLinePlot } from "./plots/featureLinePlot";
 
-
 export const BookmarkedPlots = () => {
     const [{bookmarkedPlots}, dispatch] = useContext(DataContext);
-
-   
 
     const ParseBookmark = ({book}) => {
         
@@ -59,7 +56,9 @@ const WhichPlot = ({data}) => {
         yCoord={data.y} 
         categorical={categoricalBool} 
         feature={data.x} 
+        navBool={false}
         explanBool={true} 
+        pivotBool={false} 
         bookmarkData={data}
         />
     }else if(data.encoding === 'line'){

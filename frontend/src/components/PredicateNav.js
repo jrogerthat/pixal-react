@@ -13,9 +13,8 @@ const NestedWrapper = ({predicateData, setHighlightPred, scoreExtent}) => {
   return(
     <div>{
       predArray.map((p, i) => (
-    
-       <div style={{display:'flex', flexDirection:'row'}}>
-        { i > 0 && <div>
+       <div style={{display:'flex'}}>
+        { i > 0 && <div style={{flex: '0 0 20px'}}>
           <svg style={{width:20, height:'100%', filter:'drop-shadow(1px 1px 2px rgb(0 0 0 / 0.1))'}}>
             <line x1={10} x2={20} y1={60} y2={60} stroke={'#FFF'} strokeWidth={8}/>
             <line x1={10} x2={10} y1={-20} y2={64} stroke={'#FFF'} strokeWidth={8}/>
@@ -65,7 +64,7 @@ export default function PredicateNav({setHighlightPred}) {
   let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
 
   return (
-    <div className="pred-exp-nav">
+    <div className="pred-exp-nav" style={{overflowX:'hidden'}}>
       {
         editMode ? <Button
         variant="outlined"

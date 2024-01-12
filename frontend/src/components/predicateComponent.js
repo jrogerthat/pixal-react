@@ -89,8 +89,10 @@ export default function PredicateComp({predicateData, scoreExtent}) {
     let bayesScale = d3.scaleLinear().domain(scoreExtent).range([25, 125])
     
     return (
+        // <div style={{display:'inline'}}>
         <div className="pred-wrap"
             style={{
+                flex:'1 0 400px',
                 opacity: isHidden(),
                 border: `3px solid ${isSelected()}`,
                 cursor: 'pointer'//(editMode === true) ? 'pointer' : null
@@ -175,5 +177,6 @@ export default function PredicateComp({predicateData, scoreExtent}) {
             }
            
         </div>
+        // </div>
     );
 }
