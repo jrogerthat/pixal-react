@@ -7,18 +7,27 @@ import { DataContext } from '../context';
 import * as d3 from 'd3';
 
 const NestedWrapper = ({predicateData, setHighlightPred, scoreExtent}) => {
-  console.log(predicateData);
+ 
   let predArray = predicateData.children ? [...predicateData.children, predicateData] : [predicateData];
 
   return(
     <div>{
       predArray.map((p, i) => (
-      <PredicateComp
-        key={`pred-edir-${p.id}`} 
-        predicateData={p} 
-        setHighlightPred={setHighlightPred}
-        scoreExtent={scoreExtent}
-        />
+    
+       <div style={{display:'flex', flexDirection:'row'}}>
+        { i > 0 && <div>
+          <svg style={{width:20, height:'100%', filter:'drop-shadow(1px 1px 2px rgb(0 0 0 / 0.1))'}}>
+            <line x1={10} x2={20} y1={60} y2={60} stroke={'#FFF'} strokeWidth={8}/>
+            <line x1={10} x2={10} y1={-20} y2={64} stroke={'#FFF'} strokeWidth={8}/>
+          </svg></div> }
+        <PredicateComp
+          key={`pred-edir-${p.id}`} 
+          predicateData={p} 
+          setHighlightPred={setHighlightPred}
+          scoreExtent={scoreExtent}
+          />
+        </div>
+     
   ))}</div>
   )
 }
@@ -51,8 +60,9 @@ export default function PredicateNav({setHighlightPred}) {
     }
   }, [predicateArray, parentToChildDict]);
 
-  console.log('FILTERED PRED', filteredPredicates);
+  
   let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score));
+  let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
 
   return (
     <div className="pred-exp-nav">
@@ -73,33 +83,14 @@ export default function PredicateNav({setHighlightPred}) {
       }
       <div>
         {
-          editMode ? filteredPredicates.map(p => (
-          //  <PredicateComp
-          //  key={`pred-edir-${p.id}`} 
-          //  predicateData={p} 
-          //  setHighlightPred={setHighlightPred}
-          //  scoreExtent={scoreExtent}
-          //  />
+          predNavData.map(p => (
           <NestedWrapper 
             key={`pred-edir-${p.id}`} 
             predicateData={p} 
             setHighlightPred={setHighlightPred}
             scoreExtent={scoreExtent}
           />
-          )) : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1).map(p => (
-            // <PredicateComp
-            // key={`pred-edir-${p.id}`} 
-            // predicateData={p} 
-            // setHighlightPred={setHighlightPred}
-            // scoreExtent={scoreExtent}
-            // />
-            <NestedWrapper 
-            key={`pred-edir-${p.id}`} 
-            predicateData={p} 
-            setHighlightPred={setHighlightPred}
-            scoreExtent={scoreExtent}
-          />
-            ))
+          ))
         }
       </div>
     </div>

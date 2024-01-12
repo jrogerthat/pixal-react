@@ -99,7 +99,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
             onMouseLeave={() => editMode ? handleHover(null) : null}
             onClick={handleClick}
         >
-            <div>
+            {/* <div> */}
                 <div style={{
                     marginBottom:10, 
                     paddingBottom:10, 
@@ -110,11 +110,12 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     gap:10,
                     alignItems:'stretch',
                     paddingLeft:12,
-                    paddingTop:5
+                    paddingTop:5,
+                    // marginLeft:20
                     }}>
                     {/* <div style={{float:'right'}}> */}
+                    {/* <div>{predicateData.parent ? `(Cloned from ${predicateData.parent}) `: `${predicateData.id}`}</div> */}
                     <div>
-                    {predicateData.parent && <span>{`(Cloned from ${predicateData.parent})  `}</span>}
                     <span>Bayes Factor Score:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
                     </div>
@@ -124,7 +125,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     fillOpacity:.5,
                     borderRadius:15, 
                     paddingTop:2}}>
-                        <svg
+                    <svg
                     style={{height: 20, width:'100%'}}
                     >{
                         predicateArray.map((p)=> 
@@ -134,7 +135,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                         height={35} 
                         x={bayesScale(p.predicate.score)} 
                         y={1}
-                        style={{fill:p.id === predicateData.id ? p.color : 'gray', fillOpacity: p.id === predicateData.id ? 1 : .3}} 
+                        style={{fill: p.id === predicateData.id ? p.color : 'gray', fillOpacity: p.id === predicateData.id ? 1 : .3}} 
                         />)
                     }
                     </svg></div>
@@ -143,7 +144,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                 {
                     editing ? <EditableFeatureCompWrap presentFeatureArray={features} predicateData={predicateData} /> : features.map((f, i)=> (<StaticClauseComponent key={`f-${i+1}`} data={f}/>))
                 }
-            </div>
+            {/* </div> */}
             {
                 editMode && (
                     <div className="pred-edit-bar" 
