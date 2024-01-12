@@ -24,8 +24,8 @@ import SmallMultiple from './components/SmallMultiple';
 function App() {
   
    // new line start
-  const [{editMode}, dispatch] = useContext(DataContext);
-  const [plotMode, setPlotMode] = useState('overlap');
+  const [{editMode, plotMode}, dispatch] = useContext(DataContext);
+  // const [plotMode, setPlotMode] = useState('overlap');
   /**
    * This loads an object with pred_dist (list of predicate distribtutions) and pred_list (pred_list)
    */
@@ -47,7 +47,10 @@ function App() {
         <FormControlLabel 
           control={<Switch defaultChecked />} 
           label={plotMode} 
-          onChange={() => plotMode === 'overlap' ? setPlotMode('multiples') : setPlotMode('overlap')}/>
+          onChange={() => {
+            let plot = plotMode === 'overlap' ? 'multiples' : 'overlap';
+            dispatch({ type:"UPDATE_PLOT_MODE", plotMode: plot})
+            }}/>
         </FormGroup>}
         <BasicDrop />
       </AppBar>

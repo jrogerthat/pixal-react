@@ -2,26 +2,39 @@ import * as d3 from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { DataContext } from "../../context";
 
-const PredExplorePlot = ({width, height}) => {
+const PredExplorePlot = ({width, height, singlePred}) => {
     
     const axesRef = useRef(null);
     const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray},] = useContext(DataContext);
 
     let usedData = useMemo(() => {
-        return [...predicateArray].filter(f => {
-            if(hiddenPredicates.length === 0 && deletedPredicates.length === 0){
-                return f
-            }else{
-                return hiddenPredicates.indexOf(f.id) === -1 && deletedPredicates.indexOf(f.id) === -1
-            }
-        }).map(m => {
-            return m.predicate.dist.filter(f => negatedArray.indexOf(m.id) > -1 ? f.predicate === false : f.predicate === true).filter(f => f.density > .001)
-            .map(ag => {
-                ag.id = m.id;
-                ag.color = m.color;
-                return ag
+        if(singlePred){
+            console.log(singlePred)
+            return [singlePred].map(m => {
+                return m.predicate.dist.filter(f => negatedArray.indexOf(m.id) > -1 ? f.predicate === false : f.predicate === true)//.filter(f => f.density > .001)
+                .map(ag => {
+                    ag.id = m.id;
+                    ag.color = m.color;
+                    return ag
+                });
             });
-        });
+        }else{
+            return [...predicateArray].filter(f => {
+                if(hiddenPredicates.length === 0 && deletedPredicates.length === 0){
+                    return f
+                }else{
+                    return hiddenPredicates.indexOf(f.id) === -1 && deletedPredicates.indexOf(f.id) === -1
+                }
+            }).map(m => {
+                return m.predicate.dist.filter(f => negatedArray.indexOf(m.id) > -1 ? f.predicate === false : f.predicate === true)//.filter(f => f.density > .001)
+                .map(ag => {
+                    ag.id = m.id;
+                    ag.color = m.color;
+                    return ag
+                });
+            });
+        }
+
 
     }, [predicateArray, negatedArray, hiddenPredicates, deletedPredicates]);
 

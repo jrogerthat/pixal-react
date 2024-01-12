@@ -5,10 +5,12 @@ import AddPredBox from '../predicateExploreComponents/addPredicateBox';
 import PredicateComp from './predicateComponent';
 import { DataContext } from '../context';
 import * as d3 from 'd3';
+import { PredExplorePlot } from './plots/predExplorerPlot';
 
 export const NestedWrapper = ({predicateData, scoreExtent}) => {
- 
+  
   let predArray = predicateData.children ? [...predicateData.children, predicateData] : [predicateData];
+  const [{plotMode}, dispatch] = useContext(DataContext);
 
   return(
     <div>{
@@ -27,7 +29,27 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
           // setHighlightPred={setHighlightPred}
           scoreExtent={scoreExtent}
           />
+          {
+            plotMode === 'multiples' && (
+              <div
+              className="pred-wrap"
+              style={{
+                marginLeft:10,
+                width:600, 
+                height:355,
+                backgroundColor:'white',
+                borderRadius: 4,
+                marginTop: 5,
+                padding:5,
+                paddingLeft:20,
+                boxShadow: `0px 3px 15px rgba(0,0,0,0.1)`,
+              }}
+              ><PredExplorePlot width={500} height={300} singlePred={p} />
+              </div>
+            )
+          }
         </div>
+       
      
   ))}</div>
   )
@@ -61,7 +83,6 @@ export default function PredicateNav() {
     }
   }, [predicateArray, parentToChildDict]);
 
-  
   let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score));
   let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
 

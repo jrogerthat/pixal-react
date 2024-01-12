@@ -8,7 +8,6 @@ import { NestedWrapper } from './PredicateNav';
 
 export default function SmallMultiple () {
 
-  
   const [{predicateArray, deletedPredicates, parentToChildDict}, dispatch] = useContext(DataContext);
 
   const filteredPredicates = useMemo(() => {  
@@ -34,49 +33,17 @@ export default function SmallMultiple () {
     }
   }, [predicateArray, parentToChildDict]);
 
-
-
     return(
-        <div style={{width:'98%'}}>
+        <div style={{width:'98%', display:'flex', flexDirection:'row'}}>
         <PredicateNavLarge filteredPredicates={filteredPredicates} />
-        <div
-
-        ></div>
         </div>
     )
 }
 
-
-
 function PredicateNavLarge({filteredPredicates}) {
 
     const [addPredMode, setAddPredMode] = useState(false);
-    const [{editMode, predicateArray, hiddenPredicates}, dispatch] = useContext(DataContext);
-  
-    // const filteredPredicates = useMemo(() => {  
-    //   const test = predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => b.predicate.score - a.predicate.score)
-    //   const parents = test.filter(f => Object.keys(parentToChildDict).includes(f.id));
-    //   let child = []
-    //   if(parents.length === 0){
-    //     return test;
-    //   }else{
-    //     let starter = parents.map(p => {
-    //       let children = test.filter(f => parentToChildDict[p.id].includes(+f.id));
-    //       child = [...child, ...children.map(m => +m.id)]
-    //       p.children = children.map(c => {
-    //         c.parent = p.id;
-    //         return c
-    //       });
-    //       return p
-    //     });
-  
-    //     let notKid = test.filter(t => child.indexOf(+t.id) === -1 && Object.keys(parentToChildDict).indexOf(t.id) === -1);
-    //     let combo = [...starter, ...notKid];
-    //     return combo;
-    //   }
-    // }, [predicateArray, parentToChildDict]);
-  
-    
+    const [{editMode, predicateArray, hiddenPredicates}, dispatch] = useContext(DataContext);    
     let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score));
     let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
   

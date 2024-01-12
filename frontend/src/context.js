@@ -21,6 +21,7 @@ const initialState = {
   selectedPredicate:null,
   highlightedPred:null,
   editMode: true,
+  plotMode: 'overlap',
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
   numericalDict: numericalDict,
@@ -48,6 +49,10 @@ const reducer = (state, action) => {
 
     case "UPDATE_EDIT_MODE":
       return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
+
+    case "UPDATE_PLOT_MODE":
+      console.log('action', action.plotMode)
+      return {...state, plotMode: action.plotMode}
 
     case "UPDATE_PARENT_CHILD_ARRAY":
       return {...DataContext, parentToChildDict: action.pcArray}

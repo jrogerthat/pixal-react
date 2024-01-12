@@ -59,7 +59,7 @@ TODO: hook this up to actually create a predicate
 export default function PredicateComp({predicateData, scoreExtent}) {
    
     const features = Object.entries(predicateData.predicate.attribute_values)
-    const [{predicateArray, editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
+    const [{predicateArray, editMode, plotMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     const [editing, setEditing] = useState(false);
 
     let opacityFunction = (pred) => {
@@ -102,9 +102,10 @@ export default function PredicateComp({predicateData, scoreExtent}) {
         // <div style={{display:'inline'}}>
         <div className="pred-wrap"
             style={{
-                flex:'1 0 400px',
+                flex: plotMode === 'overlap' ? '1 0 400px' : '0 0 600px',
                 opacity: isHidden(),
                 border: `3px solid ${isSelected()}`,
+                height: plotMode === 'overlap' ? "inherit" : 350,
                 cursor: 'pointer'//(editMode === true) ? 'pointer' : null
             }}
             onMouseEnter={() => editMode ? handleHover(predicateData.id) : null}

@@ -41,11 +41,12 @@ const DensityBarPlot = () => {
 
 
     const yScale = useMemo(() => {
-        return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.filter(f=> +f.density > .001).map(m => +m.density))]);
+        return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
       }, [selectedPredicate.id, selectedPredicate.feature]);
 
     const xScale = useMemo(() => {
-        return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores.filter(f=> +f.density > .001).map(m => +m.score))]);
+        return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores//.filter(f=> +f.density > .001)
+            .map(m => +m.score))]);
         }, [width, selectedPredicate.id, selectedPredicate.feature]);
   
 
