@@ -62,6 +62,16 @@ export default function PredicateComp({predicateData, scoreExtent}) {
     const [{predicateArray, editMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     const [editing, setEditing] = useState(false);
 
+    let opacityFunction = (pred) => {
+        if(predicateData.children && predicateData.children.map(m => +m.id).includes(+pred.id) || 
+        (predicateData.parent && +predicateData.parent === +pred.id) || +predicateData.id === +pred.id){
+            return 1;
+        }else{
+            return .3
+        }
+        // fillOpacity: p.id === predicateData.id ? 1 : .3
+    }
+
     let isHidden = () => {
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
             return 1
@@ -115,8 +125,6 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     paddingTop:5,
                     // marginLeft:20
                     }}>
-                    {/* <div style={{float:'right'}}> */}
-                    {/* <div>{predicateData.parent ? `(Cloned from ${predicateData.parent}) `: `${predicateData.id}`}</div> */}
                     <div>
                     <span>Bayes Factor Score:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
@@ -137,7 +145,8 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                         height={35} 
                         x={bayesScale(p.predicate.score)} 
                         y={1}
-                        style={{fill: p.id === predicateData.id ? p.color : 'gray', fillOpacity: p.id === predicateData.id ? 1 : .3}} 
+                        style={{fill: p.id === predicateData.id ? p.color : 'gray', 
+                        fillOpacity: opacityFunction(p)}} 
                         />)
                     }
                     </svg></div>
