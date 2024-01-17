@@ -60,7 +60,10 @@ function App() {
             <PredicateNav /><PredicateExplore /> 
             </React.Fragment> : <SmallMultiple />
         ): (
-          <Pixalate />
+          <React.Fragment>
+          <PredicateNav /><Pixalate />
+          </React.Fragment>
+          
         )}
       </div>
     </div>
