@@ -47,6 +47,7 @@ function App() {
         <FormControlLabel 
           control={<Switch defaultChecked />} 
           label={plotMode} 
+          style={{color:'gray'}}
           onChange={() => {
             let plot = plotMode === 'overlap' ? 'multiples' : 'overlap';
             dispatch({ type:"UPDATE_PLOT_MODE", plotMode: plot})
