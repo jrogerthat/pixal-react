@@ -33,11 +33,12 @@ const StaticFeatureValues = (data) => {
         style={{fontSize:11, paddingRight:4}}
         >{numericalDict[data[0]][0]}</span>
         <Slider
-          getAriaLabel={() => data[0]}
+        //   getAriaLabel={() => data[0]}
+        //  aria-label={getAriaLabel}
           value={valArr}
           valueLabelDisplay="on"
           size="small"
-          aria-label="Small"
+        //   aria-label="Small"
           min={numericalDict[data[0]][0]}
           max={numericalDict[data[0]][1]}
           disabled={true}
@@ -56,7 +57,7 @@ const StaticFeatureValues = (data) => {
 /*
 TODO: hook this up to actually create a predicate
 */
-export default function PredicateComp({predicateData, scoreExtent}) {
+export default function PredicateComp({predicateData, scoreExtent, index}) {
    
     const features = Object.entries(predicateData.predicate.attribute_values)
     const [{predicateArray, editMode, plotMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
@@ -67,7 +68,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
         (predicateData.parent && +predicateData.parent === +pred.id) || +predicateData.id === +pred.id){
             return 1;
         }else{
-            return .3
+            return (predicateData.children || (predicateData.children && predicateData.children.map(m => +m.id).includes(+pred.id))) ? .1 : .3
         }
         // fillOpacity: p.id === predicateData.id ? 1 : .3
     }
@@ -102,11 +103,14 @@ export default function PredicateComp({predicateData, scoreExtent}) {
         // <div style={{display:'inline'}}>
         <div className="pred-wrap"
             style={{
-                flex: plotMode === 'overlap' ? '1 0 400px' : '0 0 600px',
+                flex: plotMode === 'overlap' ? '1 0 400px' : '1 1 550px',
                 opacity: isHidden(),
                 border: `3px solid ${isSelected()}`,
-                height: plotMode === 'overlap' ? "inherit" : 350,
-                cursor: 'pointer'//(editMode === true) ? 'pointer' : null
+                height: plotMode === 'overlap' ? "inherit" : 245,
+                cursor: 'pointer',
+                justifyContent: 'space-between',
+                display:'flex',
+                flexDirection:'column'
             }}
             onMouseEnter={() => editMode && plotMode === 'overlap' ? handleHover(predicateData.id) : null}
             onMouseLeave={() => editMode && plotMode === 'overlap' ? handleHover(null) : null}
@@ -159,6 +163,12 @@ export default function PredicateComp({predicateData, scoreExtent}) {
             {/* </div> */}
             {
                 editMode && (
+                    <div style={{display:'flex', 
+                    flexDirection:'column', 
+                    alignContent:'end', 
+                    justifyContent:'end', 
+                    flexGrow:2
+                    }}>
                     <div className="pred-edit-bar" 
                     style={{display:'flex', 
                     flexDirection:'row', 
@@ -166,11 +176,8 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     justifyContent:'space-between',
                     borderTop:".5px solid gray",
                     borderRadius: 5,
-                    // backgroundColor:'#eeeeee',
-                    marginTop:20,
-                    paddingTop:10,
                     marginLeft:5
-                }}
+                    }}
                     >
                     <div style={{width:'fit-content'}}>
                     <InvertButton predicateData={predicateData} />
@@ -182,6 +189,7 @@ export default function PredicateComp({predicateData, scoreExtent}) {
                     <div
                     style={{width:30}}
                     ><svg><rect width={20} height={20} fill={predicateData.color}/></svg></div>
+                    </div>
                     </div>
                 )
             }

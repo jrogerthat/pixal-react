@@ -32,7 +32,7 @@ export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) =>
     <div style={{paddingLeft:5}}>{
     combinedFeatureArraySorted.map((f, i)=> {
       return(
-      f.presentFeat === null ? <div style={{display:'inline'}}>
+      f.presentFeat === null ? <div style={{display:'inline'}} key={`f-${i+1}`}>
         <Button 
           onClick={() => {
             let values = f.data_type == 'nominal' ? [] : numericalDict[f.feature];

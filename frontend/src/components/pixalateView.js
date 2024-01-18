@@ -10,8 +10,6 @@ function Pixalate() {
 
   const [{selectedPredicate}] = useContext(DataContext);
 
-  
-
   if(selectedPredicate && !selectedPredicate.attribute_data){
     return(
       <div className="splash-select">Unable to process, please choose another predicate.</div>

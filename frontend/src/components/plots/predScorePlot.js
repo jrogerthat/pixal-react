@@ -38,8 +38,6 @@ const DensityBarPlot = () => {
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
 
-
-
     const yScale = useMemo(() => {
         return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
       }, [selectedPredicate.id, selectedPredicate.feature]);
@@ -53,10 +51,8 @@ const DensityBarPlot = () => {
     useEffect(()=> {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
-
         let wrap = svg.append('g');
         wrap.attr('transform', `translate(${(margin.x/2)+20}, ${margin.y/2})`)
-
         const xAxisGenerator = d3.axisBottom(xScale);
 
         wrap
@@ -83,9 +79,9 @@ const DensityBarPlot = () => {
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", -((height/2) - 30))
+        .attr("x", ((height/2) - 20))
         .text("Percentage of Data Points")
-        .style('font-size', 11)
+        .style('font-size', 10)
 
         // Add X axis label:
         svg.append("text")

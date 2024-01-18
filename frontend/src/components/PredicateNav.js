@@ -27,6 +27,7 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
           // key={`pred-edir-${p.id}`} 
           predicateData={p} 
           // setHighlightPred={setHighlightPred}
+          index={i}
           scoreExtent={scoreExtent}
           />
           {
@@ -35,8 +36,8 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
               className="pred-wrap"
               style={{
                 marginLeft:10,
-                width:600, 
-                height:355,
+                width:700, 
+                height:250,
                 backgroundColor:'white',
                 borderRadius: 4,
                 marginTop: 5,
@@ -44,7 +45,7 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
                 paddingLeft:20,
                 boxShadow: `0px 3px 15px rgba(0,0,0,0.1)`,
               }}
-              ><PredExplorePlot width={500} height={300} singlePred={p} />
+              ><PredExplorePlot width={600} height={200} singlePred={p} />
               </div>
             )
           }

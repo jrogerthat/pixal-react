@@ -9,7 +9,7 @@ const PredExplorePlot = ({width, height, singlePred}) => {
 
     let usedData = useMemo(() => {
         if(singlePred){
-            console.log(singlePred)
+           
             return [singlePred].map(m => {
                 return m.predicate.dist.filter(f => negatedArray.indexOf(m.id) > -1 ? f.predicate === false : f.predicate === true)//.filter(f => f.density > .001)
                 .map(ag => {
@@ -35,11 +35,9 @@ const PredExplorePlot = ({width, height, singlePred}) => {
             });
         }
 
-
     }, [predicateArray, negatedArray, hiddenPredicates, deletedPredicates]);
 
     let margin = {x: 60, y: 30}
-
 
     const yScale = useMemo(() => {
         if(predicateArray.length > 0){
@@ -83,27 +81,29 @@ const PredExplorePlot = ({width, height, singlePred}) => {
 
         // Y axis label:
         wrap.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", -(height/4))
+        .attr("x", -((height/2) - 20))
+        .style("font-size", singlePred ? 11 : 13)
         .text("Percentage of Data Points")
 
         // Add X axis label:
         wrap.append("text")
         .attr("text-anchor", "middle")
         .attr("x", (width/2))
-        .attr("y", (height - 20))
+        .attr("y", singlePred ? (height - 5) : (height - 10))
         .text("Anomaly Score")
-        .style('font-size', 13);
+        .style('font-size', singlePred ? 11 : 13);
 
         let groups = wrap.selectAll('g.pred_group').data(usedData).join('g').classed('pred_group', true);
+        groups.attr('transform', `translate(${-1}, ${-1})`)
 
         let bars = groups.selectAll('rect.dist').data(d => d).join('rect').classed('dist', true);
         bars.attr('fill', (d)=> calcColor(d));
-        bars.attr('width', 5)
+        bars.attr('width', 11)
         bars.attr('height', (d)=> (height - 50)-yScale(d.density))
-        bars.attr('x', d=> xScale(d.score) - 2.5)
+        bars.attr('x', d=> xScale(d.score))
         bars.attr('transform', (d)=> `translate(0, ${yScale(d.density)})`)
         bars.style('fill-opacity', .6)
         bars.style('stroke', d => calcColor(d));
@@ -113,24 +113,6 @@ const PredExplorePlot = ({width, height, singlePred}) => {
    
     return(
         <svg width={width + (margin.x * 2)} height={height + margin.y} ref={axesRef}>
-            {/* {
-                filteredDist.length > 0 && filteredDist.map((p, i) => (
-                    <PredicateGroup 
-                    key={`pred-${i+1}`} 
-                    predData={p} 
-                    xScale={xScale} 
-                    yScale={yScale} 
-                    height={height} 
-                    // color={predicateArray.filter(f=> +p[0] === +f.id)[0]}
-                    />
-                ))
-            } */}
-            {/* <g
-            width={width}
-            height={20}
-            ref={axesRef}
-            transform={`translate(${[60, 30].join(",")})`}
-            /> */}
         </svg>
     )
 }
