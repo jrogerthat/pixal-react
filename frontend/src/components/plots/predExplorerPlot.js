@@ -5,7 +5,7 @@ import { DataContext } from "../../context";
 const PredExplorePlot = ({width, height, singlePred}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray},] = useContext(DataContext);
+    const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray, plotStyle},] = useContext(DataContext);
 
     let usedData = useMemo(() => {
         if(singlePred){
@@ -98,17 +98,47 @@ const PredExplorePlot = ({width, height, singlePred}) => {
 
         let groups = wrap.selectAll('g.pred_group').data(usedData).join('g').classed('pred_group', true);
         groups.attr('transform', `translate(${-1}, ${-1})`)
+        if(plotStyle === 'histogram'){
+            let bars = groups.selectAll('rect.dist').data(d => d).join('rect').classed('dist', true);
+            bars.attr('fill', (d)=> calcColor(d));
+            bars.attr('width', 11)
+            bars.attr('height', (d)=> (height - 50)-yScale(d.density))
+            bars.attr('x', d=> xScale(d.score))
+            bars.attr('transform', (d)=> `translate(0, ${yScale(d.density)})`)
+            bars.style('fill-opacity', .6)
+            bars.style('stroke', d => calcColor(d));
+        }
 
-        let bars = groups.selectAll('rect.dist').data(d => d).join('rect').classed('dist', true);
-        bars.attr('fill', (d)=> calcColor(d));
-        bars.attr('width', 11)
-        bars.attr('height', (d)=> (height - 50)-yScale(d.density))
-        bars.attr('x', d=> xScale(d.score))
-        bars.attr('transform', (d)=> `translate(0, ${yScale(d.density)})`)
-        bars.style('fill-opacity', .6)
-        bars.style('stroke', d => calcColor(d));
+        if(plotStyle === 'line'){
+            const line = d3.line()
+            .x(d => xScale(d.score))
+            .y(d => yScale(d.density))
+            .curve(d3.curveCatmullRom.alpha(0.5));
 
-    }, [usedData, highlightedPred, negatedArray, xScale, yScale, height]);
+            const area = d3.area()
+            .x(d => xScale(d.score))
+            .y1(d => yScale(d.density))
+            .y0(yScale(0))
+            .curve(d3.curveBasis)
+            // .curve(d3.curveCatmullRom.alpha(0.5));
+            
+            let lineSVG = groups.selectAll("path.test").data(d => {
+                let test = d.sort((a, b) => a.score - b.score);
+                return [test];
+            }).join('path').classed('test', true);
+    
+            lineSVG.attr("fill", "none")
+            .attr("stroke", d => {
+                return  highlightedPred != null && highlightedPred != d[0].id ? 'rgba(211,211,211, .2)' : d[0].color;
+            })
+            .attr("stroke-width", 1.5)
+            .attr("fill-opacity", .3)
+            .attr('fill', d =>  highlightedPred != null && highlightedPred != d[0].id ? 'rgba(211,211,211, .2)' : d[0].color)
+            .attr("d", d => {return area(d)});
+        }
+  
+
+    }, [usedData, highlightedPred, negatedArray, xScale, yScale, height, plotStyle]);
     
    
     return(
@@ -116,6 +146,7 @@ const PredExplorePlot = ({width, height, singlePred}) => {
         </svg>
     )
 }
+
 
 const PredicateGroup = ({predData, yScale, xScale, height}) => {
 

@@ -79,7 +79,7 @@ const DensityBarPlot = () => {
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", ((height/2) - 20))
+        .attr("x", ((height/2) - 180))
         .text("Percentage of Data Points")
         .style('font-size', 10)
 
@@ -105,14 +105,14 @@ const DensityBarPlot = () => {
         let labelOn = onG.append('text').text('Selected Predicate Anomaly Scores').style('font-size', 9);
         labelOn.attr('x', 15).attr('y', 9)
 
-        onG.attr('transform', `translate(220,10)`)
+        onG.attr('transform', `translate(210,10)`)
 
         let offG = legend.append('g');
         offG.append('rect').attr('width', 12).attr('height', 12).attr('fill', 'gray');
         let labelOff = offG.append('text').text('All Other Anomaly Scores').style('font-size', 9);
         labelOff.attr('x', 15).attr('y', 9)
 
-        offG.attr('transform', `translate(80,10)`)
+        offG.attr('transform', `translate(70,10)`)
 
           
 

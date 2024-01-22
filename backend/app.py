@@ -183,6 +183,7 @@ def get_predicates_dict(predicates, target, num_bins=25):
     # print(predicates)
     # num_bins = [100 if p.is_negated else 25 for p in predicates]
     # print(num_bins)
+    print('predicates',predicates)
 
     predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=num_bins, include_compliment=True) for i in range(len(predicates))}
     for k,v in predicates_dict.items():

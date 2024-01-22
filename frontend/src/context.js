@@ -22,6 +22,7 @@ const initialState = {
   highlightedPred:null,
   editMode: true,
   plotMode: 'overlap',
+  plotStyle:'histogram',
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
   numericalDict: numericalDict,
@@ -52,8 +53,10 @@ const reducer = (state, action) => {
       return {...state, editMode: action.editMode, plotMode:'overlap', selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
     case "UPDATE_PLOT_MODE":
-     
       return {...state, plotMode: action.plotMode}
+
+    case "UPDATE_PLOT_STYLE":
+      return {...state, plotStyle: action.plotStyle}
 
     case "UPDATE_PARENT_CHILD_ARRAY":
       return {...DataContext, parentToChildDict: action.pcArray}
