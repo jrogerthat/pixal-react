@@ -46,8 +46,6 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
         }
     };
 
-    console.log(margin)
-
     let plotDataOptions = {...usedPredData.attribute_data[feature], 'Score': usedPredData.attribute_score_data[feature]};
     let plotData = plotDataOptions[yCoord][0];
 

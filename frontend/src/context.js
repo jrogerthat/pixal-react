@@ -3,20 +3,30 @@ import formatPredicateArray from "./dataFormating";
 
 export const DataContext = createContext();
 
+const dTypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+
 const categoryDict = {
   'State': ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'U.S. Virgin Islands', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
   'Segment': ['Consumer', 'Home Office','Corporate'],
   'Sub-Category': ['Machine', 'Bookcases', 'Chairs', 'Tables', 'Storage', 'Appliances', 'Copiers']
 }
 
+const numericalDict = {
+  precipitation : [0, 20],
+  temperature: [-32, 80]
+}
 
 const initialState = {
   predicateArray: [],
   selectedPredicate:null,
   highlightedPred:null,
   editMode: true,
+  plotMode: 'overlap',
+  plotStyle:'histogram',
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
+  numericalDict: numericalDict,
+  dataTypes: dTypes,
   hiddenPredicates: [],
   deletedPredicates: [],
   bookmarkedPlots: [],
@@ -24,6 +34,7 @@ const initialState = {
   yCoord: "score",
   negatedArray : [],
   scaleExtent: true,
+  parentToChildDict: {},
 };
 
 const reducer = (state, action) => {
@@ -38,11 +49,22 @@ const reducer = (state, action) => {
         return {...state, negatedArray: action.negated}
 
     case "UPDATE_EDIT_MODE":
-      return {...state, editMode: action.editMode, selectedPredicate: null, xCoord: null, yCoord: "Score"}
+      
+      return {...state, editMode: action.editMode, plotMode:'overlap', selectedPredicate: null, xCoord: null, yCoord: "Score"}
+
+    case "UPDATE_PLOT_MODE":
+      return {...state, plotMode: action.plotMode}
+
+    case "UPDATE_PLOT_STYLE":
+      return {...state, plotStyle: action.plotStyle}
+
+    case "UPDATE_PARENT_CHILD_ARRAY":
+      return {...DataContext, parentToChildDict: action.pcArray}
 
     case "SET_PREDICATE_EXPLORE_DATA":
       let arr = formatPredicateArray(action.predData);
-      return {...state, predicateArray: arr}
+      let pToC = action.parentToChildDict !== null ? action.parentToChildDict : state.parentToChildDict;
+      return {...state, predicateArray: arr, parentToChildDict: pToC}
 
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};

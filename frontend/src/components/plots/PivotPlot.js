@@ -71,7 +71,7 @@ export const  PivotPlot = () => {
                     ><BookmarkAddIcon/>Bookmark Plot</Button>
             </div>
         </div>
-        <div id="pivot-plot" style={{display:'flex', flexDirection:'column'}}>
+        <div id="pivot-plot">
             <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
         
             <WhichPlot setEncoding={setEncoding} />

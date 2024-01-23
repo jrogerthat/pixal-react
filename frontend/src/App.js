@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './App.css';
 import PredicateNav from './components/PredicateNav';
 import AppBar from '@mui/material/AppBar';
@@ -8,15 +8,24 @@ import PredicateExplore from './predicateExploreComponents/predicateExploreView'
 import BasicDrop from './components/headerDropdown';
 import { useAxiosGet } from './axiosUtil';
 import { DataContext } from './context';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import SmallMultiple from './components/SmallMultiple';
 
-
+// function SwitchLabels() {
+//   return (
+//     <FormGroup>
+//       <FormControlLabel control={<Switch defaultChecked />} label="Label" />
+//     </FormGroup>
+//   );
+// }
 
 function App() {
   
    // new line start
-
-  const [{editMode}, dispatch] = useContext(DataContext);
-
+  const [{editMode, plotMode, plotStyle}, dispatch] = useContext(DataContext);
+  // const [plotMode, setPlotMode] = useState('overlap');
   /**
    * This loads an object with pred_dist (list of predicate distribtutions) and pred_list (pred_list)
    */
@@ -24,27 +33,49 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-     
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data})
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data, parentToChildDict: null})
     }
     
   }, [loaded])
-
-  
-
 
   return (
     <div className="App">
       <AppBar position="static" sx = {{ background: 'white', padding: "10px", flexDirection:"row"}}>
         <Typography variant="h6" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
+        {editMode && <FormGroup>
+        <FormControlLabel 
+          control={<Switch defaultChecked />} 
+          label={plotMode} 
+          style={{color:'gray'}}
+          onChange={() => {
+            let plot = plotMode === 'overlap' ? 'multiples' : 'overlap';
+            dispatch({ type:"UPDATE_PLOT_MODE", plotMode: plot})
+            }}/>
+        </FormGroup>
+        }
+          {editMode && <FormGroup>
+        <FormControlLabel 
+          control={<Switch defaultChecked />} 
+          label={plotStyle} 
+          style={{color:'gray'}}
+          onChange={() => {
+            let plot = plotStyle === 'histogram' ? 'area' : 'histogram';
+            dispatch({ type:"UPDATE_PLOT_STYLE", plotStyle: plot})
+            }}/>
+             </FormGroup>
+        }
         <BasicDrop />
       </AppBar>
       <div className="main-wrapper">
-        <PredicateNav /> 
         {editMode ? (
-          <PredicateExplore />
+          plotMode === 'overlap' ? <React.Fragment>
+            <PredicateNav /><PredicateExplore /> 
+            </React.Fragment> : <SmallMultiple />
         ): (
-          <Pixalate />
+          <React.Fragment>
+          <PredicateNav /><Pixalate />
+          </React.Fragment>
+          
         )}
       </div>
     </div>

@@ -6,11 +6,11 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 
 
 export const PixalFeatureNavWrap = ({classN}) => {
-    const [{selectedPredicate}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, editMode}, dispatch] = useContext(DataContext);
 
     let predicateFeatureArray = useMemo(()=> {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
-      }, [selectedPredicate]);
+      }, [selectedPredicate, editMode]);
 
     const handleClick = (d) => {
   
@@ -28,12 +28,10 @@ export const PixalFeatureNavWrap = ({classN}) => {
             key={`${f[0]}-${i}`}
             onClick={() => handleClick(f)}
             style={{
-                // alignItems:"center", 
                 display:'flex', 
                 flexDirection:'column'
             }}
             >
-            {/* <div style={{marginBottom:10}}>{`${f[0]}: `}{selectedPredicate.predicate_info.predicate.attribute_values[f[0]].join(', ')}</div> */}
             <PixalFeatureNav feature={f[0]} />
             </div>
         ))

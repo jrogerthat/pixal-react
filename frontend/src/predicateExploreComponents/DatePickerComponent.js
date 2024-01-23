@@ -24,7 +24,7 @@ const useCalendarClose = () => {
 
   let pass = {features: newPred, id: predData.id}
   useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-      dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+      dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})
   })
 }
   

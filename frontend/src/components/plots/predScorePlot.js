@@ -38,24 +38,21 @@ const DensityBarPlot = () => {
     const svgRef = useRef(null);
     let groupData =  Array.from(d3.group(selectedPredicate.predicate_scores, (s)=> s.predicate));
 
-
-
     const yScale = useMemo(() => {
-        return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.filter(f=> +f.density > .001).map(m => +m.density))]);
+        return d3.scaleLinear().range([(height - margin.y), 0]).domain([0, d3.max(selectedPredicate.predicate_scores.map(m => +m.density))]);
       }, [selectedPredicate.id, selectedPredicate.feature]);
 
     const xScale = useMemo(() => {
-        return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores.filter(f=> +f.density > .001).map(m => +m.score))]);
+        return d3.scaleLinear().range([0, width - (margin.x)]).domain([0, d3.max(selectedPredicate.predicate_scores//.filter(f=> +f.density > .001)
+            .map(m => +m.score))]);
         }, [width, selectedPredicate.id, selectedPredicate.feature]);
   
 
     useEffect(()=> {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
-
         let wrap = svg.append('g');
         wrap.attr('transform', `translate(${(margin.x/2)+20}, ${margin.y/2})`)
-
         const xAxisGenerator = d3.axisBottom(xScale);
 
         wrap
@@ -82,9 +79,9 @@ const DensityBarPlot = () => {
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("y", -40)
-        .attr("x", -((height/2) - 30))
+        .attr("x", ((height/2) - 180))
         .text("Percentage of Data Points")
-        .style('font-size', 11)
+        .style('font-size', 10)
 
         // Add X axis label:
         svg.append("text")
@@ -108,14 +105,14 @@ const DensityBarPlot = () => {
         let labelOn = onG.append('text').text('Selected Predicate Anomaly Scores').style('font-size', 9);
         labelOn.attr('x', 15).attr('y', 9)
 
-        onG.attr('transform', `translate(220,10)`)
+        onG.attr('transform', `translate(210,10)`)
 
         let offG = legend.append('g');
         offG.append('rect').attr('width', 12).attr('height', 12).attr('fill', 'gray');
         let labelOff = offG.append('text').text('All Other Anomaly Scores').style('font-size', 9);
         labelOff.attr('x', 15).attr('y', 9)
 
-        offG.attr('transform', `translate(80,10)`)
+        offG.attr('transform', `translate(70,10)`)
 
           
 

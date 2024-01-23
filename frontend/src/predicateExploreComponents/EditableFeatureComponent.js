@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useGetAxiosAsync } from '../axiosUtil';
 import { DataContext } from '../context';
 import Slider from '@mui/material/Slider';
@@ -9,10 +9,42 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { BasicDatePickerComp } from './DatePickerComponent';
 import styled from '@emotion/styled';
 
+
+export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) => {
+  const [{dataTypes, numericalDict}, dispatch] = useContext(DataContext);
+  const [featureArray, setFeatureArray] = useState(presentFeatureArray);
+
+  const combinedFeatureArraySorted = useMemo(() => {
+    let combinedFeatureArrayFirst = Object.entries(dataTypes).map((dt, i) => {
+      let isPresent = featureArray.map(p => p[0]).indexOf(dt[0]);
+      return {feature: dt[0], data_type:dt[1], presentFeat: isPresent > -1 ? featureArray[isPresent] : null}
+    });
+  
+    return [...combinedFeatureArrayFirst.filter(f => f.presentFeat != null), ...combinedFeatureArrayFirst.filter(f => f.presentFeat == null)]
+    
+  }, [featureArray]);
+  
+  return(
+    <div style={{paddingLeft:5}}>{
+    combinedFeatureArraySorted.map((f, i)=> {
+      return(
+      f.presentFeat === null ? <div style={{display:'inline'}} key={`f-${i+1}`}>
+        <Button 
+          onClick={() => {
+            let values = f.data_type == 'nominal' ? [] : numericalDict[f.feature];
+            setFeatureArray([...featureArray, [f.feature, values]]);
+          }}
+          variant="outlined" 
+          size='small' 
+          style={{margin:3}}>{`Add ${f.feature}`}</Button>
+      </div> : <EditableFeatureComponent key={`f-${i+1}`} data={f} predData={predicateData}/>
+    )})}</div>
+  )
+}
 
 const DropCheckComponent = ({cat, selected, options, predData}) => {
   
@@ -30,16 +62,11 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
 
         let newPred = {...pred};
         newPred[cat]  = newSelected;
-
         let pass = {features: newPred, id: predData.id}
 
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-           
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})
         })
-
-
-        
   };
     return (
         <div>
@@ -79,23 +106,10 @@ const RangeDivStyled = styled.div`
   flex-direction:row;
   align-items:center;
 `
-
 export const RangeSlider = ({range, data, predData}) => {
-
   const [, dispatch] = useContext(DataContext);
   const [value, setValue] = useState(data[1]);
   const [pred, setPred] = useState(predData.predicate.attribute_values);
-
-  // const marks = [
-  //     {
-  //     value: range[0],
-  //     label: range[0],
-  //     },
-  //     {
-  //     value: range[1],
-  //     label: range[1],
-  //     }
-  // ];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -105,10 +119,10 @@ export const RangeSlider = ({range, data, predData}) => {
   };
 
   const useMouseUp = () => {
-        let pass = {features: pred, id: predData.id}
-        useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data})
-        })
+    let pass = {features: pred, id: predData.id}
+    useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
+        dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})
+    })
   }
 
   return (
@@ -138,28 +152,24 @@ export const RangeSlider = ({range, data, predData}) => {
 
 export default function EditableFeatureComponent({data, predData}){
 
-    const [{predicateArray, categoricalFeatures, categoryDict}] = useContext(DataContext);
-    const numericalClauses = ['precipitation', 'temperature'];
-    const numericalRanges = {precipitation: [0, 20], temperature: [-32, 80]}
+    const [{categoryDict, numericalDict}] = useContext(DataContext);
 
-    console.log('data in ediable feature omponen',data)
-
-    if(numericalClauses.indexOf(data[0]) > -1){
-        return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
-        <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
-        {`${data[0]}: `}
-        </Typography>
-        <RangeSlider range={numericalRanges[data[0]]} data={data} predData={predData}/>
-        </div>
-    }else if(categoricalFeatures.indexOf(data[0]) > -1){
-        return <div>
-        <DropCheckComponent cat={data[0]} selected={data[1]}  options={categoryDict[data[0]]} predData={predData}/>
-        </div>
+    if(data.data_type === 'numeric'){
+      return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
+      <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
+      {`${data.feature}: `}
+      </Typography>
+      <RangeSlider range={numericalDict[data.feature]} data={data.presentFeat} predData={predData}/>
+      </div>
+    }else if(data.data_type === 'nominal'){
+      return <div>
+      <DropCheckComponent cat={data.feature} selected={data.presentFeat[1]} options={categoryDict[data.feature]} predData={predData}/>
+      </div>
     }
 
     // return <div style={{display:'inline'}}><span>{`${data[0]}: `}</span>
     // <div style={{display:'inline'}}>{`${data[1][0]} to ${data[1][1]}`}</div>
     // </div>
     // return <DateTimePickerValue />
-    return <BasicDatePickerComp predData={predData} label={data[0]} dateRange={data[1]}/>
+    return <BasicDatePickerComp predData={predData} label={data.feature} dateRange={data.presentFeat[1]}/>
 }
