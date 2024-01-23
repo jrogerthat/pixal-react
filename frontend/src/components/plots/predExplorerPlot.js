@@ -109,7 +109,7 @@ const PredExplorePlot = ({width, height, singlePred}) => {
             bars.style('stroke', d => calcColor(d));
         }
 
-        if(plotStyle === 'line'){
+        if(plotStyle === 'area'){
             const line = d3.line()
             .x(d => xScale(d.score))
             .y(d => yScale(d.density))

@@ -62,7 +62,7 @@ const WhichPlot = ({data}) => {
         bookmarkData={data}
         />
     }else if(data.encoding === 'line'){
-        // setEncoding('line')
+       
         return <FeatureLinePlot 
         xCoord={data.x} 
         yCoord={data.y} 
@@ -70,7 +70,7 @@ const WhichPlot = ({data}) => {
         bookmarkData={data}
         />
     }else{
-        // setEncoding('dot')
+       
         return <FeatureDotPlot 
         xCoord={data.x} 
         yCoord={data.y} 

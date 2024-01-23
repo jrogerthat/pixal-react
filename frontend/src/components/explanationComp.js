@@ -63,13 +63,13 @@ const WhichPlot = ({yCoord}) => {
         navBool={false}
         />
     }else if(selectedPredicate.feature[0] === "Order-Date"){
-        // setEncoding('line')
+     
         return <FeatureLinePlot 
         xCoord={xCoord} 
         yCoord={yCoord} 
         explanBool={true}/>
     }else{
-        // setEncoding('dot')
+       
         return <FeatureDotPlot 
         xCoord={xCoord} 
         yCoord={yCoord} 

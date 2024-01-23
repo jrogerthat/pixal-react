@@ -59,7 +59,7 @@ function App() {
           label={plotStyle} 
           style={{color:'gray'}}
           onChange={() => {
-            let plot = plotStyle === 'histogram' ? 'line' : 'histogram';
+            let plot = plotStyle === 'histogram' ? 'area' : 'histogram';
             dispatch({ type:"UPDATE_PLOT_STYLE", plotStyle: plot})
             }}/>
              </FormGroup>
