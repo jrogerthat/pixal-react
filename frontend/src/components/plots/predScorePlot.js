@@ -3,18 +3,9 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 
 
-function kde(kernel, thresholds, data) {
-    return thresholds.map(t => [t, d3.mean(data, d => kernel(t - +d.score))]);
-}
-
-function epanechnikov(bandwidth) {
-    return x => Math.abs(x /= bandwidth) <= 1 ? 0.75 * (1 - x * x) / bandwidth : 0;
-}
-
 const PredScorePlot = () => {
   
     return(
-        // <KDEPlot />
         <DensityBarPlot />
     )
 }
@@ -65,7 +56,7 @@ const DensityBarPlot = () => {
 
         let groups = wrap.selectAll('g.group').data(groupData).join('g').classed('group', true);
 
-        let bars = groups.selectAll('rect.bar').data(d => d[1])
+        groups.selectAll('rect.bar').data(d => d[1])
         .join('rect').attr("x", function(d) { return xScale(+d.score); })
         .attr("y", function(d) { return yScale(+d.density); })
         .attr("width", 5)
@@ -93,22 +84,22 @@ const DensityBarPlot = () => {
 
         //Initialize legend
         var legendItemSize = 12;
-        var legendSpacing = 4;
-        var xOffset = 150;
-        var yOffset = 100;
+        // var legendSpacing = 4;
+        // var xOffset = 150;
+        // var yOffset = 100;
 
         var legend = svg.append('g')
         legend.classed('.legend-group');
 
         let onG = legend.append('g');
-        onG.append('rect').attr('width', 12).attr('height', 12).attr('fill', selectedPredicate.predicate_info.color);
+        onG.append('rect').attr('width', legendItemSize).attr('height', legendItemSize).attr('fill', selectedPredicate.predicate_info.color);
         let labelOn = onG.append('text').text('Selected Predicate Anomaly Scores').style('font-size', 9);
         labelOn.attr('x', 15).attr('y', 9)
 
         onG.attr('transform', `translate(210,10)`)
 
         let offG = legend.append('g');
-        offG.append('rect').attr('width', 12).attr('height', 12).attr('fill', 'gray');
+        offG.append('rect').attr('width', legendItemSize).attr('height', legendItemSize).attr('fill', 'gray');
         let labelOff = offG.append('text').text('All Other Anomaly Scores').style('font-size', 9);
         labelOff.attr('x', 15).attr('y', 9)
 

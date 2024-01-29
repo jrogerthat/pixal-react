@@ -13,12 +13,15 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 
 export const  PivotPlot = () => {
 
-    const [{selectedPredicate, xCoord, yCoord}, dispatch] = useContext(DataContext);
+    const [{selectedPredicate, xCoord, yCoord, plotStyle}, dispatch] = useContext(DataContext);
     const [encoding, setEncoding] = useState(null);
     const [checked, setChecked] = useState(true);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
     let yOptions = ['Score', ...keys]
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
+
+    console.log('PLOT TYPE', plotStyle);
+    console.log('encoding', encoding);
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
@@ -27,21 +30,23 @@ export const  PivotPlot = () => {
 
     return (
         <div className="r-top" style={{display:'flex', flexDirection:'row'}}>
-        <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+        <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between', marginLeft:10}}>
             <div style={{
-                marginTop:5,
+                marginTop:15,
                 marginLeft:5,
                 alignItems:'flex-end', 
                 flexDirection:'column',
                 display:'flex'}}>
                 <Legend selectedPredicate={selectedPredicate} xCoord={xCoord}/>
                 <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', paddingTop:50, marginLeft:10}}>
-                    <CoordDrop 
-                        options={yOptions} 
-                        label={"y"} 
-                        type={"yCoord"}
-                    />
-                    <div style={{fontSize:7}}>
+                    <div style={{position:'relative', left:25}}>
+                        <CoordDrop 
+                            options={yOptions} 
+                            label={"y"} 
+                            type={"yCoord"}
+                        />
+                    </div>
+                    <div style={{fontSize:7, position:'relative', left:30}}>
                         <FormGroup>
                             <FormControlLabel 
                             control={<Switch size="small"defaultChecked />} 
@@ -54,10 +59,12 @@ export const  PivotPlot = () => {
                 </div>
             </div>
             <div className="bookmark-button" 
-                style={{display: 'flex', 
-                flexDirection:'row', 
-                marginTop:7, 
-                justifyContent:'flex-start', 
+                style={{
+                    display: 'flex', 
+                    flexDirection:'row', 
+                    marginTop:7, 
+                    justifyContent:'flex-start',
+                    marginBottom:20,
                 }}>
                     <Button
                     onClick={() => {
@@ -71,16 +78,19 @@ export const  PivotPlot = () => {
                     ><BookmarkAddIcon/>Bookmark Plot</Button>
             </div>
         </div>
-        <div id="pivot-plot">
+        <div id="pivot-plot" style={{marginTop:5}}>
             <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
         
             <WhichPlot setEncoding={setEncoding} />
             </div>
             <div style={{display:"flex", justifyContent:'center'}}>
-            <CoordDropX  
-                options={selectedPredicate.predicate_info.predicate.attribute_values} 
-                label={"x"} 
-                type={"xCoord"}/>
+                <div style={{position:'relative', top: encoding === 'line' ? -35 : -15}}>
+                    <CoordDropX  
+                    options={selectedPredicate.predicate_info.predicate.attribute_values} 
+                    label={"x"} 
+                    type={"xCoord"}/>
+                </div>
+            
             </div>
         </div>
       </div>

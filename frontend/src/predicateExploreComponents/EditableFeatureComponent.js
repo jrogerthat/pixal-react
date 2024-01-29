@@ -15,7 +15,7 @@ import styled from '@emotion/styled';
 
 
 export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) => {
-  const [{dataTypes, numericalDict}, dispatch] = useContext(DataContext);
+  const [{dataTypes, numericalDict},] = useContext(DataContext);
   const [featureArray, setFeatureArray] = useState(presentFeatureArray);
 
   const combinedFeatureArraySorted = useMemo(() => {
@@ -24,7 +24,7 @@ export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) =>
       return {feature: dt[0], data_type:dt[1], presentFeat: isPresent > -1 ? featureArray[isPresent] : null}
     });
   
-    return [...combinedFeatureArrayFirst.filter(f => f.presentFeat != null), ...combinedFeatureArrayFirst.filter(f => f.presentFeat == null)]
+    return [...combinedFeatureArrayFirst.filter(f => f.presentFeat !== null), ...combinedFeatureArrayFirst.filter(f => f.presentFeat === null)]
     
   }, [featureArray]);
   
@@ -35,7 +35,7 @@ export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) =>
       f.presentFeat === null ? <div style={{display:'inline'}} key={`f-${i+1}`}>
         <Button 
           onClick={() => {
-            let values = f.data_type == 'nominal' ? [] : numericalDict[f.feature];
+            let values = f.data_type === 'nominal' ? [] : numericalDict[f.feature];
             setFeatureArray([...featureArray, [f.feature, values]]);
           }}
           variant="outlined" 
@@ -50,14 +50,14 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
   
     let [selectedNames, setSelectedNames] = useState(selected);
     let [pred, setPred] = useState(predData.predicate.attribute_values);
-    const [{}, dispatch] = useContext(DataContext);
+    const [, dispatch] = useContext(DataContext);
 
     const useHandleChange = (event) => {
         const {
         target: { value },
         } = event;
         
-        let newSelected = selectedNames.indexOf(value) > -1 ? [...selectedNames].filter(f => f != value) : [...selectedNames, value];
+        let newSelected = selectedNames.indexOf(value) > -1 ? [...selectedNames].filter(f => f !== value) : [...selectedNames, value];
         setSelectedNames(newSelected);
 
         let newPred = {...pred};
