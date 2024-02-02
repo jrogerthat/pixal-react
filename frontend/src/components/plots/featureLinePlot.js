@@ -68,7 +68,7 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
         let wrap = svg.append('g');
 
        if(navBool){
-        wrap.attr("transform", `translate(${(margin.x/2) + 30}, ${((margin.y/2) - 15)})`)
+        wrap.attr("transform", `translate(${(margin.x/2) + 10}, ${((margin.y/2) - 15)})`)
        }else{
         wrap.attr("transform", `translate(${(margin.x/2) + 10}, ${((margin.y/2) - 9)})`)
        }

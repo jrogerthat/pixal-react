@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, Fragment } from "react";
 import { DataContext } from "../context";
 import { FeatureBarPlot } from "./plots/featureBarPlot";
 import { FeatureDotPlot } from "./plots/featureDotPlot";
@@ -66,23 +66,29 @@ export const PixalFeatureNav = ({feature}) => {
     let categoricalBool = categoricalFeatures.indexOf(feature) > -1;
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== feature);
 
-    if(categoricalBool){
+    let labels = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] === feature)[0];
     
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
-    
-        <FeatureBarPlot 
-            xCoord={feature} 
-            yCoord={'Score'} 
-            categorical={categoricalBool} 
-            feature={feature} 
-            navBool={true}
-            pivotBool={false}
-            explanBool={false}
-        />
-
-        <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+    return (
+        <div style={{display:'flex', flexDirection:'column', alignItems:"center", marginBottom:15, paddingBottom:15, width:'100%'}}>
+            <div style={{width:'90%', padding:3, paddingLeft:10, height:25, borderBottom:'1px gray solid', display:'flex', justifyContent:'center', alignItems:'center'}}>
+              <span style={{fontSize:18, fontWeight:600, marginRight:5, textTransform:'capitalize'}}>{`${labels[0]}: `}</span>
+              <span style={{fontSize:14, fontWeight:300}}>{categoricalBool ? labels[1].join(', ') : labels[1].join(' to ')}</span>
+            </div>
+            <div style={{display:'flex', flexDirection:'column', marginTop:25, width:'99%'}}>
+        {
+         categoricalBool ? <Fragment>
+            <FeatureBarPlot 
+                xCoord={feature} 
+                yCoord={'Score'} 
+                categorical={categoricalBool} 
+                feature={feature} 
+                navBool={true}
+                pivotBool={false}
+                explanBool={false}
+            />
+            {/* <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}> */}
             <div style={{justifyContent:"center"}}>
-                <svg 
+               <svg 
                 width={12} 
                 height={12} 
                 style={{
@@ -93,7 +99,7 @@ export const PixalFeatureNav = ({feature}) => {
             </span>
             </div>
            
-                {
+                <div style={{display:'flex', flexDirection:'column', justifyContent:'center'}}>{
                     others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
                          <svg 
                         width={12} 
@@ -102,15 +108,13 @@ export const PixalFeatureNav = ({feature}) => {
                         backgroundColor: `gray`, 
                         marginRight:5}} /><span style={{fontSize:11}}>All other data points.</span>
                     </div>
-                }
-                </div>
-        </div>
-    }else if(feature === "Order-Date"){
-        return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
-         <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
-         <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
-            <div>
-               <svg 
+                }</div>
+            {/* </div> */}
+         </Fragment> : feature === "Order-Date" ? <Fragment>
+          <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
+          <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+             <div>
+                <svg 
                width={12} 
                height={12} 
                style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
@@ -123,29 +127,112 @@ export const PixalFeatureNav = ({feature}) => {
             )
            }
          </div>
-         </div>
-    }else{
-       return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
-       <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
-       
-       <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
-            <div>
-               <svg 
-               width={12} 
-               height={12} 
-               style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
-            <span 
-            style={{fontSize:11}}>
-                {`Data points with ${feature}: `}
-                <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
-                </span></span>
+  
+        </Fragment> : <Fragment>
+            <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
+            <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+                <div>
+                    <svg 
+                    width={12} 
+                    height={12} 
+                    style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+                <span 
+                style={{fontSize:11}}>
+                   {`Data points with ${feature}: `}
+                   <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
+                   </span></span>
+                </div>
+              {
+               others.length > 0 && (
+                   <OtherLegend data={others} />
+               )
+              }
            </div>
-           {
-            others.length > 0 && (
-                <OtherLegend data={others} />
-            )
-           }
+         </Fragment>
+        }
         </div>
-       </div>
-    }
+        </div>
+    )
+    // if(categoricalBool){
+    
+    //     return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
+        
+    //     <FeatureBarPlot 
+    //         xCoord={feature} 
+    //         yCoord={'Score'} 
+    //         categorical={categoricalBool} 
+    //         feature={feature} 
+    //         navBool={true}
+    //         pivotBool={false}
+    //         explanBool={false}
+    //     />
+
+    //     <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+    //         <div style={{justifyContent:"center"}}>
+    //             <svg 
+    //             width={12} 
+    //             height={12} 
+    //             style={{
+    //                 backgroundColor: `${selectedPredicate.predicate_info.color}`, 
+    //                 marginRight:5}} />
+    //         <span style={{fontSize:11}}>{`Data points with ${feature}: `} 
+    //         <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
+    //         </span>
+    //         </div>
+           
+    //             {
+    //                 others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
+    //                      <svg 
+    //                     width={12} 
+    //                     height={12} 
+    //                     style={{
+    //                     backgroundColor: `gray`, 
+    //                     marginRight:5}} /><span style={{fontSize:11}}>All other data points.</span>
+    //                 </div>
+    //             }
+    //             </div>
+    //     </div>
+    // }else if(feature === "Order-Date"){
+    //     return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
+    //      <FeatureLinePlot xCoord={feature} yCoord={'Score'} navBool={true} />
+    //      <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+    //         <div>
+    //            <svg 
+    //            width={12} 
+    //            height={12} 
+    //            style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+    //        <span style={{fontSize:11}}>{`Data points with ${feature}: `}
+    //        <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span></span>
+    //        </div>
+    //        {
+    //         others.length > 0 && (
+    //             <OtherLegend data={others} />
+    //         )
+    //        }
+    //      </div>
+    //      </div>
+    // }else{
+    //    return <div style={{display:'flex', flexDirection:'column', alignItems:"center", width:'95%', marginTop:15, marginBottom:15}}>
+    //    <FeatureDotPlot xCoord={feature} yCoord={'Score'} categorical={false} navBool={true} />
+       
+    //    <div style={{display:'flex', flexDirection:'column', alignContent:'center', wdith:'90%', marginLeft:'5%'}}>
+    //         <div>
+    //            <svg 
+    //            width={12} 
+    //            height={12} 
+    //            style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
+    //         <span 
+    //         style={{fontSize:11}}>
+    //             {`Data points with ${feature}: `}
+    //             <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}
+    //             </span></span>
+    //        </div>
+    //        {
+    //         others.length > 0 && (
+    //             <OtherLegend data={others} />
+    //         )
+    //        }
+    //     </div>
+    //    </div>
+    // }
 }

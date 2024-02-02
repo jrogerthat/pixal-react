@@ -69,14 +69,13 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
         let wrap = svg.append('g').classed('wrap', true);
 
         if(navBool){
-            wrap.attr("transform", `translate(${((margin().x/2)) + 30}, ${((margin().y/2) - 30)})`)
+            wrap.attr("transform", `translate(${((margin().x/2)) + 10}, ${((margin().y/2) - 30)})`)
         }else if(explanBool){
             wrap.attr("transform", `translate(${((margin().x/2)) + 20}, ${((margin().y/2) - 20)})`)
         }else{
             wrap.attr("transform", `translate(${((margin().x/2)) + 30}, ${((margin().y/2) - 40)})`)
         }
        
-
         let xAxis = wrap.append("g")
         .attr("transform", "translate(0," + (svgHeight - (margin().y)) + ")")
         .call(d3.axisBottom(xScale))
@@ -109,19 +108,21 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
             .style('font-size', navBool || explanBool ? 10 : 12)
             .style('font-weight', 800)
 
-            // Add X axis label:
-            svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("x", width/2)
-            .attr("y", (svgHeight + 10))
-            .text(feature)
-            .style('font-size', navBool || explanBool ? 10 : 12)
-            .style('font-weight', 800)
+            if(explanBool){
+                // Add X axis label:
+                svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("x", width/2)
+                .attr("y", (svgHeight + 10))
+                .text(feature)
+                .style('font-size', navBool || explanBool ? 10 : 12)
+                .style('font-weight', 800)
+            }
 
-        }else if(explanBool){
+            if(navBool){
+                svg.attr('height', '160px')
+            }
            
-
-
         }
        
        
