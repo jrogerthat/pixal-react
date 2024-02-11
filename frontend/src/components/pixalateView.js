@@ -17,13 +17,13 @@ function Pixalate() {
   }else if(selectedPredicate){
     return(
       <div className="pixalate">
-        <div className="left-wrap">
+        {/* <div className="left-wrap">
         <PixalFeatureNavWrap classN={"l-top"} />
         <div className="l-bottom">
         <div className="head-3">Anomaly Scores</div>
         <PredScorePlot />
         </div>
-        </div>
+        </div> */}
 
         <div className="right-wrap">
       {

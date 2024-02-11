@@ -13,7 +13,7 @@ export const PixalFeatureNavWrap = ({classN}) => {
       }, [selectedPredicate, editMode]);
 
     const handleClick = (d) => {
-  
+        console.log('FEAT', d);
         dispatch({type:'FEATURE_SELECTED', feature: d})
     }
 

@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool, bookmarkData}) => {
+export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pivotBool, bookmarkData}) => {
    
     const [{selectedPredicate, scaleExtent}] = useContext(DataContext);
 
@@ -46,12 +46,12 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
         }
     };
 
-    let plotDataOptions = {...usedPredData.attribute_data[feature], 'Score': usedPredData.attribute_score_data[feature]};
+    let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0];
 
     let xScale = useMemo(()=> {
-        return d3.scaleBand().domain(plotData.map(m => m[feature])).range([0, (width - margin().x)]).padding(0.2);
-    }, [width, feature])
+        return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (width - margin().x)]).padding(0.2);
+    }, [width, xCoord])
 
     let extentOfData = d3.extent(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]));
     let yScale = useMemo(()=> {
@@ -89,7 +89,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
         .call(d3.axisLeft(yScale));
 
         let bars = wrap.selectAll('rect.bar').data(plotData)
-        .join('rect').attr("x", function(d) { return xScale(d[feature]); })
+        .join('rect').attr("x", function(d) { return xScale(d[xCoord]); })
         .attr("y", function(d) { return yScale(d[yCoord === 'Score' ? 'score' : yCoord]); })
         .attr("width", xScale.bandwidth())
         .attr("height", function(d) { return (svgHeight - margin().y) - yScale(d[yCoord === 'Score' ? 'score' : yCoord]); })
@@ -114,7 +114,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
                 .attr("text-anchor", "middle")
                 .attr("x", width/2)
                 .attr("y", (svgHeight + 10))
-                .text(feature)
+                .text(xCoord)
                 .style('font-size', navBool || explanBool ? 10 : 12)
                 .style('font-weight', 800)
             }
@@ -127,7 +127,7 @@ export const FeatureBarPlot = ({yCoord, feature, navBool, explanBool, pivotBool,
        
        
 
-    }, [width, feature, yCoord, yScale, usedPredData.predicate_info.id, scaleExtent]);
+    }, [width, xCoord, yCoord, yScale, usedPredData.predicate_info.id, scaleExtent]);
 
     return(
         <div 

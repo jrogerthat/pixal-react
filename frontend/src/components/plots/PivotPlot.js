@@ -20,9 +20,6 @@ export const  PivotPlot = () => {
     let yOptions = ['Score', ...keys]
     let others = Object.entries(selectedPredicate.predicate_info.predicate.attribute_values).filter(f=> f[0] !== xCoord);
 
-    console.log('PLOT TYPE', plotStyle);
-    console.log('encoding', encoding);
-
     const handleChange = (event) => {
         setChecked(event.target.checked);
         dispatch({type: "CHANGE_SCALE", scaleExtent: event.target.checked})
@@ -150,6 +147,8 @@ const Legend = ({selectedPredicate, xCoord, others}) => {
 
 const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord},] = useContext(DataContext);
+
+  
 
     let categoricalBool = useMemo(() => {
         return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;

@@ -91,7 +91,10 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
 
                 let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
                 predSel.predicate_info = predicateData;
+                console.log('PREDDDD',predSel)
+                let startFeat = Object.entries(predSel.attribute_data)[0]
                 dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
+                dispatch({type:'FEATURE_SELECTED', feature: startFeat})
             })
         }
     }
