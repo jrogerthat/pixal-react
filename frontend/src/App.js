@@ -12,6 +12,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import SmallMultiple from './components/SmallMultiple';
+import { Badge, Button } from '@mui/material';
 
 // function SwitchLabels() {
 //   return (
@@ -24,7 +25,7 @@ import SmallMultiple from './components/SmallMultiple';
 function App() {
   
    // new line start
-  const [{editMode, plotMode, plotStyle}, dispatch] = useContext(DataContext);
+  const [{plotMode, plotStyle, selectedPredicate}, dispatch] = useContext(DataContext);
   // const [plotMode, setPlotMode] = useState('overlap');
   /**
    * This loads an object with pred_dist (list of predicate distribtutions) and pred_list (pred_list)
@@ -43,7 +44,7 @@ function App() {
     <div className="App">
       <AppBar position="static" sx = {{ background: 'white', padding: "10px", flexDirection:"row"}}>
         <Typography variant="h6" sx={{ flexGrow: 1, color: 'GrayText' }}>PIXAL</Typography>
-        {editMode && <FormGroup>
+        {!selectedPredicate && <FormGroup>
         <FormControlLabel 
           control={<Switch defaultChecked />} 
           label={plotMode} 
@@ -54,7 +55,7 @@ function App() {
             }}/>
         </FormGroup>
         }
-          {editMode && <FormGroup>
+          {!selectedPredicate && <FormGroup>
         <FormControlLabel 
           control={<Switch defaultChecked />} 
           label={plotStyle} 
@@ -65,10 +66,15 @@ function App() {
             }}/>
              </FormGroup>
         }
-        <BasicDrop />
+        {/* <BasicDrop /> */}
+        {selectedPredicate && (<Button
+        onClick={()=> {
+          dispatch({type: "UNSELECT_PREDICATE"})
+        }}
+        >Unselect Predicate</Button>)}
       </AppBar>
       <div className="main-wrapper">
-        {editMode ? (
+        {!selectedPredicate ? (
           plotMode === 'overlap' ? <React.Fragment>
             <PredicateNav /><PredicateExplore /> 
             </React.Fragment> : <SmallMultiple />

@@ -53,6 +53,8 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
     const [, dispatch] = useContext(DataContext);
 
     const useHandleChange = (event) => {
+
+        event.stopPropagation();
         const {
         target: { value },
         } = event;
@@ -112,13 +114,15 @@ export const RangeSlider = ({range, data, predData}) => {
   const [pred, setPred] = useState(predData.predicate.attribute_values);
 
   const handleChange = (event, newValue) => {
+    event.stopPropagation();
     setValue(newValue);
     let test = {...predData.predicate.attribute_values}
     test[data[0]] = newValue;
     setPred(test);
   };
 
-  const useMouseUp = () => {
+  const useMouseUp = (event) => {
+    event.stopPropagation();
     let pass = {features: pred, id: predData.id}
     useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
         dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})

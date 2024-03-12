@@ -49,9 +49,11 @@ const reducer = (state, action) => {
         return {...state, negatedArray: action.negated}
 
     case "UPDATE_EDIT_MODE":
-      
       return {...state, editMode: action.editMode, plotMode:'overlap', selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
+    case "UNSELECT_PREDICATE":
+      return {...state, selectedPredicate: null, xCoord: null, yCoord: "Score"}
+  
     case "UPDATE_PLOT_MODE":
       return {...state, plotMode: action.plotMode}
 

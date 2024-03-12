@@ -90,17 +90,17 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
     }
 
     let handleClick = () => {
-        if(!editMode){
-            axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
+       if(!editing){
+        axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
 
-                let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
-                predSel.predicate_info = predicateData;
-                console.log('PREDDDD',predSel)
-                let startFeat = Object.entries(predSel.attribute_data)[0]
-                dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
-                dispatch({type:'FEATURE_SELECTED', feature: startFeat})
-            })
-        }
+            let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
+            predSel.predicate_info = predicateData;
+       
+            let startFeat = Object.entries(predSel.attribute_data)[0]
+            dispatch({type: "UPDATE_SELECTED_PREDICATE", predSel})
+            dispatch({type:'FEATURE_SELECTED', feature: startFeat})
+        })
+       }
     }
 
     let handleHover = (d) => dispatch({type: "PREDICATE_HOVER", pred:d})

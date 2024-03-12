@@ -8,6 +8,8 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const PixalFeatureNavWrap = ({classN}) => {
     const [{selectedPredicate, editMode}, dispatch] = useContext(DataContext);
 
+    
+
     let predicateFeatureArray = useMemo(()=> {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
       }, [selectedPredicate, editMode]);
@@ -98,7 +100,6 @@ export const PixalFeatureNav = ({feature}) => {
             <span style={{fontWeight:800}}>{`${selectedPredicate.predicate_info.predicate.attribute_values[feature].join(', ')}`}</span>
             </span>
             </div>
-           
                 <div style={{display:'flex', flexDirection:'column', justifyContent:'center'}}>{
                     others.length > 0 ?  <OtherLegend data={others} /> : <div style={{display:'inline'}}>
                          <svg 

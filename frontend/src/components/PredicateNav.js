@@ -59,7 +59,7 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
 export default function PredicateNav() {
 
   const [addPredMode, setAddPredMode] = useState(false);
-  const [{editMode, predicateArray, hiddenPredicates, deletedPredicates, parentToChildDict}, dispatch] = useContext(DataContext);
+  const [{selectedPredicate, predicateArray, hiddenPredicates, deletedPredicates, parentToChildDict}, dispatch] = useContext(DataContext);
 
   const filteredPredicates = useMemo(() => {  
     const test = predicateArray.filter(f => deletedPredicates.indexOf(f.id) === -1).sort((a, b) => b.predicate.score - a.predicate.score)
@@ -85,18 +85,19 @@ export default function PredicateNav() {
   }, [predicateArray, parentToChildDict]);
 
   let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score));
-  let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
+  // let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
+  let predNavData = filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
 
   return (
     <div className="pred-exp-nav" style={{overflowX:'hidden'}}>
       {
-        editMode ? <Button
+        !selectedPredicate ? <Button
         variant="outlined"
         onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
       >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span className='head-3'>Predicates</span>
       }
       {
-        editMode && <Button variant="outlined" onClick={()=> {
+        !selectedPredicate && <Button variant="outlined" onClick={()=> {
           dispatch({type: "UPDATE_HIDDEN_PREDS", hidden: predicateArray.map(m => m.id)})
         }}>Hide All Predicates</Button>
       }

@@ -14,7 +14,10 @@ const HideButton = ({predicateData}) => {
     const [hidden, setHidden] = useState(false);
     const [{hiddenPredicates}, dispatch] = useContext(DataContext);
 
-    const handleHides = () => {
+    const handleHides = (event, d) => {
+        console.log(event)
+        event.stopPropagation()
+
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
             let hidden = [...hiddenPredicates, predicateData.id]
             dispatch({type: "UPDATE_HIDDEN_PREDS", hidden})
@@ -43,8 +46,9 @@ const HideButton = ({predicateData}) => {
 }
 const EditButton = ({predicateData, editing, setEditing}) => {
 
-    function editChange(){
-        
+    function editChange(event, d){
+        console.log(event)
+        event.stopPropagation()
         editing ? setEditing(false) : setEditing(true);
     }
     return (
@@ -66,7 +70,9 @@ const EditButton = ({predicateData, editing, setEditing}) => {
 
 const DeleteButton = ({predicateData}) => {
     const [{deletedPredicates}, dispatch] = useContext(DataContext);
-    const HandleDelete = () => {
+    const HandleDelete = (event, d) => {
+        console.log(event)
+        event.stopPropagation()
         let deleted = [...deletedPredicates, predicateData.id]
         dispatch({type: "DELETE_PREDICATE", deleted})
     }
@@ -90,7 +96,10 @@ const CopyButton = ({predicateData}) => {
 
     const [{parentToChildDict}, dispatch] = useContext(DataContext);
     
-    const HandleCopy = () => {
+    const HandleCopy = (event, d) => {
+        console.log(event)
+        event.stopPropagation()
+
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
 
             let childId = Object.keys(data.data).length - 1;
@@ -126,7 +135,9 @@ const InvertButton = ({predicateData}) => {
 
     let negatedBool = negatedArray.indexOf(predicateData.id) > -1;
    
-    const HandleClick = () => {
+    const HandleClick = (event, d) => {
+        console.log(event);
+        event.stopPropagation();
 
         let newNegated = negatedBool ? negatedArray.filter(n => n !== predicateData.id) : [...negatedArray, predicateData.id];
 
