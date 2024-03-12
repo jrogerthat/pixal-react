@@ -19,7 +19,7 @@ const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(
 
 const StaticFeatureValues = (data) => {
 
-    const [{numericalDict}] = useContext(DataContext);
+    const [{numericalDict, categoryDict}] = useContext(DataContext);
 
     let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
 
@@ -47,11 +47,12 @@ const StaticFeatureValues = (data) => {
       style={{fontSize:11, paddingLeft:4}}
       >{numericalDict[data[0]][1]}</span></div>
     }else if(valArr.length === 1){
-        return  <div className="feature-value">{` ${valArr[0]}`}</div>
+        return  <div className="feature-value">{` ${valArr[0]}`}<span style={{fontWeight:60, fontSize:12}}>{` (${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
     }
 
     return (
-        <div className="feature-value" >{valArr.join(', ')}</div>
+        <div className="feature-value" >{valArr.join(', ')} 
+        <span style={{fontWeight:60, fontSize:12}}>{`(${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
     )
 }
 /*
@@ -62,6 +63,9 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
     const features = Object.entries(predicateData.predicate.attribute_values)
     const [{predicateArray, editMode, plotMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     const [editing, setEditing] = useState(false);
+
+    let count = predicateData.predicate.dist.filter(f => f.predicate === true).map(m => m.counts).reduce((a, c)=> a + c);
+    let uncount = predicateData.predicate.dist.filter(f => f.predicate === false).map(m => m.counts).reduce((a, c)=> a + c);
 
     let opacityFunction = (pred) => {
         if(predicateData.children && predicateData.children.map(m => +m.id).includes(+pred.id) || 
@@ -134,6 +138,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
                     // marginLeft:20
                     }}>
                     <div>
+                    <span style={{fontWeight:100}}>{`${count} of ${count + uncount} Points  |  `}</span>
                     <span>Bayes Factor Score:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
                     </div>

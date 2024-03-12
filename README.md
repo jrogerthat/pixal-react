@@ -33,5 +33,6 @@ We are using axios.js for making async requests on the frontend.
 `run flask` or? `env/bin/flask run`
 `"http://localhost:5000"`
 
+`pip install -r requirements.txt`
 
 

@@ -33,6 +33,7 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
+      console.log('PREDDATA', data)
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data, parentToChildDict: null})
     }
     
