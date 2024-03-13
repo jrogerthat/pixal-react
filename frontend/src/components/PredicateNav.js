@@ -78,7 +78,7 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
        key={`pred-edir-${p.id}`}
        style={{display:'flex'}}>
         {/* <div style={{background:'red', display:'inline'}}> */}
-        {p.level > 0 && <div style={{flex: '0 0 20px', backgroundColor:'yellow', marginLeft: (p.level * 20)}}>
+        {p.level > 0 && <div style={{flex: '0 0 20px', marginLeft: (p.level * 20)}}>
           <svg style={{width:20, height:'100%', filter:'drop-shadow(1px 1px 2px rgb(0 0 0 / 0.1))'}}>
             <line x1={10} x2={20} y1={60} y2={60} stroke={'#FFF'} strokeWidth={8}/>
             <line x1={10} x2={10} y1={-20} y2={64} stroke={'#FFF'} strokeWidth={8}/>
