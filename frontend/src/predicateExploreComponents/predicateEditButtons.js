@@ -15,7 +15,7 @@ const HideButton = ({predicateData}) => {
     const [{hiddenPredicates}, dispatch] = useContext(DataContext);
 
     const handleHides = (event, d) => {
-        console.log(event)
+       
         event.stopPropagation()
 
         if(hiddenPredicates.length === 0 || hiddenPredicates.indexOf(predicateData.id) === -1){
@@ -47,7 +47,7 @@ const HideButton = ({predicateData}) => {
 const EditButton = ({predicateData, editing, setEditing}) => {
 
     function editChange(event, d){
-        console.log(event)
+       
         event.stopPropagation()
         editing ? setEditing(false) : setEditing(true);
     }
@@ -71,7 +71,7 @@ const EditButton = ({predicateData, editing, setEditing}) => {
 const DeleteButton = ({predicateData}) => {
     const [{deletedPredicates}, dispatch] = useContext(DataContext);
     const HandleDelete = (event, d) => {
-        console.log(event)
+       
         event.stopPropagation()
         let deleted = [...deletedPredicates, predicateData.id]
         dispatch({type: "DELETE_PREDICATE", deleted})
@@ -97,21 +97,11 @@ const CopyButton = ({predicateData}) => {
     const [{parentToChildDict}, dispatch] = useContext(DataContext);
     
     const HandleCopy = (event, d) => {
-        console.log(event)
+      
         event.stopPropagation()
 
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
-
-            let childId = Object.keys(data.data).length - 1;
-            let parentId = predicateData.id;
-            if(Object.keys(parentToChildDict).includes(parentId)){
-                parentToChildDict[parentId].push(childId);
-            }else{
-                parentToChildDict[parentId] = [];
-                parentToChildDict[parentId].push(childId);
-            }
-            data.data[Object.keys(data.data).length - 1].parent = predicateData.id
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: parentToChildDict})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data['predicates'], parentToChildDict: data.data.parent_dict})
         })
     }
 
@@ -136,11 +126,9 @@ const InvertButton = ({predicateData}) => {
     let negatedBool = negatedArray.indexOf(predicateData.id) > -1;
    
     const HandleClick = (event, d) => {
-        console.log(event);
+    
         event.stopPropagation();
-
         let newNegated = negatedBool ? negatedArray.filter(n => n !== predicateData.id) : [...negatedArray, predicateData.id];
-
         dispatch({ type: "UPDATE_NEGATED", negated: newNegated})
        
         let negated = negatedBool ? 1 : 0;

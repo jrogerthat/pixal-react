@@ -5,12 +5,9 @@ import json
 import pandas as pd
 import numpy as np
 from sklearn.neighbors import LocalOutlierFactor
-# from predicates import PredicateControl 
+import copy
 import edit_predicates
-# import plot_pred
-# from predicate_induction_main import Predicate
 import all_fun
-# from predicate_induction import Predicate, PredicateInduction, infer_dtypes
 import random
 from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_string, JZS
 
@@ -118,6 +115,8 @@ session_id = "49324312"
 # predicates_path = 'augmented_superstore_predicates.json'
 predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 
+parent_dict = {}
+
 @api.route('/get_pred_dis')
 def get_pred_dis():
     pred = all_fun.save_predicates({'default': {}, 'hidden': {}, 'archived': {}}, predicates_path)
@@ -161,7 +160,7 @@ def app_add_predicates():
     print('request_data', request_data)
     feature_values = request_data['feature_values']
     res = all_fun.add_predicates(feature_values)
-    return json.dumps(res)
+    return {'predicates': json.dumps(res), 'parent_dict': parent_dict}
 
 def load_predicate_data(path, predicates_path):
     print("reaching predicates", f"{path}/{predicates_path}")
@@ -259,16 +258,24 @@ def delete_predicate(predicate_id):
 @api.route('/copy_predicate/<predicate_id>', methods=['GET', 'POST'])
 def copy_predicate(predicate_id):
     predicate_id = int(predicate_id)
-    predicates.append(predicates[predicate_id])
+    cop_ob = copy.deepcopy(predicates[predicate_id])
+   
+    if predicate_id in parent_dict.get(predicate_id, {}).keys():
+        parent_dict[predicate_id].append(len(predicates))
+    else:
+        parent_dict[predicate_id] = []
+        parent_dict[predicate_id].append(len(predicates))
+
+    predicates.append(cop_ob)
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
     predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
-    return predicates_dict
+    return {'predicates': predicates_dict, 'parent_dict':parent_dict}
 
 @api.route('/get_predicate_data', methods=['GET', 'POST'])
 def get_predicate_data():
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
     predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
-    return predicates_dict
+    return {'predicates': predicates_dict, 'parent_dict':parent_dict}
 
 @api.route('/get_predicate_score', methods=['GET', 'POST'])
 def get_predicate_score():

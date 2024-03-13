@@ -33,9 +33,10 @@ function App() {
   let {data, error, loaded} = useAxiosGet('/get_predicate_data');
  
   useEffect(() => {
+    
     if(loaded){ 
-      console.log('PREDDATA', data)
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data, parentToChildDict: null})
+      console.log('predicate_explore_data',data.predicates)
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict})
     }
     
   }, [loaded])

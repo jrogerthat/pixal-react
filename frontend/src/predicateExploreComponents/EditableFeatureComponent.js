@@ -55,6 +55,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
     const useHandleChange = (event) => {
 
         event.stopPropagation();
+        
         const {
         target: { value },
         } = event;

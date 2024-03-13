@@ -138,6 +138,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
                     // marginLeft:20
                     }}>
                     <div>
+                    <span style={{fontWeight:500}}>{`${predicateData.id}  |  `}</span>
                     <span style={{fontWeight:100}}>{`${count} of ${count + uncount} Points  |  `}</span>
                     <span>Bayes Factor Score:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
