@@ -110,7 +110,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
         // <div style={{display:'inline'}}>
         <div className="pred-wrap"
             style={{
-                flex: plotMode === 'overlap' ? '1 0 400px' : '1 1 550px',
+                flex: plotMode === 'overlap' ? '1 0 500px' : '1 1 550px',
                 opacity: isHidden(),
                 border: `3px solid ${isSelected()}`,
                 height: plotMode === 'overlap' ? "inherit" : 245,
@@ -140,7 +140,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
                     <div>
                     <span style={{fontWeight:500}}>{`${predicateData.id}  |  `}</span>
                     <span style={{fontWeight:100}}>{`${count} of ${count + uncount} Points  |  `}</span>
-                    <span>Bayes Factor Score:</span>
+                    <span>Bayes Factor:</span>
                     <span>{`  ${predicateData.predicate.score.toFixed(2)}`}</span>
                     </div>
                     <div style={{display:'inline', 

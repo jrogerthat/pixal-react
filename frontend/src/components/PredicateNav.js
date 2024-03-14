@@ -70,7 +70,7 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
   // let tester = unnestRender(predicateData);
   // console.log('TEST', tester);
   const [{plotMode}, dispatch] = useContext(DataContext);
-
+  console.log('pred', predicateData.id, predicateData)
   return(
     <div>{
       predArray.map((p, i) => (

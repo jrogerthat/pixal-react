@@ -59,9 +59,7 @@ export const ExplanationComponent = () => {
 
     const [{selectedPredicate, yCoord, xCoord}, dispatch] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
-
     let selectedPredFeat = Object.entries(selectedPredicate.attribute_data);
-
 
     useEffect(() => {
         
