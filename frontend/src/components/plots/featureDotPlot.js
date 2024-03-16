@@ -32,6 +32,9 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
                 setWidth(d3.select('.l-top').style('width').split('px')[0]);
                 setSvgHeight(200)
             }
+        }else{
+            console.log('TEST PIVOT')
+            setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 300)
         }
         // else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
            

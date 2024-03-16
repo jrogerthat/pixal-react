@@ -21,10 +21,13 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
             }
         }else if(explanBool){
             if(!d3.select('.l-top').empty()){
+                console.log('EXPLANBOOL',explanBool)
                 setWidth(d3.select('.l-top').style('width').split('px')[0] - 80);
                 setSvgHeight(200)
             }
         }else{
+            console.log('PIVOT PLOT??')
+            setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 300)
             // if(!d3.select('.l-top').empty()){
             //     setWidth(d3.select('.l-top').style('width').split('px')[0] - 50);
             //     setSvgHeight(200)
@@ -63,6 +66,8 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
 
     useEffect(()=> {
 
+        console.log('R TOPPP', d3.select('.r-top').node().getBoundingClientRect().width - 200)
+        // setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 300)
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
@@ -71,7 +76,7 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
         if(navBool){
             wrap.attr("transform", `translate(${((margin().x/2)) + 10}, ${((margin().y/2) - 30)})`)
         }else if(explanBool){
-            wrap.attr("transform", `translate(${((margin().x/2)) + 20}, ${((margin().y/2) - 20)})`)
+            wrap.attr("transform", `translate(${((margin().x/2)) + 30}, ${((margin().y/2) - 20)})`)
         }else{
             wrap.attr("transform", `translate(${((margin().x/2)) + 30}, ${((margin().y/2) - 40)})`)
         }

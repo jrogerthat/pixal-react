@@ -27,11 +27,10 @@ export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDa
                 setWidth(d3.select(`#explan-${yCoord}`).style('width').split('px')[0]);
                 setSvgHeight(200)
             }
+        }else{
+            setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 300)
         }
-        // else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
-      
-        //     // setWidth(d3.select('#pivot-plot').style('width').split('px')[0] - 50);
-        // }
+   
         
     }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
