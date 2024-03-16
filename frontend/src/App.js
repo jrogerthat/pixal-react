@@ -35,7 +35,7 @@ function App() {
   useEffect(() => {
     
     if(loaded){ 
-      console.log('predicate_explore_data',data.predicates)
+   
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict})
     }
     

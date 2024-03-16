@@ -17,12 +17,12 @@ function createNestedStructure(objects, parentChildMap) {
   // Step 3: Populate children
   Object.entries(parentChildMap).forEach(([parentId, childIds]) => {
       childIds.forEach(childId => {
-          // console.log('parent', parentId, childId)
+       
           const parent = lookup[parentId];
           const child = lookup[childId];
-          // console.log('look up', parent, child)
+         
           if (parent && child) {
-            // console.log('have parent and child', parent);
+          
               if(parent.children){
                 parent.children.push(child);
               }else{
@@ -68,9 +68,9 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
   let predArray = unnestRender(predicateData);
   // predicateData.children ? [predicateData, ...predicateData.children] : [predicateData];
   // let tester = unnestRender(predicateData);
-  // console.log('TEST', tester);
+ 
   const [{plotMode}, dispatch] = useContext(DataContext);
-  console.log('pred', predicateData.id, predicateData)
+
   return(
     <div>{
       predArray.map((p, i) => (
@@ -111,8 +111,6 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
             )
           }
         </div>
-       
-        // </div>
   ))}</div>
   )
 }

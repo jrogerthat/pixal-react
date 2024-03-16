@@ -15,7 +15,7 @@ const FormatExplanation = ({featCat, k}) => {
         </div>
         <ul style={{paddingLeft:12}}>
             {
-                k[1][1].map(m => <li>{m}</li>)
+                k[1][1].map((m, i) => <li key={`li-${i}`}>{m}</li>)
             }
         </ul>
         
@@ -73,8 +73,8 @@ export const ExplanationComponent = () => {
     return (
         <div>
             {
-                selectedPredFeat.map(p => (
-                    <div>
+                selectedPredFeat.map((p, i) => (
+                    <div key={`pred-feat-${i}`}>
                         <div
                         style={{
                             paddingLeft:20,
