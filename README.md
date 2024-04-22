@@ -29,8 +29,8 @@ We are using axios.js for making async requests on the frontend.
 
 ### Getting started:
 `cd backend`
-`source env/bin/activate`
-`run flask` or? `env/bin/flask run`
+`source venv-3/bin/activate`
+`run flask` or? `venv-3/bin/flask run`
 `"http://localhost:5000"`
 
 `pip install -r requirements.txt`
