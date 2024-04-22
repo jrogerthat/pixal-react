@@ -33,5 +33,24 @@ We are using axios.js for making async requests on the frontend.
 `run flask` or? `env/bin/flask run`
 `"http://localhost:5000"`
 
+`pip install -r requirements.txt`
 
+NOTES FOR VENV CHANGE:
+# Save current installs
+(venv) -> pip freeze -r > requirements.txt
 
+# Shutdown current env
+(venv) -> deactivate
+
+# Copy it to keep a backup
+-> mv venv venv-3.8
+
+# Ensure you have python3.7
+-> python3.7 -V
+
+# Create and activate a 3.7 venv
+-> python3 -m venv venv-3
+-> source venv-3/bin/activate
+
+# Reinstall previous requirements
+(venv-3) -> pip install -r requirements.txt

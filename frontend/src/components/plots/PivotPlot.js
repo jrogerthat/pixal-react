@@ -27,11 +27,11 @@ export const  PivotPlot = () => {
 
     return (
         <div className="r-top" style={{display:'flex', flexDirection:'row'}}>
-        <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between', marginLeft:10}}>
+        <div style={{display:'flex', flexDirection:'column', width:200, justifyContent:'space-between', marginLeft:10}}>
             <div style={{
                 marginTop:15,
-                marginLeft:5,
-                alignItems:'flex-end', 
+                marginLeft:7,
+                // alignItems:'flex-end', 
                 flexDirection:'column',
                 display:'flex'}}>
                 <Legend selectedPredicate={selectedPredicate} xCoord={xCoord}/>
@@ -148,8 +148,6 @@ const Legend = ({selectedPredicate, xCoord, others}) => {
 const WhichPlot = ({setEncoding}) => {
     const [{categoricalFeatures, selectedPredicate, xCoord, yCoord},] = useContext(DataContext);
 
-  
-
     let categoricalBool = useMemo(() => {
         return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
     }, [selectedPredicate, selectedPredicate.feature])
@@ -170,7 +168,9 @@ const WhichPlot = ({setEncoding}) => {
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         setEncoding('line')
         return <div style={{marginTop:20}}>
-       <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} /></div>
+       <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} pivotBool={true}
+        explanBool={false}
+        navBool={false} /></div>
     }else{
         setEncoding('dot')
         return <div style={{marginTop:20}}>

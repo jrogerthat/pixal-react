@@ -21,7 +21,7 @@ const initialState = {
   selectedPredicate:null,
   highlightedPred:null,
   editMode: true,
-  plotMode: 'overlap',
+  plotMode: 'multiples',
   plotStyle:'histogram',
   categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
@@ -35,12 +35,22 @@ const initialState = {
   negatedArray : [],
   scaleExtent: true,
   parentToChildDict: {},
+  attribute_filtered: []
 };
 
 const reducer = (state, action) => {
 
   switch (action.type) {
 
+    case "UPDATE_ATTRIBUTE_FILTERS":
+      let temp = state.attribute_filtered;
+      if(action.hideBool){
+        temp = [...temp, ...action.ids]
+      }else{
+        temp = temp.filter(f => !action.ids.includes(f))
+      }
+      console.log('TEMP HIDDEN IDS', temp)
+      return {...state, attribute_filtered: Array.from(new Set(temp))}
     case "ADD_BOOKMARK_PLOT":
       let newBooks = [...state.bookmarkedPlots, action.bookmarked]
       return {...state, bookmarkedPlots: newBooks}
@@ -49,9 +59,11 @@ const reducer = (state, action) => {
         return {...state, negatedArray: action.negated}
 
     case "UPDATE_EDIT_MODE":
-      
       return {...state, editMode: action.editMode, plotMode:'overlap', selectedPredicate: null, xCoord: null, yCoord: "Score"}
 
+    case "UNSELECT_PREDICATE":
+      return {...state, selectedPredicate: null, xCoord: null, yCoord: "Score"}
+  
     case "UPDATE_PLOT_MODE":
       return {...state, plotMode: action.plotMode}
 

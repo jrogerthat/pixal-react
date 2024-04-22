@@ -15,7 +15,7 @@ const FormatExplanation = ({featCat, k}) => {
         </div>
         <ul style={{paddingLeft:12}}>
             {
-                k[1][1].map(m => <li>{m}</li>)
+                k[1][1].map((m, i) => m !== "" ? <li key={`li-${i}`}>{m}</li> : "")
             }
         </ul>
         
@@ -38,7 +38,6 @@ const FeatureComp = ({features, featCat}) => {
                     key={k[0]}
                     style={{display:'flex', flexDirection:'row', marginBottom: 10, cursor:'pointer'}}
                     onClick={()=> {
-                        console.log('FEAT', k)
                         // dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: selectedPredicate, x: featCat,  y: k[0]  })
                         dispatch({type:'FEATURE_SELECTED', feature: [featCat, k]})
                 }
@@ -60,9 +59,7 @@ export const ExplanationComponent = () => {
 
     const [{selectedPredicate, yCoord, xCoord}, dispatch] = useContext(DataContext);
     const [explanation, setExplanation] = useState(selectedPredicate.attribute_score_data[selectedPredicate.feature[0]][1]);
-
     let selectedPredFeat = Object.entries(selectedPredicate.attribute_data);
-
 
     useEffect(() => {
         
@@ -76,8 +73,8 @@ export const ExplanationComponent = () => {
     return (
         <div>
             {
-                selectedPredFeat.map(p => (
-                    <div>
+                selectedPredFeat.map((p, i) => (
+                    <div key={`pred-feat-${i}`}>
                         <div
                         style={{
                             paddingLeft:20,

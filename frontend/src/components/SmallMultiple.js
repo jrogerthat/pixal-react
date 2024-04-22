@@ -34,29 +34,29 @@ export default function SmallMultiple () {
   }, [predicateArray, parentToChildDict]);
 
     return(
-        <div style={{width:'98%', display:'flex', flexDirection:'row'}}>
-        <PredicateNavLarge filteredPredicates={filteredPredicates} />
-        </div>
+      <div style={{width:'100%', display:'flex', flexDirection:'row'}}>
+      <PredicateNavLarge filteredPredicates={filteredPredicates} />
+      </div>
     )
 }
 
 function PredicateNavLarge({filteredPredicates}) {
 
     const [addPredMode, setAddPredMode] = useState(false);
-    const [{editMode, predicateArray, hiddenPredicates}, dispatch] = useContext(DataContext);    
+    const [{editMode, predicateArray, hiddenPredicates, selectedPredicate}, dispatch] = useContext(DataContext);    
     let scoreExtent = d3.extent(filteredPredicates.map(m => m.predicate.score));
     let predNavData = editMode ? filteredPredicates : filteredPredicates.filter(f => hiddenPredicates.indexOf(f.id) === -1);
   
     return (
       <div className="pred-exp-nav-large" style={{overflowX:'hidden'}}>
         {
-          editMode ? <Button
+          editMode && !selectedPredicate ? <Button
           variant="outlined"
           onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
         >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span className='head-3'>Predicates</span>
         }
         {
-          editMode && <Button variant="outlined" onClick={()=> {
+          (editMode && !selectedPredicate) && <Button variant="outlined" onClick={()=> {
             dispatch({type: "UPDATE_HIDDEN_PREDS", hidden: predicateArray.map(m => m.id)})
           }}>Hide All Predicates</Button>
         }

@@ -29,6 +29,7 @@ function Pixalate() {
       {
         selectedPredicate.feature && (
           <React.Fragment>
+          <div className="head-3" style={{marginBottom:16}}>Predicate Explanations</div>
           <PivotPlot />
           <div 
           className="r-bottom" 

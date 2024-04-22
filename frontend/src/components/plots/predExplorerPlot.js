@@ -5,7 +5,7 @@ import { DataContext } from "../../context";
 const PredExplorePlot = ({width, height, singlePred}) => {
     
     const axesRef = useRef(null);
-    const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray, plotStyle},] = useContext(DataContext);
+    const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray, plotStyle, selectedPredicate},] = useContext(DataContext);
 
     let usedData = useMemo(() => {
         if(singlePred){
@@ -101,7 +101,7 @@ const PredExplorePlot = ({width, height, singlePred}) => {
         if(plotStyle === 'histogram'){
             let bars = groups.selectAll('rect.dist').data(d => d).join('rect').classed('dist', true);
             bars.attr('fill', (d)=> calcColor(d));
-            bars.attr('width', 11)
+            bars.attr('width', selectedPredicate ? 5 : 11)
             bars.attr('height', (d)=> (height - 50)-yScale(d.density))
             bars.attr('x', d=> xScale(d.score))
             bars.attr('transform', (d)=> `translate(0, ${yScale(d.density)})`)
