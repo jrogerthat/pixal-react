@@ -23,12 +23,15 @@ const StaticFeatureValues = (data) => {
 
     let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
 
-    if(isDate(valArr[0]) && data[0] === 'Order-Date'){ 
+    if(valArr[0] === ''){
+     
+    }else if(isDate(valArr[0]) && data[0] === 'Order-Date'){ 
         // if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){ 
         return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
         </span></div>
 
     }else if(isNaN(valArr[0]) === false){
+       
         return <div style={{marginTop:25, display:'flex', flexDirection:'row', width:'85%'}}> <span
         style={{fontSize:11, paddingRight:4}}
         >{numericalDict[data[0]][0]}</span>
@@ -64,8 +67,13 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
     const [{predicateArray, editMode, plotMode, selectedPredicate, hiddenPredicates}, dispatch] = useContext(DataContext);
     const [editing, setEditing] = useState(false);
 
-    let count = predicateData.predicate.dist.filter(f => f.predicate === true).map(m => m.counts).reduce((a, c)=> a + c);
-    let uncount = predicateData.predicate.dist.filter(f => f.predicate === false).map(m => m.counts).reduce((a, c)=> a + c);
+    let count_one = predicateData.predicate.dist.filter(f => f.predicate === false)
+    let count = count_one.length > 0 ? count_one.map(m => m.counts).reduce((a, c)=> a + c) : [];
+    let uncount_one = predicateData.predicate.dist.filter(f => f.predicate === false)
+    let uncount = uncount_one.length  > 0 ? uncount_one.map(m => m.counts).reduce((a, c)=> a + c) : [];
+
+    // let count = predicateData.predicate.dist.filter(f => f.predicate === true).map(m => m.counts).reduce((a, c)=> a + c);
+    // let uncount = predicateData.predicate.dist.filter(f => f.predicate === false).map(m => m.counts).reduce((a, c)=> a + c);
 
     let opacityFunction = (pred) => {
         if(predicateData.children && predicateData.children.map(m => +m.id).includes(+pred.id) || 
@@ -91,7 +99,9 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
 
     let handleClick = () => {
        if(!editing){
-        axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
+        console.log('PREDICATE DATA ID', predicateData)
+        axios.get(`/get_selected_data/${predicateData.id}`).then((data)=> {
+            // axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
 
             let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
             predSel.predicate_info = predicateData;

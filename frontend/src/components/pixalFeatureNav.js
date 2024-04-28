@@ -8,11 +8,11 @@ import { FeatureLinePlot } from "./plots/featureLinePlot";
 export const PixalFeatureNavWrap = ({classN}) => {
     const [{selectedPredicate, editMode}, dispatch] = useContext(DataContext);
 
-    
-
     let predicateFeatureArray = useMemo(()=> {
         return (selectedPredicate && selectedPredicate.attribute_data != null) ? Object.entries(selectedPredicate.attribute_data) : [];
       }, [selectedPredicate, editMode]);
+
+      console.log('PREDICATE FEATUER ARRAY', predicateFeatureArray)
 
     const handleClick = (d) => {
         dispatch({type:'FEATURE_SELECTED', feature: d})

@@ -3,17 +3,164 @@ import formatPredicateArray from "./dataFormating";
 
 export const DataContext = createContext();
 
-const dTypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+// const dTypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
 
 const categoryDict = {
   'State': ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'U.S. Virgin Islands', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
   'Segment': ['Consumer', 'Home Office','Corporate'],
-  'Sub-Category': ['Machine', 'Bookcases', 'Chairs', 'Tables', 'Storage', 'Appliances', 'Copiers']
+  'Sub-Category': ['Machine', 'Bookcases', 'Chairs', 'Tables', 'Storage', 'Appliances', 'Copiers'],
+  "denied": [0,1],
+  "diagnosis": ["E2XXX", "A6XXX", "H7XXX", "G1XXX", "A5XXX","C6XXX","A3XXX","E9XXX","J6XXX","I4XXX","B6XXX","E1XXX","C5XXX","J4XXX","F6XXX","I9XXX","G4XXX",
+    "C7XXX",
+    "C9XXX",
+    "F3XXX",
+    "E5XXX",
+    "D5XXX",
+    "C8XXX",
+    "I2XXX",
+    "G2XXX",
+    "C3XXX",
+    "J8XXX",
+    "B1XXX",
+    "J2XXX",
+    "B5XXX",
+    "B2XXX",
+    "I7XXX",
+    "G7XXX",
+    "E3XXX",
+    "E8XXX",
+    "G3XXX",
+    "D7XXX",
+    "G9XXX",
+    "I5XXX",
+    "H3XXX",
+    "J1XXX",
+    "E7XXX",
+    "F4XXX",
+    "D8XXX",
+    "A1XXX",
+    "J7XXX",
+    "H8XXX",
+    "G8XXX",
+    "F8XXX",
+    "A4XXX",
+    "F2XXX",
+    "C4XXX",
+    "I6XXX",
+    "B3XXX",
+    "D3XXX",
+    "B8XXX",
+    "A8XXX",
+    "H6XXX",
+    "D6XXX",
+    "A2XXX",
+    "C2XXX",
+    "D4XXX",
+    "D9XXX",
+    "B7XXX",
+    "A9XXX",
+    "G5XXX",
+    "D1XXX",
+    "G6XXX",
+    "D2XXX",
+    "J3XXX",
+    "H9XXX",
+    "C1XXX",
+    "E4XXX",
+    "H5XXX",
+    "J9XXX",
+    "I3XXX",
+    "E6XXX",
+    "H4XXX","J5XXX","H1XXX","B9XXX","A7XXX","I8XXX","F1XXX","F5XXX","B4XXX","F9XXX","F7XXX","H2XXX","I1XXX"
+  ],
+  "insurance": [
+    "Payer I", "Payer J", "Payer G", "Payer F", "Payer B", "Payer C", "Payer D", "Payer H", "Payer E", "Payer A"
+  ],
+  "modifier": ["9X","2X","4X","8X","5X","3X","1X","6X","7X"], 
+  "procedure": [
+    "14XXX",
+    "99XXX",
+    "65XXX",
+    "74XXX",
+    "87XXX",
+    "84XXX",
+    "28XXX",
+    "44XXX",
+    "53XXX",
+    "33XXX",
+    "79XXX",
+    "51XXX",
+    "55XXX",
+    "16XXX",
+    "37XXX",
+    "43XXX",
+    "30XXX",
+    "58XXX",
+    "20XXX",
+    "46XXX",
+    "61XXX",
+    "98XXX",
+    "27XXX",
+    "67XXX",
+    "36XXX",
+    "88XXX",
+    "62XXX",
+    "35XXX",
+    "42XXX",
+    "49XXX",
+    "18XXX",
+    "92XXX",
+    "82XXX",
+    "76XXX",
+    "24XXX",
+    "39XXX",
+    "71XXX",
+    "15XXX",
+    "40XXX",
+    "77XXX",
+    "32XXX",
+    "83XXX",
+    "26XXX",
+    "90XXX",
+    "48XXX",
+    "78XXX",
+    "52XXX",
+    "57XXX",
+    "86XXX",
+    "64XXX",
+    "59XXX",
+    "45XXX",
+    "73XXX",
+    "94XXX",
+    "89XXX",
+    "56XXX",
+    "47XXX",
+    "38XXX",
+    "29XXX",
+    "95XXX",
+    "97XXX",
+    "25XXX",
+    "12XXX",
+    "13XXX",
+    "21XXX",
+    "22XXX",
+    "31XXX",
+    "11XXX",
+    "19XXX",
+    "72XXX",
+    "60XXX",
+    "69XXX",
+    "34XXX",
+    "70XXX",
+    "93XXX","10XXX","96XXX","63XXX","91XXX","66XXX","54XXX","68XXX","80XXX","41XXX","23XXX","50XXX","81XXX","17XXX","85XXX","75XXX"
+  ]
 }
 
 const numericalDict = {
   precipitation : [0, 20],
-  temperature: [-32, 80]
+  temperature: [-32, 80],
+  duration: [2.1521968399301402e-08, 156.29003067669515], 
+  pdenial: [4.922409856236115e-22, 0.99989428376897]
 }
 
 const initialState = {
@@ -23,10 +170,12 @@ const initialState = {
   editMode: true,
   plotMode: 'multiples',
   plotStyle:'histogram',
-  categoricalFeatures: ["Sub-Category", "Segment", "State"],
+  // categoricalFeatures: ["Sub-Category", "Segment", "State"],
   categoryDict: categoryDict,
+  // null,//valueDict,//categoryDict,
   numericalDict: numericalDict,
-  dataTypes: dTypes,
+  // valueDict: null,
+  dataTypes: null,//dTypes,
   hiddenPredicates: [],
   deletedPredicates: [],
   bookmarkedPlots: [],
@@ -49,7 +198,6 @@ const reducer = (state, action) => {
       }else{
         temp = temp.filter(f => !action.ids.includes(f))
       }
-      console.log('TEMP HIDDEN IDS', temp)
       return {...state, attribute_filtered: Array.from(new Set(temp))}
     case "ADD_BOOKMARK_PLOT":
       let newBooks = [...state.bookmarkedPlots, action.bookmarked]
@@ -76,7 +224,8 @@ const reducer = (state, action) => {
     case "SET_PREDICATE_EXPLORE_DATA":
       let arr = formatPredicateArray(action.predData);
       let pToC = action.parentToChildDict !== null ? action.parentToChildDict : state.parentToChildDict;
-      return {...state, predicateArray: arr, parentToChildDict: pToC}
+      
+      return {...state, predicateArray: arr, parentToChildDict: pToC, dataTypes: action.dataTypes}
 
     case "UPDATE_SELECTED_PREDICATE":
         return {...state, selectedPredicate: action.predSel, xCoord: null, yCoord: "Score"};

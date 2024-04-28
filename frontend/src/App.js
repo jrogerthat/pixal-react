@@ -28,7 +28,8 @@ function App() {
   useEffect(() => {
     
     if(loaded){ 
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict})
+     
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict, dataTypes: data.dtypes})
     }
     
   }, [loaded])

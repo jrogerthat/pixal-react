@@ -45,7 +45,9 @@ export const BookmarkedPlots = () => {
 }
 
 const WhichPlot = ({data}) => {
-    const [{categoricalFeatures, selectedPredicate }, dispatch] = useContext(DataContext);
+    const [{categoricalFeatures, selectedPredicate, dataTypes}, dispatch] = useContext(DataContext);
+
+    console.log('DATATYPES IN WHICH PLOT',dataTypes)
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
