@@ -15,6 +15,8 @@ function Pixalate() {
       <div className="splash-select">Unable to process, please choose another predicate.</div>
     )
   }else if(selectedPredicate){
+    console.log(selectedPredicate)
+    console.log(selectedPredicate.feature)
     return(
       <div className="pixalate">
         {/* <div className="left-wrap">

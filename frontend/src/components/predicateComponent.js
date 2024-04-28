@@ -18,13 +18,8 @@ const StaticClauseComponent = ({data}) => {
 const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 
 const StaticFeatureValues = (data) => {
-
-    console.log('StaticFeatureValues')
     const [{numericalDict, categoryDict}] = useContext(DataContext);
-    console.log(data)
-
     let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
-    console.log(valArr)
 
     if(valArr[0] === ''){
      

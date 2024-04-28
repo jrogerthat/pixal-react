@@ -1,0 +1,2 @@
+{"0": {"insurance": ["Payer A"], "procedure": ["99XXX"], "diagnosis": ["A1XXX"], "modifier": [""], "duration": [20, 200]}, 
+"1": {"insurance": ["Payer A"], "procedure": ["99XXX"], "diagnosis": ["A1XXX"], "modifier": [""], "duration": [20, 200]}}
