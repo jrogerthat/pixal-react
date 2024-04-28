@@ -19,15 +19,20 @@ const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(
 
 const StaticFeatureValues = (data) => {
 
+    console.log('StaticFeatureValues')
     const [{numericalDict, categoryDict}] = useContext(DataContext);
+    console.log(data)
 
     let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
+    console.log(valArr)
 
     if(isDate(valArr[0]) && data[0] === 'Order-Date'){ 
         // if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){ 
         return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
         </span></div>
 
+    }else if(valArr.length === 1){
+        return  <div className="feature-value">{` ${valArr[0]}`}<span style={{fontWeight:60, fontSize:12}}>{` (${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
     }else if(isNaN(valArr[0]) === false){
         return <div style={{marginTop:25, display:'flex', flexDirection:'row', width:'85%'}}> <span
         style={{fontSize:11, paddingRight:4}}
@@ -46,8 +51,6 @@ const StaticFeatureValues = (data) => {
       <span
       style={{fontSize:11, paddingLeft:4}}
       >{numericalDict[data[0]][1]}</span></div>
-    }else if(valArr.length === 1){
-        return  <div className="feature-value">{` ${valArr[0]}`}<span style={{fontWeight:60, fontSize:12}}>{` (${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
     }
 
     return (
