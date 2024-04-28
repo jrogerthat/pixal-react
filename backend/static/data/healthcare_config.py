@@ -5,8 +5,9 @@ def get_data(path):
     predicates_path = 'static/data/healthcare.json'
 
     data = pd.read_csv(f'{path}/{data_path}')
+    print(data)
     data['modifier'] = data['modifier'].fillna('')
-    target = data.anomaly
+    target = data.lof
     dtypes = {
         'insurance': 'nominal',
         'procedure': 'nominal',
@@ -18,4 +19,4 @@ def get_data(path):
     }    
     dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
     numeric = dtypes['numeric']
-    return data, predicates_path, target, dtypes, numeric, 'anomaly'
+    return data, predicates_path, target, dtypes, numeric, 'lof'

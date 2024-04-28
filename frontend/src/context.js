@@ -5,11 +5,13 @@ export const DataContext = createContext();
 
 // const dTypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
 
+const dTypes = {'diagnosis': 'nominal', 'insurance': 'nominal', 'modifier': 'nominal', 'procedure': 'nominal', 'duration': 'numeric', 'pdenial': 'numeric', 'denied': 'numeric'}
+
 const categoryDict = {
-  'State': ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'U.S. Virgin Islands', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
-  'Segment': ['Consumer', 'Home Office','Corporate'],
-  'Sub-Category': ['Machine', 'Bookcases', 'Chairs', 'Tables', 'Storage', 'Appliances', 'Copiers'],
-  "denied": [0,1],
+  // 'State': ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'U.S. Virgin Islands', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
+  // 'Segment': ['Consumer', 'Home Office','Corporate'],
+  // 'Sub-Category': ['Machine', 'Bookcases', 'Chairs', 'Tables', 'Storage', 'Appliances', 'Copiers'],
+  // "denied": [0,1],
   "diagnosis": ["E2XXX", "A6XXX", "H7XXX", "G1XXX", "A5XXX","C6XXX","A3XXX","E9XXX","J6XXX","I4XXX","B6XXX","E1XXX","C5XXX","J4XXX","F6XXX","I9XXX","G4XXX",
     "C7XXX",
     "C9XXX",
@@ -350,42 +352,18 @@ const categoryDict = {
 //   'modifier': ['1X', '2X', '3X', '4X', '5X', '6X', '7X', '8X', '9X', '']
 // }
 
-const numericalDict = {
-  precipitation : [0, 20],
-  temperature: [-32, 80],
-  duration: [2.1521968399301402e-08, 156.29003067669515], 
-  pdenial: [4.922409856236115e-22, 0.99989428376897]
-}
-
 // const numericalDict = {
-//   'duration' : [1.877715e-10, 1.441287e+02],
-//   'pdenial': [6.447861e-19, 9.995778e-01],
-//   'denied': [0, 1]
+//   precipitation : [0, 20],
+//   temperature: [-32, 80],
+//   duration: [2.1521968399301402e-08, 156.29003067669515], 
+//   pdenial: [4.922409856236115e-22, 0.99989428376897]
 // }
 
-const initialState = {
-  predicateArray: [],
-  selectedPredicate:null,
-  highlightedPred:null,
-  editMode: true,
-  plotMode: 'multiples',
-  plotStyle:'histogram',
-  // categoricalFeatures: ["Sub-Category", "Segment", "State"],
-  categoryDict: categoryDict,
-  // null,//valueDict,//categoryDict,
-  numericalDict: numericalDict,
-  // valueDict: null,
-  dataTypes: null,//dTypes,
-  hiddenPredicates: [],
-  deletedPredicates: [],
-  bookmarkedPlots: [],
-  xCoord: null,
-  yCoord: "score",
-  negatedArray : [],
-  scaleExtent: true,
-  parentToChildDict: {},
-  attribute_filtered: []
-};
+const numericalDict = {
+  'duration' : [1.877715e-10, 1.441287e+02],
+  'pdenial': [6.447861e-19, 9.995778e-01],
+  'denied': [0, 1]
+}
 
 // const initialState = {
 //   predicateArray: [],
@@ -394,10 +372,12 @@ const initialState = {
 //   editMode: true,
 //   plotMode: 'multiples',
 //   plotStyle:'histogram',
-//   categoricalFeatures: ["procedure", "diagnosis", "insurance", "modifier"],
+//   // categoricalFeatures: ["Sub-Category", "Segment", "State"],
 //   categoryDict: categoryDict,
+//   // null,//valueDict,//categoryDict,
 //   numericalDict: numericalDict,
-//   dataTypes: dTypes,
+//   // valueDict: null,
+//   dataTypes: null,//dTypes,
 //   hiddenPredicates: [],
 //   deletedPredicates: [],
 //   bookmarkedPlots: [],
@@ -408,6 +388,28 @@ const initialState = {
 //   parentToChildDict: {},
 //   attribute_filtered: []
 // };
+
+const initialState = {
+  predicateArray: [],
+  selectedPredicate:null,
+  highlightedPred:null,
+  editMode: true,
+  plotMode: 'multiples',
+  plotStyle:'histogram',
+  categoricalFeatures: ["procedure", "diagnosis", "insurance", "modifier"],
+  categoryDict: categoryDict,
+  numericalDict: numericalDict,
+  dataTypes: dTypes,
+  hiddenPredicates: [],
+  deletedPredicates: [],
+  bookmarkedPlots: [],
+  xCoord: null,
+  yCoord: "score",
+  negatedArray : [],
+  scaleExtent: true,
+  parentToChildDict: {},
+  attribute_filtered: []
+};
 
 const reducer = (state, action) => {
 

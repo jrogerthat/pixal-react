@@ -14,13 +14,13 @@ from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_
 
 from flask import Flask
 
-data_path = 'static/data/healthcare.csv'
-predicates_path = 'static/data/healthcare.json'
+# data_path = 'static/data/healthcare.csv'
+# predicates_path = 'static/data/healthcare.json'
 # data_path = 'static/data/superstore_data_vis23.csv'
 # predicates_path = 'static/data/superstore_predicates_vis23.json'
 
-name = 'superstore'
-# name = 'healthcare'
+# name = 'superstore'
+name = 'healthcare'
 
 api = Flask(__name__)
 path = os.path.dirname(os.path.realpath(__file__))
@@ -46,7 +46,7 @@ data, predicates_path, target, dtypes, numeric, target_name = get_data(path)
 #  'Sales': 'numeric',
 #  'Profit': 'numeric'}
 
-dtypes = {'insurance': 'nominal', 'procedure': 'nominal', 'diagnosis': 'nominal', 'modifier': 'nominal', 'duration': 'numeric', 'pdenial': 'numeric', 'denied': 'nominal'}
+dtypes = {'insurance': 'nominal', 'procedure': 'nominal', 'diagnosis': 'nominal', 'modifier': 'nominal', 'duration': 'numeric', 'pdenial': 'numeric', 'denied': 'numeric'}
 # val_types = {}
 # # print(data.columns)
 # for col in data.columns:
@@ -86,6 +86,7 @@ numeric = dtypes['numeric']
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f).values()
 predicates = [Predicate(data, dtypes, attribute_values=predicate_dict) for predicate_dict in predicate_dicts]
+print(predicates, flush=True)
 
 bf = JZS(side='right')
 p = PredicateInduction(
