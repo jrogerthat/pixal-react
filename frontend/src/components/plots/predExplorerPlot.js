@@ -6,12 +6,14 @@ const PredExplorePlot = ({width, height, singlePred}) => {
     
     const axesRef = useRef(null);
     const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray, plotStyle, selectedPredicate},] = useContext(DataContext);
-
+    console.log('singlepred', singlePred)
     let usedData = useMemo(() => {
         if(singlePred){
            
             return [singlePred].map(m => {
-                return m.predicate.dist.filter(f => negatedArray.indexOf(m.id) > -1 ? f.predicate === false : f.predicate === true)//.filter(f => f.density > .001)
+                console.log('M', m)
+                return m.predicate.dist.filter(f => f.predicate === false)
+                // return m.predicate.dist.filter(f => negatedArray.indexOf(m.id) > -1 ? f.predicate === false : f.predicate === true)//.filter(f => f.density > .001)
                 .map(ag => {
                     ag.id = m.id;
                     ag.color = m.color;
@@ -36,6 +38,8 @@ const PredExplorePlot = ({width, height, singlePred}) => {
         }
 
     }, [predicateArray, negatedArray, hiddenPredicates, deletedPredicates]);
+
+    console.log('USED DATA',usedData)
 
     let margin = {x: 60, y: 30}
 

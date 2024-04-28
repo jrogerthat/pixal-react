@@ -12,6 +12,13 @@ import random
 from flask import Flask
 from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_string, JZS
 
+from flask import Flask
+
+data_path = 'static/data/healthcare.csv'
+predicates_path = 'static/data/healthcare.json'
+# data_path = 'static/data/superstore_data_vis23.csv'
+# predicates_path = 'static/data/superstore_predicates_vis23.json'
+
 name = 'superstore'
 # name = 'healthcare'
 
@@ -19,6 +26,62 @@ api = Flask(__name__)
 path = os.path.dirname(os.path.realpath(__file__))
 exec(f'from static.data.{name}_config import get_data')
 data, predicates_path, target, dtypes, numeric, target_name = get_data(path)
+
+# target = "";
+# score_name = "";
+# if 'Order-Date' in data.columns:
+#     target =  data.lof;
+#     data['Order-Date'] = pd.to_datetime(data['Order-Date']);
+#     score_name = 'lof';
+# else:
+#     target =  data.lof
+#     score_name = 'lof';
+
+# dtypes = {'Order-Date': 'date',
+#  'State': 'nominal',
+#  'Segment': 'nominal',
+#  'Temperature': 'numeric',
+#  'Precipitation': 'numeric',
+#  'Quantity': 'numeric',
+#  'Sales': 'numeric',
+#  'Profit': 'numeric'}
+
+dtypes = {'insurance': 'nominal', 'procedure': 'nominal', 'diagnosis': 'nominal', 'modifier': 'nominal', 'duration': 'numeric', 'pdenial': 'numeric', 'denied': 'nominal'}
+# val_types = {}
+# # print(data.columns)
+# for col in data.columns:
+#     if col != 'anomaly' and dtypes[col] == 'numeric':
+#         # print('DATAAAA range!!', col, 'test', data[col])
+#         # min = min(data[col])
+#         # print('rangeeee', data[col].min(), data[col].max())
+#         val_types[col] = [data[col].min(), data[col].max()]
+    # if col != 'anomaly' and dtypes[col] != 'numeric':
+    #     settit = set(data[col])
+    #     val_types[col] = list(settit)
+# print(val_types)
+
+# dtypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'numeric', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+
+# dtypes['Date'] = 'date'
+# dtypes['Precipitation'] = 'numeric'
+# dtypes['Temperature'] = 'numeric'
+# dtypes['Profit'] = 'numeric'
+# dtypes['Sales'] = 'numeric'
+dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
+numeric = dtypes['numeric']
+
+# api = Flask(__name__)
+# path = os.path.dirname(os.path.realpath(__file__))
+# data = pd.read_csv(f'{path}/{data_path}')
+# target = data.iforest_score
+# data = data.drop('iforest_score', axis=1)
+# data['Order-Date'] = pd.to_datetime(data['Order-Date'])
+# dtypes = {'Order-Date': 'date', 'Ship-Mode': 'nominal', 'Segment': 'nominal', 'State': 'nominal', 'Sub-Category': 'nominal', 'Quantity': 'ordinial', 'Unit-Price': 'numeric', 'Unit-Cost': 'numeric', 'precipitation': 'numeric', 'temperature': 'numeric'}
+# dtypes['numeric'] = [k for k,v in dtypes.items() if v == 'numeric']
+
+# dtypes = infer_dtypes(data)
+# target = pd.read_csv(f'{path}/{target_path}')
+# target = target[target.columns[0]]
 
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f).values()
@@ -49,8 +112,12 @@ def get_feature_cat():
     #Segment,State,Sub-Category
     return test['State']
 
-@api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
-def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
+# @api.route('/get_selected_data/<predicate_id>/<num_score_bins>/<num_pivot_bins>')
+# def get_selected_data(predicate_id, num_score_bins=25, num_pivot_bins=15):
+@api.route('/get_selected_data/<predicate_id>')
+def get_selected_data(predicate_id):
+    print('PREDICATE ID', predicate_id)
+    print('predicates', predicates)
     print('get_selected_data', flush=True)
     predicate = predicates[int(predicate_id)]
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
@@ -107,8 +174,11 @@ def get_predicates_dict(predicates, target, num_bins=25):
 
     predicates_dict = {i: predicates[i].to_dict_dist(target, num_bins=num_bins, include_compliment=True) for i in range(len(predicates))}
     for k,v in predicates_dict.items():
+       
         score = p.score(predicates[k])
         predicates_dict[k]['score'] = max(0, score)
+       
+        print('score', score)
     return predicates_dict
 
 @api.route('/add_predicate', methods=['GET', 'POST'])
@@ -196,7 +266,7 @@ def copy_predicate(predicate_id):
 def get_predicate_data():
     # target_ = pd.Series(np.random.normal(size=data.shape[0]))
     predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
-    return {'predicates': predicates_dict, 'parent_dict':parent_dict}
+    return {'predicates': predicates_dict, 'parent_dict': parent_dict, 'dtypes': dtypes}
 
 @api.route('/get_predicate_score', methods=['GET', 'POST'])
 def get_predicate_score():

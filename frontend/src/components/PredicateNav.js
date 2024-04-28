@@ -123,7 +123,7 @@ function Checkbox({data}) {
         defaultChecked={checked}
         onChange={() => {
           setChecked((state) => !state)
-          console.log('checked', checked)
+    
           dispatch({type: "UPDATE_ATTRIBUTE_FILTERS", ids: data[1], hideBool: checked})
         }}
       />

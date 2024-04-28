@@ -21,12 +21,12 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
             }
         }else if(explanBool){
             if(!d3.select('.l-top').empty()){
-                console.log('EXPLANBOOL',explanBool)
+               
                 setWidth(d3.select('.l-top').style('width').split('px')[0] - 200);
                 setSvgHeight(200)
             }
         }else{
-            console.log('PIVOT PLOT??')
+           
             setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 250)
             // if(!d3.select('.l-top').empty()){
             //     setWidth(d3.select('.l-top').style('width').split('px')[0] - 50);
