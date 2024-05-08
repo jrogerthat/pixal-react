@@ -5,22 +5,21 @@ import { FeatureDotPlot } from "./plots/featureDotPlot";
 import { FeatureLinePlot } from "./plots/featureLinePlot";
 
 const FormatExplanation = ({featCat, k}) => {
-
     return(
-    <div style={{padding:10, marginTop:10}}>
-        <div>
-            <span style={{marginRight: 5, fontWeight:700}}>{`X Axis: ${featCat}`}</span>
-            <span style={{marginRight: 10}}>{"|"}</span>
-            <span style={{marginRight: 5, fontWeight:700}}>{`Y Axis: ${k[0]}`}</span>
+        <div style={{padding:10, marginTop:10}}>
+            <div>
+                <span style={{marginRight: 5, fontWeight:700}}>{`X Axis: ${featCat}`}</span>
+                <span style={{marginRight: 10}}>{"|"}</span>
+                <span style={{marginRight: 5, fontWeight:700}}>{`Y Axis: ${k[0]}`}</span>
+            </div>
+            <ul style={{paddingLeft:12}}>
+                {
+                    k[1][1].map((m, i) => m !== "" ? <li key={`li-${i}`}>{m}</li> : "")
+                }
+            </ul>
+            
+            {/* {k[1][1].join(", ")} */}
         </div>
-        <ul style={{paddingLeft:12}}>
-            {
-                k[1][1].map((m, i) => m !== "" ? <li key={`li-${i}`}>{m}</li> : "")
-            }
-        </ul>
-        
-        {/* {k[1][1].join(", ")} */}
-    </div>
     )
 }
 
@@ -77,13 +76,14 @@ export const ExplanationComponent = () => {
                     <div key={`pred-feat-${i}`}>
                         <div
                         style={{
-                            paddingLeft:20,
+                            paddingLeft:10,
                             // backgroundColor:'red',
                             color:'gray',
                             fontWeight:400,
-                            fontSize:15
+                            fontSize:15,
+                            paddingTop:10
                         }}
-                        ><span>{p[0]}</span></div>
+                        ><span style={{fontSize:21}}>{p[0].toLocaleUpperCase()}</span></div>
                         <FeatureComp features={p[1]} featCat={p[0]}/>
                     </div>
                 ))

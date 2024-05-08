@@ -69,6 +69,10 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
  
   const [{plotMode, selectedPredicate}, dispatch] = useContext(DataContext);
 
+  let isSelected = () => {
+    return (selectedPredicate && predicateData.id === selectedPredicate.predicate_id) ? predicateData.color : 'white';//'#e8e4e4e0';
+}
+
   
   return(
     <div>{
@@ -76,7 +80,6 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
        <div 
        key={`pred-edir-${p.id}`}
        style={{display:'flex'}}>
-        {/* <div style={{background:'red', display:'inline'}}> */}
         {p.level > 0 && <div style={{flex: '0 0 20px', marginLeft: (p.level * 20)}}>
           <svg style={{width:20, height:'100%', filter:'drop-shadow(1px 1px 2px rgb(0 0 0 / 0.1))'}}>
             <line x1={10} x2={20} y1={60} y2={60} stroke={'#FFF'} strokeWidth={8}/>
@@ -94,17 +97,18 @@ export const NestedWrapper = ({predicateData, scoreExtent}) => {
               <div
               className="pred-wrap"
               style={{
-                marginLeft:10,
-                width: selectedPredicate ? 400 : 700, 
-                height:250,
+                marginLeft:3,
+                width: selectedPredicate ? 370 : 700, 
+                height:245,
                 backgroundColor:'white',
                 borderRadius: 4,
                 marginTop: 5,
                 padding:5,
                 paddingLeft:20,
                 boxShadow: `0px 3px 15px rgba(0,0,0,0.1)`,
+                border: `3px solid ${isSelected()}`,
               }}
-              ><PredExplorePlot width={selectedPredicate ? 300 : 600} height={200} singlePred={p} />
+              ><PredExplorePlot width={selectedPredicate ? 280 : 600} height={200} singlePred={p} />
               </div>
             )
           }

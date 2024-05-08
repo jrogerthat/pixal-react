@@ -20,6 +20,7 @@ api = Flask(__name__)
 path = os.path.dirname(os.path.realpath(__file__))
 exec(f'from static.data.{name}_config import get_data')
 data, predicates_path, target, dtypes, numeric, target_name = get_data(path)
+print('D TYPES', dtypes)
 
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f).values()
@@ -44,24 +45,28 @@ def get_pred_dis():
     all_fun.save_predicate_id(0, predicate_id_path)
     return all_fun.get_pred_distribution_data(all_fun.feat_val, pred, 100)
 
-@api.route('/get_feature_cat')
-def get_feature_cat():
-    test = pd.read_csv('static/data/augmented_superstore_data.csv')
-    return test['State']
+# @api.route('/get_feature_cat')
+# def get_feature_cat():
+#     test = pd.read_csv('static/data/augmented_superstore_data.csv')
+#     return test['State']
 
 @api.route('/get_selected_data/<predicate_id>')
 def get_selected_data(predicate_id):
-    print('PREDICATE ID', predicate_id)
-    print('predicates', predicates)
-    print('get_selected_data', flush=True)
+    # print('PREDICATE ID', predicate_id)
+    # # print('predicates', predicates)
+    # print('get_selected_data', flush=True)
     predicate = predicates[int(predicate_id)]
+    print('predicate', predicate.predicate_attributes)
     pivots = {attr: predicate.pivot(attr) for attr in predicate.predicate_attributes} if predicate is not None else None
+
+    print('PIVOTS', pivots)
     
     num_pivot_bins = 35
     num_score_bins = 40
     predicate_scores = predicate.get_distribution(target, num_bins=num_score_bins, include_compliment=True).dropna().to_dict('records')
-
+    # print('PREDICATE SCORES',predicate_scores)
     attribute_data = {attr: {num_attr: pivot.get_plot_data_text(num_attr, max_bins=int(num_pivot_bins), to_dict=True) for num_attr in dtypes['numeric'] if num_attr not in predicate.attributes} for attr,pivot in pivots.items()}  if predicate is not None else None
+    print('PREDICATE SCORES',predicate_scores)
     attribute_score_data = {attr: pivot.get_plot_data_text(target_name, max_bins=int(num_pivot_bins), to_dict=True) for attr,pivot in pivots.items()}  if predicate is not None else None
     for k,v in attribute_score_data.items():
         attribute_score_data[k] = ([{'score' if ki==target_name else ki: vi for ki,vi in r.items()} for r in v[0]], v[1])

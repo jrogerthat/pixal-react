@@ -1,8 +1,6 @@
 import React, { useContext } from 'react'
 import '../App.css';
-import { PredScorePlot } from './plots/predScorePlot';
 import { DataContext } from '../context';
-import { PixalFeatureNavWrap } from './pixalFeatureNav';
 import { PivotPlot } from './plots/PivotPlot';
 import TabComponent from './tabComponent';
 
@@ -15,23 +13,15 @@ function Pixalate() {
       <div className="splash-select">Unable to process, please choose another predicate.</div>
     )
   }else if(selectedPredicate){
-    console.log(selectedPredicate)
-    console.log(selectedPredicate.feature)
+    
     return(
       <div className="pixalate">
-        {/* <div className="left-wrap">
-        <PixalFeatureNavWrap classN={"l-top"} />
-        <div className="l-bottom">
-        <div className="head-3">Anomaly Scores</div>
-        <PredScorePlot />
-        </div>
-        </div> */}
 
         <div className="right-wrap">
       {
         selectedPredicate.feature && (
           <React.Fragment>
-          <div className="head-3" style={{marginBottom:16}}>Predicate Explanations</div>
+          <div className="head-3" style={{marginBottom:10}}>{`Explanation for Predicate ${selectedPredicate.predicate_id}`}</div>
           <PivotPlot />
           <div 
           className="r-bottom" 

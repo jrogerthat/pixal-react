@@ -97,7 +97,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
 
     let handleClick = () => {
        if(!editing){
-        console.log('PREDICATE DATA ID', predicateData)
+       
         axios.get(`/get_selected_data/${predicateData.id}`).then((data)=> {
             // axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
 
@@ -142,6 +142,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
                     gap:10,
                     alignItems:'stretch',
                     paddingLeft:12,
+                    paddingRight:15,
                     paddingTop:5,
                     // marginLeft:20
                     }}>
@@ -205,7 +206,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
                     </div>
                     <div
                     style={{width:30}}
-                    ><svg><rect width={20} height={20} fill={predicateData.color}/></svg></div>
+                    ><svg style={{width:30, height:30}}><rect width={20} height={20} fill={predicateData.color}/></svg></div>
                     </div>
                     </div>
                 )

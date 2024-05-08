@@ -49,11 +49,17 @@ function PredicateNavLarge({filteredPredicates}) {
   
     return (
       <div className="pred-exp-nav-large" style={{overflowX:'hidden'}}>
-        {
+        {/* {
           editMode && !selectedPredicate ? <Button
           variant="outlined"
           onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
         >{addPredMode ? "Cancel" : "Add Predicate"}</Button> : <span className='head-3'>Predicates</span>
+        } */}
+        {
+          (editMode && !selectedPredicate) && <Button
+          variant="outlined"
+          onClick={() => addPredMode ? setAddPredMode(false) : setAddPredMode(true)}
+        >{addPredMode ? "Cancel" : "Add Predicate"}</Button>
         }
         {
           (editMode && !selectedPredicate) && <Button variant="outlined" onClick={()=> {

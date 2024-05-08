@@ -2,12 +2,12 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pivotBool, bookmarkData}) => {
+export const FeatureBarPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
    
     const [{selectedPredicate, scaleExtent}] = useContext(DataContext);
 
-    const [width, setWidth] = useState(470);
-    const [svgHeight, setSvgHeight] = useState(300)
+    const [width, setWidth] = useState(500);
+    const [svgHeight, setSvgHeight] = useState(300);
 
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
@@ -51,10 +51,11 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
 
     let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0];
+    
 
     let xScale = useMemo(()=> {
         return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (width - margin().x)]).padding(0.2);
-    }, [width, xCoord])
+    }, [width, xCoord, plotData])
 
     let extentOfData = d3.extent(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]));
     let yScale = useMemo(()=> {
@@ -65,12 +66,9 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
     const divRef = useRef();
 
     useEffect(()=> {
-
-       
-        // setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 300)
+   
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
-
         let wrap = svg.append('g').classed('wrap', true);
 
         if(navBool){
@@ -132,7 +130,7 @@ export const FeatureBarPlot = ({xCoord, yCoord, feature, navBool, explanBool, pi
        
        
 
-    }, [width, xCoord, yCoord, yScale, usedPredData.predicate_info.id, scaleExtent]);
+    }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id, scaleExtent]);
 
     return(
         <div 

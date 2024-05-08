@@ -14,6 +14,7 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 export const  PivotPlot = () => {
 
     const [{selectedPredicate, xCoord, yCoord, plotStyle}, dispatch] = useContext(DataContext);
+    console.log('SELECTED PREDICATE', selectedPredicate)
     const [encoding, setEncoding] = useState(null);
     const [checked, setChecked] = useState(true);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
@@ -151,8 +152,7 @@ const WhichPlot = ({setEncoding}) => {
     let categoricalBool = useMemo(() => {
         return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
     }, [selectedPredicate, selectedPredicate.feature])
-    
-
+    console.log('SELECTED_PRED in WHICH PLOT', selectedPredicate.feature[0], xCoord)
     if(categoricalBool){
         setEncoding('bar')
         return  <div style={{marginTop:20}}>
