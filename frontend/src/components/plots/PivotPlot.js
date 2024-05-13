@@ -14,7 +14,7 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 export const  PivotPlot = () => {
 
     const [{selectedPredicate, xCoord, yCoord, plotStyle}, dispatch] = useContext(DataContext);
-    console.log('SELECTED PREDICATE', selectedPredicate)
+  
     const [encoding, setEncoding] = useState(null);
     const [checked, setChecked] = useState(true);
     let keys = Object.keys(selectedPredicate.attribute_data[selectedPredicate.feature[0]])
@@ -28,16 +28,23 @@ export const  PivotPlot = () => {
 
     return (
         <div className="r-top" style={{display:'flex', flexDirection:'row'}}>
-        <div style={{display:'flex', flexDirection:'column', width:200, justifyContent:'space-between', marginLeft:10}}>
+        <div style={{display:'flex', flexDirection:'column', width:180, justifyContent:'space-between', 
+        // marginLeft:10, 
+        marginRight:15,
+        // backgroundColor:'red'
+        }}>
             <div style={{
                 marginTop:15,
-                marginLeft:7,
+                // marginLeft:7,
                 // alignItems:'flex-end', 
                 flexDirection:'column',
                 display:'flex'}}>
                 <Legend selectedPredicate={selectedPredicate} xCoord={xCoord}/>
-                <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', paddingTop:50, marginLeft:10}}>
-                    <div style={{position:'relative', left:25}}>
+                <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', paddingTop:50, 
+                // marginLeft:10, 
+                // backgroundColor:'yellow'
+                }}>
+                    <div style={{position:'relative', left:20}}>
                         <CoordDrop 
                             options={yOptions} 
                             label={"y"} 
@@ -105,7 +112,7 @@ const getExplanation = (xC, yC, selectedPredicate) => {
 
 const Legend = ({selectedPredicate, xCoord, others}) => {
     return(
-        <div>
+        <div style={{paddingLeft:10}}>
         <div style={{display:'inline'}}>
             <svg width={12} height={12} style={{backgroundColor: `${selectedPredicate.predicate_info.color}`, marginRight:5}} />
             <div 
@@ -152,7 +159,15 @@ const WhichPlot = ({setEncoding}) => {
     let categoricalBool = useMemo(() => {
         return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
     }, [selectedPredicate, selectedPredicate.feature])
-    console.log('SELECTED_PRED in WHICH PLOT', selectedPredicate.feature[0], xCoord)
+    // console.log('SELECTED_PRED in WHICH PLOT', selectedPredicate.feature[0], xCoord)
+
+    const [width, setWidth] = useState(500);
+    const [svgHeight, setSvgHeight] = useState(300);
+
+    useEffect(() => {
+        setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 200)
+    }, [d3.select('.r-top').empty(), d3.select('#pivot-plot').empty()]);
+
     if(categoricalBool){
         setEncoding('bar')
         return  <div style={{marginTop:20}}>
@@ -163,14 +178,22 @@ const WhichPlot = ({setEncoding}) => {
             feature={selectedPredicate.feature[0]} 
             pivotBool={true}
             explanBool={false}
-            navBool={false}
+            width={width}
+            svgHeight={svgHeight}
             /></div>
     }else if(selectedPredicate.feature[0] === "Order-Date"){
         setEncoding('line')
         return <div style={{marginTop:20}}>
-       <FeatureLinePlot xCoord={xCoord} yCoord={yCoord} pivotBool={true}
+       <FeatureLinePlot 
+        xCoord={xCoord} 
+        yCoord={yCoord} 
+        pivotBool={true}
         explanBool={false}
-        navBool={false} /></div>
+        width={width}
+        svgHeight={svgHeight}
+        />
+
+        </div>
     }else{
         setEncoding('dot')
         return <div style={{marginTop:20}}>
@@ -180,7 +203,8 @@ const WhichPlot = ({setEncoding}) => {
         categorical={categoricalBool}
         pivotBool={true}
         explanBool={false}
-        navBool={false}
+        width={width}
+        svgHeight={svgHeight}
         /></div>
     }
 }
@@ -188,11 +212,9 @@ const WhichPlot = ({setEncoding}) => {
 const CoordDrop = ({options, label, type}) => {
 
     const [{xCoord, yCoord}, dispatch] = useContext(DataContext);
-
     const [coord, setCoord] = useState(type === "yCoord" ? "Score" : xCoord);
 
     useEffect(() => {
-        
         type === "yCoord" ? setCoord(yCoord) : setCoord(xCoord);
     }, [yCoord, xCoord])
 
@@ -206,7 +228,7 @@ const CoordDrop = ({options, label, type}) => {
     };
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 90, p:.1 }} size="small">
+        <FormControl sx={{ m: 1, minWidth: 80, p:.1 }} size="small">
         <InputLabel id="demo-select-small">{label}</InputLabel>
         <Select
             labelId="demo-select-small"

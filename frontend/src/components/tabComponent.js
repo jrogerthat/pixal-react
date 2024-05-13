@@ -18,7 +18,7 @@ function TabPanel({ children, value, index, ...other }) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 2 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -40,7 +40,6 @@ function a11yProps(index) {
 }
 
 export default function TabComponent() {
-
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);

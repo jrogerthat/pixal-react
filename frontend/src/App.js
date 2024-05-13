@@ -10,6 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import SmallMultiple from './components/SmallMultiple';
 import { Badge, Button } from '@mui/material';
+import PredicateNav from './components/PredicateNav';
 
 
 function App() {
@@ -23,12 +24,9 @@ function App() {
   let {data, error, loaded} = useAxiosGet('/get_predicate_data');
  
   useEffect(() => {
-    
     if(loaded){ 
-     
       dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict, dataTypes: data.dtypes})
     }
-    
   }, [loaded])
 
   return (
@@ -70,10 +68,13 @@ function App() {
       </AppBar>
       <div className="main-wrapper">
         {!selectedPredicate ? (
-         <SmallMultiple />
+        //  <SmallMultiple />
+        <PredicateNav/>
         ): (
           <React.Fragment>
-          <SmallMultiple /><Pixalate />
+          {/* <SmallMultiple /><Pixalate /> */}
+          <PredicateNav/>
+          <Pixalate />
           </React.Fragment>
           
         )}

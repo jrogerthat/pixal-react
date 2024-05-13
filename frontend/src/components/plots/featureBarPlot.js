@@ -2,48 +2,16 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureBarPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
+export const FeatureBarPlot = ({xCoord, yCoord, explanBool, bookmarkData, width, svgHeight}) => {
    
     const [{selectedPredicate, scaleExtent}] = useContext(DataContext);
-
-    const [width, setWidth] = useState(500);
-    const [svgHeight, setSvgHeight] = useState(300);
-
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
     }, [selectedPredicate, bookmarkData]);
-    
-    useEffect(() => {
-        if(navBool){
-            if(!d3.select('.l-top').empty()){
-                setWidth(d3.select('.l-top').style('width').split('px')[0]);
-                setSvgHeight(180)
-            }
-        }else if(explanBool){
-            if(!d3.select('.l-top').empty()){
-               
-                setWidth(d3.select('.l-top').style('width').split('px')[0] - 200);
-                setSvgHeight(200)
-            }
-        }else{
-           
-            setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 250)
-            // if(!d3.select('.l-top').empty()){
-            //     setWidth(d3.select('.l-top').style('width').split('px')[0] - 50);
-            //     setSvgHeight(200)
-            // }
-        }
-        // else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
-           
-        // }
-        
-    }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
     let margin = () => {
-        if(navBool){
-            return {x:90, y:(svgHeight * .3)}
-        }else if(explanBool){
-            return {x:70, y:(svgHeight * .3)}
+       if(explanBool){
+            return {x:60, y:60}
         }else{
             return {x: 50, y: 10}
         }
@@ -52,15 +20,15 @@ export const FeatureBarPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
     let plotDataOptions = {...usedPredData.attribute_data[xCoord], 'Score': usedPredData.attribute_score_data[xCoord]};
     let plotData = plotDataOptions[yCoord][0];
     
-
     let xScale = useMemo(()=> {
-        return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (width - margin().x)]).padding(0.2);
+        return d3.scaleBand().domain(plotData.map(m => m[xCoord])).range([0, (width - margin().x)])
+        //.padding(0.2);
     }, [width, xCoord, plotData])
 
     let extentOfData = d3.extent(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]));
     let yScale = useMemo(()=> {
         return scaleExtent ? d3.scaleLinear().domain([extentOfData[0] - (extentOfData[0]*.05), extentOfData[1]]).range([(svgHeight - (margin().y)), 0]) : d3.scaleLinear().domain([0,d3.max(plotData.map(m => m[yCoord === 'Score' ? 'score' : yCoord]))]).range([(svgHeight - (margin().y)), 0])
-    }, [svgHeight, yCoord, scaleExtent])
+    }, [svgHeight, yCoord, scaleExtent, plotData])
    
     const svgRef = useRef(null);
     const divRef = useRef();
@@ -71,12 +39,10 @@ export const FeatureBarPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
         svg.selectAll("*").remove();
         let wrap = svg.append('g').classed('wrap', true);
 
-        if(navBool){
-            wrap.attr("transform", `translate(${((margin().x/2)) + 10}, ${((margin().y/2) - 30)})`)
-        }else if(explanBool){
-            wrap.attr("transform", `translate(${((margin().x/2)) + 30}, ${((margin().y/2) - 20)})`)
+        if(explanBool){
+            wrap.attr("transform", `translate(${((margin().x/2) + 10)}, ${((margin().y/2))})`)
         }else{
-            wrap.attr("transform", `translate(${((margin().x/2)) + 30}, ${((margin().y/2) - 40)})`)
+            wrap.attr("transform", `translate(${((margin().x/2)) + 10}, ${((margin().y/2) - 40)})`)
         }
        
         let xAxis = wrap.append("g")
@@ -85,7 +51,7 @@ export const FeatureBarPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
         .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
             .style("text-anchor", "end")
-            .style('font-size', (navBool || explanBool) ? 8 : 10)
+            .style('font-size', (explanBool) ? 8 : 10)
 
         let yAxis = wrap.append('g')
         .attr("transform", "translate(-0, 0)")
@@ -100,33 +66,30 @@ export const FeatureBarPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
             return d.predicate === 1 ? usedPredData.predicate_info.color : 'gray'
         }).attr('fill-opacity', .6)
 
-        if(navBool || explanBool){
+        if(explanBool){
             // Y axis label:
             wrap.append("text")
-            .attr("text-anchor", "middle")
-            .attr("transform", "rotate(-90)")
-            .attr("y", -40)
-            .attr("x", -((svgHeight/4) + 10))
-            .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
-            .style('font-size', navBool || explanBool ? 10 : 12)
-            .style('font-weight', 800)
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -27)
+                .attr("x", -((svgHeight/4) + 10))
+                .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
+                .style('font-size', explanBool ? 10 : 12)
+                .style('font-weight', 800)
 
-            if(explanBool){
-                // Add X axis label:
-                svg.append("text")
+            svg.append("text")
                 .attr("text-anchor", "middle")
                 .attr("x", width/2)
                 .attr("y", (svgHeight + 10))
                 .text(xCoord)
-                .style('font-size', navBool || explanBool ? 10 : 12)
+                .style('font-size', explanBool ? 10 : 12)
                 .style('font-weight', 800)
-            }
-
-            if(navBool){
-                svg.attr('height', '160px')
-            }
-           
         }
+       
+        if(plotData.length > 50){
+            svg.selectAll('.tick').selectAll('text').style('font-size', 6)
+        }
+        
        
        
 

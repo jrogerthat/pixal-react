@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import React, { useContext, useEffect, useState } from "react"
 import { DataContext } from "../context"
 import { FeatureBarPlot } from "./plots/featureBarPlot";
@@ -39,13 +40,14 @@ const FeatureComp = ({features, featCat}) => {
                     onClick={()=> {
                         // dispatch({type: "UPDATE_SELECTED_PRED_X_Y", predSel: selectedPredicate, x: featCat,  y: k[0]  })
                         dispatch({type:'FEATURE_SELECTED', feature: [featCat, k]})
-                }
-            }
+                    }}
                     >
                         <div
                         id={`explan-${k[0]}`}
-                        style={{marginRight:10, borderRadius:20, backgroundColor:'#f4efefe0', padding:3}}
-                        ><WhichPlot yCoord={k[0]} xCoord={featCat} /></div>
+                        style={{marginRight:10, borderRadius:10, backgroundColor:'#f4efefe0', padding:3}}
+                        >
+                            <WhichPlot yCoord={k[0]} xCoord={featCat} />
+                        </div>
                         <FormatExplanation featCat={featCat} k={k} />
                     </div>
                 ))
@@ -98,6 +100,13 @@ const WhichPlot = ({yCoord, xCoord}) => {
 
     let categoricalBool = categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
 
+    const [width, setWidth] = useState(500);
+    const [svgHeight, setSvgHeight] = useState(300);
+
+    useEffect(() => {
+        setWidth(d3.select('.r-bottom').node().getBoundingClientRect().width * .5)
+    }, [d3.select('.r-bottom').empty()]);
+
     if(categoricalFeatures.indexOf(xCoord) > -1){
         // setEncoding('bar')
         return  <FeatureBarPlot 
@@ -107,20 +116,27 @@ const WhichPlot = ({yCoord, xCoord}) => {
         feature={selectedPredicate.feature[0]}
         explanBool={true} 
         pivotBool={false}
-        navBool={false}
+        width={width}
+        svgHeight={svgHeight}
         />
     }else if(xCoord === "Order-Date"){
      
         return <FeatureLinePlot 
         xCoord={xCoord} 
         yCoord={yCoord} 
-        explanBool={true}/>
+        explanBool={true}
+        width={width}
+        svgHeight={svgHeight}
+        />
     }else{
        
         return <FeatureDotPlot 
         xCoord={xCoord} 
         yCoord={yCoord} 
         categorical={categoricalBool} 
-        explanBool={true}/>
+        explanBool={true}
+        width={width}
+        svgHeight={svgHeight}
+        />
     }
 }

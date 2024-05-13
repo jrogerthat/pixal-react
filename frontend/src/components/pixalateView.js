@@ -17,7 +17,7 @@ function Pixalate() {
     return(
       <div className="pixalate">
 
-        <div className="right-wrap">
+        {/* <div className="right-wrap"> */}
       {
         selectedPredicate.feature && (
           <React.Fragment>
@@ -33,7 +33,7 @@ function Pixalate() {
           </React.Fragment>
         )
       }
-        </div>
+        {/* </div> */}
       </div>
     )
   }

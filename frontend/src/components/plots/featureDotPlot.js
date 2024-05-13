@@ -3,7 +3,7 @@ import { DataContext } from "../../context";
 import * as d3 from "d3";
 
 
-export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
+export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData, width, svgHeight}) => {
  
     const [{selectedPredicate, scaleExtent},] = useContext(DataContext);
     const usedPredData = useMemo(()=> {
@@ -16,31 +16,7 @@ export const FeatureDotPlot = ({xCoord, yCoord, navBool, explanBool, bookmarkDat
     const svgRef = useRef(null);
     const divRef = useRef();
 
-    const [width, setWidth] = useState(480);
-    const [svgHeight, setSvgHeight] = useState(300);
-
     const [useExtent, setUseExtent] = useState(true);
-    
-    useEffect(() => {
-        if(navBool){
-            if(!d3.select('.l-top').empty()){
-                setWidth(d3.select('.l-top').style('width').split('px')[0]);
-                setSvgHeight(180)
-            }
-        }else if(explanBool){
-            if(!d3.select('.l-top').empty()){
-                setWidth(d3.select('.l-top').style('width').split('px')[0]);
-                setSvgHeight(200)
-            }
-        }else{
-            
-            setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 100)
-        }
-        // else if(!navBool && !explanBool && !d3.select('#pivot-plot').empty()){
-           
-        // }
-        
-    }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
     let margin = {x:(90), y:(svgHeight * .3)};
 

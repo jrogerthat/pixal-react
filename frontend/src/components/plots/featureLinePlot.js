@@ -2,37 +2,13 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DataContext } from "../../context";
 import * as d3 from "d3";
 
-export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData}) => {
+export const FeatureLinePlot = ({xCoord, yCoord, navBool, explanBool, bookmarkData,  width, svgHeight}) => {
  
     const [{selectedPredicate, scaleExtent}, dispatch] = useContext(DataContext);
 
     const usedPredData = useMemo(()=> {
         return (bookmarkData !== null && bookmarkData !== undefined) ? bookmarkData.selectedPredicate : selectedPredicate;
     }, [selectedPredicate, bookmarkData]);
-
-    const [width, setWidth] = useState(500);
-    const [svgHeight, setSvgHeight] = useState(300)
-    
-    useEffect(() => {
-        if(navBool){
-            if(!d3.select('.l-top').empty()){
-                setWidth(d3.select('.l-top').style('width').split('px')[0]);
-                setSvgHeight(180);
-
-            }
-        }else if(explanBool){
-          
-            if(!d3.select(`#explan-${yCoord}`).empty()){
-
-                setWidth(d3.select(`#explan-${yCoord}`).style('width').split('px')[0]);
-                setSvgHeight(200)
-            }
-        }else{
-            setWidth(d3.select('.r-top').node().getBoundingClientRect().width - 200)
-        }
-   
-        
-    }, [d3.select('.l-top').empty(), d3.select('#pivot-plot').empty()]);
 
     
     let margin = {x:((90)), y:(svgHeight * .3)};

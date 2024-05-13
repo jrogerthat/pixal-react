@@ -90,9 +90,9 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
     const xScale = useMemo(() => {
         if(data.length > 0){
             let maxArr =  data.flatMap(f => f.map(m => +m.score));
-            return d3.scaleLinear().range([1, width-50]).domain(d3.extent(maxArr));
+            return d3.scaleLinear().range([1, width-(margin.x * 2)]).domain(d3.extent(maxArr));
         }else{
-            return d3.scaleLinear().range([0, width]).domain([0, 1]);
+            return d3.scaleLinear().range([0, width - margin.x]).domain([0, 1]);
         }}, [data, width]);
 
       // Render the X axis using d3.js, not react
@@ -100,7 +100,7 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
         const svgElement = d3.select(axesRef.current);
         svgElement.selectAll("*").remove();
         const wrap = svgElement.append('g').attr('id', 'wrap-explore');
-        wrap.attr('transform', `translate(${margin.x}, ${margin.y})`)
+        wrap.attr('transform', `translate(${margin.x * 1.5}, ${margin.y})`)
         const xAxisGenerator = d3.axisBottom(xScale);
 
         wrap
@@ -115,7 +115,7 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
         wrap.append("text")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("y", -40)
+        .attr("y", -30)
         .attr("x", -((height/2) - 20))
         .style("font-size", 11)
         .text("Percentage of Data Points")
@@ -123,8 +123,8 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
         // Add X axis label:
         wrap.append("text")
         .attr("text-anchor", "middle")
-        .attr("x", (width/2))
-        .attr("y", (height - 5))
+        .attr("x", ((width - (margin.x * 2))/2))
+        .attr("y", (height - 10))
         .text("Anomaly Score")
         .style('font-size', 11);
 
@@ -152,11 +152,10 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
     }, [data, highlightedPred, negatedArray, xScale, yScale, height]);
 }
 
-const PredExplorePlot = ({width, height, singlePred}) => {
+const PredExplorePlot = ({width, height, singlePred, marginX, marginY}) => {
     
     const axesRef = useRef(null);
     const [{predicateArray, hiddenPredicates, deletedPredicates, highlightedPred, negatedArray, plotStyle},] = useContext(DataContext);
-    console.log('WIDTH', width)
     let usedData = useMemo(() => {
         if(singlePred){
             return [singlePred].map(m => {
@@ -169,11 +168,9 @@ const PredExplorePlot = ({width, height, singlePred}) => {
                 });
             });
         }
-
     }, [predicateArray, negatedArray, hiddenPredicates, deletedPredicates]);
 
-
-    let margin = {x: 60, y: 30}
+    let margin = {x: marginX, y: marginY}
 
     const yScale = useMemo(() => {
         if(predicateArray.length > 0){
@@ -183,18 +180,6 @@ const PredExplorePlot = ({width, height, singlePred}) => {
              return d3.scaleLinear().range([height, 0]).domain([0, 1]);
         }}, [usedData, height]);
 
-    // const xScale = useMemo(() => {
-    //     if(predicateArray.length > 0){
-    //         let maxArr =  usedData.flatMap(f => f.map(m => +m.score));
-    //         return d3.scaleLinear().range([3, width]).domain(d3.extent(maxArr));
-    //         // return d3.scaleLinear().range([0, width]).domain([0, d3.max(maxArr)]);
-    //     }else{
-    //         return d3.scaleLinear().range([0, width]).domain([0, 1]);
-    //     }}, [usedData, width]);
-    // const calcColor = (d) => {
-    //     return highlightedPred != null && highlightedPred != d.id ? 'rgba(211,211,211, .2)' : d.color;
-    // }
-
     if(plotStyle === 'area'){
         PredScoreArea(usedData, margin, axesRef, yScale, highlightedPred, negatedArray, width, height, plotStyle)
     }else{
@@ -202,7 +187,7 @@ const PredExplorePlot = ({width, height, singlePred}) => {
     }
 
     return(
-        <svg width={width + (margin.x * 2)} height={height + margin.y} ref={axesRef}>
+        <svg width={width} height={height + margin.y} ref={axesRef}>
         </svg>
     )
 }

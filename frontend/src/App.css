@@ -26,6 +26,7 @@ body {
   align-items: stretch;
   height: calc(100% - 50px);
   background-color: #f4efefe0;
+  overflow-x: hidden;
 }
 
 .App-link {
@@ -40,12 +41,13 @@ body {
 .pred-exp-nav-large {
   /* width: 90%; */
   /* background-color: #FFF; */
-  padding:10px;
+  
+  /* padding:10px;
   justify-content: flex-start;
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  overflow-y: auto;
+  overflow-y: auto; */
 }
 /* FOR PREDICATE NAV */
 .pred-exp-nav {
@@ -119,12 +121,12 @@ body {
 }
 
 .pixalate {
-  width:80%;
-  gap: 20px;
+  width:48%;
+  gap: 10px;
   margin-top: 10px;
   justify-content: space-around;
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
   /* style={{display: "flex", flexDirection:"row"}} */
 }
 
@@ -138,14 +140,14 @@ body {
   width:35%;
   padding-bottom: 15px;
 }
-
+/* 
 .right-wrap{
   display:flex;
   flex-direction: column;
-  /* width:65%; */
+
   width:95%;
   padding-bottom: 15px;
-}
+} */
 
 
 .feature-nav-wrap{
