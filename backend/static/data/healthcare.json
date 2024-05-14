@@ -1,1 +1,4 @@
-{"0": {"insurance": ["Payer A"], "procedure": ["99XXX"], "diagnosis": ["A1XXX"], "duration": [20, 200], "modifier": [""]}}
+{"0": {"diagnosis": ["A1XXX"]}, 
+"1": {"insurance": ["Payer A"], "procedure": ["99XXX"], "diagnosis": ["A1XXX"], "modifier": [""], "duration": [20, 200]},
+"2": {"duration": [40, 120]}
+}

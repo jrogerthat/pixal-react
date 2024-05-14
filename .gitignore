@@ -27,3 +27,4 @@ backend/env
 backend/__pycache__
 backend/venv-3
 backend/venv-3.8
+backend/static/data
