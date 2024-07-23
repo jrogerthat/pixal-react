@@ -11,16 +11,21 @@ import all_fun
 import random
 from flask import Flask
 from predicates import Predicate, PredicateInduction, infer_dtypes, parse_value_string, JZS
-from flask import Flask
+from flask_cors import CORS
+
+
+# app = Flask(__name__)
+# CORS(app)
 
 # name = 'superstore'
-name = 'healthcare'
+# name = 'healthcare'
+name = 'transactions'
 
 api = Flask(__name__)
+CORS(api)
 path = os.path.dirname(os.path.realpath(__file__))
 exec(f'from static.data.{name}_config import get_data')
 data, predicates_path, target, dtypes, numeric, target_name = get_data(path)
-print('D TYPES', dtypes)
 
 with open(f'{path}/{predicates_path}', 'r') as f:
     predicate_dicts = json.load(f).values()
@@ -37,7 +42,6 @@ colors = ["#6e40aa","#7140ab","#743fac","#773fad","#7a3fae","#7d3faf","#803eb0",
 session_id = "49324312"
 predicate_id_path = f'static/data/predicate_id_{session_id}.json'
 parent_dict = {}
-
 
 @api.route('/get_pred_dis')
 def get_pred_dis():
@@ -186,7 +190,24 @@ def copy_predicate(predicate_id):
 @api.route('/get_predicate_data', methods=['GET', 'POST'])
 def get_predicate_data():
     predicates_dict = get_predicates_dict(predicates, target, num_bins=40)
-    return {'predicates': predicates_dict, 'parent_dict': parent_dict, 'dtypes': dtypes}
+    test = pd.read_csv('static/data/transactions.csv')
+
+    # transactions_json = test.to_json(orient='records')
+    # Return the JSON data as a response
+    # return jsonify(transactions_json)
+    # print('PLEASE WORK IN GET PRED DATA', test, dtypes)
+    dtype_ranges = {}
+
+    for key in dtypes:
+        if key != 'numeric':
+            if dtypes[key] == 'numeric':
+                dtype_ranges[key] = [str(test[key].min()), str(test[key].max())]
+            elif dtypes[key] == 'nominal':
+                dtype_ranges[key] = list(set(test[key]))
+            elif dtypes[key] == 'date':
+                dtype_ranges[key] = [str(test[key].min()), str(test[key].max())]
+
+    return {'predicates': predicates_dict, 'parent_dict': parent_dict, 'dtypes': dtypes, 'dtype_ranges':dtype_ranges}
 
 @api.route('/get_predicate_score', methods=['GET', 'POST'])
 def get_predicate_score():
