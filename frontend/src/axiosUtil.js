@@ -9,7 +9,7 @@ import axios from "axios";
   
     useEffect(() => {
       axios
-        .get(url)
+        .get(`http://127.0.0.1:5000${url}`)
         .then((response) => setData(response.data))
         .catch((error) => setError(error.message))
         .finally(() => setLoaded(true));
@@ -20,14 +20,14 @@ import axios from "axios";
 
 async function useGetDistributions(){
 
-  let data = await axios.get('/get_pred_dis')
+  let data = await axios.get('http://127.0.0.1:5000/get_pred_dis')
  
   return data;
 }
 
 async function useGetAxiosAsync(url){
   
-  let data = await axios.get(url)
+  let data = await axios.get(`http://127.0.0.1:5000${url}`)
  
   return data;
 }
@@ -53,7 +53,7 @@ async function useAddPredicate (dataOb){
   // }, []);
 
   // return { data, error, loaded };
-  let data = await axios.post('/add_predicate', JSON.stringify(dataOb), {headers:{"Content-Type" : "application/json"}})
+  let data = await axios.post('http://127.0.0.1:5000/add_predicate', JSON.stringify(dataOb), {headers:{"Content-Type" : "application/json"}})
   
 
   return data;

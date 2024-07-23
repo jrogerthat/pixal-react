@@ -101,7 +101,7 @@ const CopyButton = ({predicateData}) => {
         event.stopPropagation()
 
         useGetAxiosAsync(`copy_predicate/${predicateData.id}`).then(data => {
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data['predicates'], parentToChildDict: data.data.parent_dict})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data['predicates'], parentToChildDict: data.data.parent_dict, dataTypes: null, dataTypeRanges:null})
         })
     }
 
@@ -135,7 +135,7 @@ const InvertButton = ({predicateData}) => {
 
         useGetAxiosAsync(`/edit_predicate/${predicateData.id}/${negated}`).then((data) => {
 
-              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})
+              dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null, dataTypes: null, dataTypeRanges:null})
         })
     }
     return(

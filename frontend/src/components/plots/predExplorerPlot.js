@@ -100,8 +100,10 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
         const svgElement = d3.select(axesRef.current);
         svgElement.selectAll("*").remove();
         const wrap = svgElement.append('g').attr('id', 'wrap-explore');
-        wrap.attr('transform', `translate(${margin.x * 1.5}, ${margin.y})`)
+        wrap.attr('transform', `translate(${margin.x * 2}, ${margin.y})`)
         const xAxisGenerator = d3.axisBottom(xScale);
+
+        let formatPercent = d3.format(".1");
 
         wrap
         .append("g")
@@ -109,13 +111,14 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
         .call(xAxisGenerator);
 
         const yAxisGenerator = d3.axisLeft(yScale);
-        wrap.append("g").call(yAxisGenerator);
+        wrap.append("g").call(yAxisGenerator.tickFormat(formatPercent)); 
 
+        
         // Y axis label:
         wrap.append("text")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("y", -30)
+        .attr("y", -40)
         .attr("x", -((height/2) - 20))
         .style("font-size", 11)
         .text("Percentage of Data Points")
@@ -140,7 +143,6 @@ const PredScoreBar = (data, margin, axesRef, yScale, highlightedPred, negatedArr
         bars.attr('width', 5)
         bars.attr('height', (d)=> (height - 50)-yScale(d.density))
         bars.attr('x', d=> {
-
             return d.predicate === true ? (xScale(d.score) + 6) : xScale(d.score)})
         bars.attr('transform', (d)=> `translate(0, ${yScale(d.density)})`)
         bars.style('fill-opacity', .5)
@@ -183,7 +185,8 @@ const PredExplorePlot = ({width, height, singlePred, marginX, marginY}) => {
     if(plotStyle === 'area'){
         PredScoreArea(usedData, margin, axesRef, yScale, highlightedPred, negatedArray, width, height, plotStyle)
     }else{
-        PredScoreBar(usedData, margin, axesRef, yScale, highlightedPred, negatedArray, width, height, plotStyle)
+        let newUsedData = [...usedData[0].filter(f => f.predicate === false), ...usedData[0].filter(f => f.predicate === true)]
+        PredScoreBar([newUsedData], margin, axesRef, yScale, highlightedPred, negatedArray, width, height, plotStyle)
     }
 
     return(

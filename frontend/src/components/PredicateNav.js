@@ -64,9 +64,6 @@ function recurseReverse(nodes, array, lev){
 
 export const NestedWrapper = ({predicateData, scoreExtent}) => {
   let predArray = unnestRender(predicateData);
-  // predicateData.children ? [predicateData, ...predicateData.children] : [predicateData];
-  // let tester = unnestRender(predicateData);
-  console.log('PREDARRAYYYY',predArray)
  
   const [{plotMode, selectedPredicate}, dispatch] = useContext(DataContext);
 
@@ -265,7 +262,8 @@ export default function PredicateNav() {
         display: 'flex',
         flexDirection: 'column',
         rowGap: 10,
-        overflowY: 'auto'
+        overflowY: 'auto',
+        width: selectedPredicate ? '50%' : '80%'
       }}
       >
         {

@@ -15,7 +15,7 @@ import styled from '@emotion/styled';
 
 
 export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) => {
-  const [{dataTypes, numericalDict},] = useContext(DataContext);
+  const [{dataTypeRanges, dataTypes},] = useContext(DataContext);
   const [featureArray, setFeatureArray] = useState(presentFeatureArray);
 
   const combinedFeatureArraySorted = useMemo(() => {
@@ -35,7 +35,7 @@ export const EditableFeatureCompWrap = ({presentFeatureArray, predicateData}) =>
       f.presentFeat === null ? <div style={{display:'inline'}} key={`f-${i+1}`}>
         <Button 
           onClick={() => {
-            let values = f.data_type === 'nominal' ? [] : numericalDict[f.feature];
+            let values = f.data_type === 'nominal' ? [] : dataTypeRanges[f.feature];
             setFeatureArray([...featureArray, [f.feature, values]]);
           }}
           variant="outlined" 
@@ -68,7 +68,7 @@ const DropCheckComponent = ({cat, selected, options, predData}) => {
         let pass = {features: newPred, id: predData.id}
 
         useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})
+            dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null, dataTypes: null, dataTypeRanges:null})
         })
   };
     return (
@@ -126,7 +126,7 @@ export const RangeSlider = ({range, data, predData}) => {
     event.stopPropagation();
     let pass = {features: pred, id: predData.id}
     useGetAxiosAsync(`edit_predicate_clause?${JSON.stringify(pass)}`).then(data => {
-        dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null})
+        dispatch({type: "SET_PREDICATE_EXPLORE_DATA", predData: data.data, parentToChildDict: null, dataTypes: null, dataTypeRanges:null})
     })
   }
 
@@ -157,18 +157,18 @@ export const RangeSlider = ({range, data, predData}) => {
 
 export default function EditableFeatureComponent({data, predData}){
 
-    const [{categoryDict, numericalDict}] = useContext(DataContext);
+    const [{dataTypeRanges, dataType}] = useContext(DataContext);
 
     if(data.data_type === 'numeric'){
       return <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
       <Typography id="input-slider" gutterBottom style={{fontWeight:800, color:'gray'}}>
       {`${data.feature}: `}
       </Typography>
-      <RangeSlider range={numericalDict[data.feature]} data={data.presentFeat} predData={predData}/>
+      <RangeSlider range={dataTypeRanges[data.feature]} data={data.presentFeat} predData={predData}/>
       </div>
     }else if(data.data_type === 'nominal'){
       return <div>
-      <DropCheckComponent cat={data.feature} selected={data.presentFeat[1]} options={categoryDict[data.feature]} predData={predData}/>
+      <DropCheckComponent cat={data.feature} selected={data.presentFeat[1]} options={dataTypeRanges[data.feature]} predData={predData}/>
       </div>
     }
 

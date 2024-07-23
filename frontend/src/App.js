@@ -25,7 +25,8 @@ function App() {
  
   useEffect(() => {
     if(loaded){ 
-      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict, dataTypes: data.dtypes})
+      console.log('DATA',data)
+      dispatch({ type: "SET_PREDICATE_EXPLORE_DATA", predData: data.predicates, parentToChildDict: data.parent_dict, dataTypes: data.dtypes, dataTypeRanges: data.dtype_ranges})
     }
   }, [loaded])
 

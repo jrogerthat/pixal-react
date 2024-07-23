@@ -40,7 +40,7 @@ export const FeatureBarPlot = ({xCoord, yCoord, explanBool, bookmarkData, width,
         let wrap = svg.append('g').classed('wrap', true);
 
         if(explanBool){
-            wrap.attr("transform", `translate(${((margin().x/2) + 10)}, ${((margin().y/2))})`)
+            wrap.attr("transform", `translate(${((margin().x/2) + 20)}, ${((margin().y/2))})`)
         }else{
             wrap.attr("transform", `translate(${((margin().x/2)) + 10}, ${((margin().y/2) - 40)})`)
         }
@@ -53,9 +53,11 @@ export const FeatureBarPlot = ({xCoord, yCoord, explanBool, bookmarkData, width,
             .style("text-anchor", "end")
             .style('font-size', (explanBool) ? 8 : 10)
 
+        let formatPercent = d3.format(".1%");
+        
         let yAxis = wrap.append('g')
         .attr("transform", "translate(-0, 0)")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale).tickFormat(formatPercent)); 
 
         let bars = wrap.selectAll('rect.bar').data(plotData)
         .join('rect').attr("x", function(d) { return xScale(d[xCoord]); })
@@ -71,7 +73,7 @@ export const FeatureBarPlot = ({xCoord, yCoord, explanBool, bookmarkData, width,
             wrap.append("text")
                 .attr("text-anchor", "middle")
                 .attr("transform", "rotate(-90)")
-                .attr("y", -27)
+                .attr("y", -40)
                 .attr("x", -((svgHeight/4) + 10))
                 .text((yCoord === "score" || yCoord === "Score" ) ? "Anomoly Score" : yCoord)
                 .style('font-size', explanBool ? 10 : 12)
@@ -89,10 +91,6 @@ export const FeatureBarPlot = ({xCoord, yCoord, explanBool, bookmarkData, width,
         if(plotData.length > 50){
             svg.selectAll('.tick').selectAll('text').style('font-size', 6)
         }
-        
-       
-       
-
     }, [width, xCoord, yCoord, yScale, xScale, usedPredData.predicate_info.id, scaleExtent]);
 
     return(

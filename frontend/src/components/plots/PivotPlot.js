@@ -159,7 +159,6 @@ const WhichPlot = ({setEncoding}) => {
     let categoricalBool = useMemo(() => {
         return categoricalFeatures.indexOf(selectedPredicate.feature[0]) > -1;
     }, [selectedPredicate, selectedPredicate.feature])
-    // console.log('SELECTED_PRED in WHICH PLOT', selectedPredicate.feature[0], xCoord)
 
     const [width, setWidth] = useState(500);
     const [svgHeight, setSvgHeight] = useState(300);

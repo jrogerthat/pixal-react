@@ -19,23 +19,30 @@ const StaticClauseComponent = ({data}) => {
 const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 
 const StaticFeatureValues = (data) => {
-    const [{numericalDict, categoryDict}] = useContext(DataContext);
+    const [{dataTypeRanges, dataTypes}] = useContext(DataContext);
+
     let valArr = (Array.isArray(data[1])) ? data[1] : Object.entries(data[1])[0][1];
 
-    if(valArr[0] === ''){
+    if(dataTypes[data[0]] === 'nominal'){
+      
+        return <div className="feature-value" >{valArr.join(', ')} 
+            <span style={{fontWeight:60, fontSize:12}}>{`(${valArr.length} out of ${dataTypeRanges[data[0]].length})`}</span></div>
      
-    }else if(isDate(valArr[0]) && data[0] === 'Order-Date'){ 
-        // if(isDate(valArr[0]) || (isNaN(valArr[0]) === false)){ 
+    }else if(dataTypes[data[0]] === 'date'){ 
+       
         return <div className="feature-value">between<span>{` ${valArr[0]} `}</span>and<span>{` ${valArr[1]} `}
         </span></div>
 
     }else if(valArr.length === 1){
-        return  <div className="feature-value">{` ${valArr[0]}`}<span style={{fontWeight:60, fontSize:12}}>{` (${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
-    }else if(isNaN(valArr[0]) === false){
-       
+
+        // return  <div className="feature-value">{` ${valArr[0]}`}<span style={{fontWeight:60, fontSize:12}}>{` (${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
+        <span>{"add back in"}</span>
+    }else if(dataTypes[data[0]] === 'numeric'){
+     
+    // }else if(isNaN(valArr[0]) === false){
         return <div style={{marginTop:25, display:'flex', flexDirection:'row', width:'85%'}}> <span
         style={{fontSize:11, paddingRight:4}}
-        >{numericalDict[data[0]][0]}</span>
+        >{dataTypeRanges[data[0]][0]}</span>
         <Slider
         //   getAriaLabel={() => data[0]}
         //  aria-label={getAriaLabel}
@@ -43,18 +50,18 @@ const StaticFeatureValues = (data) => {
           valueLabelDisplay="on"
           size="small"
         //   aria-label="Small"
-          min={numericalDict[data[0]][0]}
-          max={numericalDict[data[0]][1]}
+          min={dataTypeRanges[data[0]][0]}
+          max={dataTypeRanges[data[0]][1]}
           disabled={true}
         />
       <span
       style={{fontSize:11, paddingLeft:4}}
-      >{numericalDict[data[0]][1]}</span></div>
+      >{dataTypeRanges[data[0]][1]}</span></div>
+
     }
 
     return (
-        <div className="feature-value" >{valArr.join(', ')} 
-        <span style={{fontWeight:60, fontSize:12}}>{`(${valArr.length} out of ${categoryDict[data[0]].length})`}</span></div>
+        <span>{'ERROR'}</span>
     )
 }
 /*
@@ -99,7 +106,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
     let handleClick = () => {
        if(!editing){
        
-        axios.get(`/get_selected_data/${predicateData.id}`).then((data)=> {
+        axios.get(`http://127.0.0.1:5000/get_selected_data/${predicateData.id}`).then((data)=> {
             // axios.get(`/get_selected_data/${predicateData.id}/50/25`).then((data)=> {
             let predSel = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
             predSel.predicate_info = predicateData;
@@ -256,7 +263,7 @@ export default function PredicateComp({predicateData, scoreExtent, index}) {
             }
             </div>
             <div className="score_wrap">
-            <PredExplorePlot width={selectedPredicate ? 250 : 400} height={160} marginX={30} marginY={10} singlePred={predicateData} />
+            <PredExplorePlot width={selectedPredicate ? 310 : 400} height={160} marginX={35} marginY={10} singlePred={predicateData} />
             </div>
         
         </div>
